@@ -26,15 +26,15 @@ enum SpotAPIError: Error, LocalizedError {
 
     var errorDescription: String? {
         switch self {
-        case .authenticationFailed(let message): return "Authentication Failed: \(message)"
-        case .invalidResponse: return "Invalid response from Spotify server."
-        case .decodingError(let error): return "Failed to decode data: \(error.localizedDescription)"
-        case .missingData(let field): return "Missing required data: \(field)"
-        case .urlConstructionFailed(let url): return "Failed to construct URL: \(url)"
-        case .loginCancelled: return "Login was cancelled by the user."
-        case .connectionClosedUnexpectedly: return "The server closed the connection unexpectedly."
-        case .apiError(let message): return "Spotify API Error: \(message)"
-        case .rateLimited(let message): return "Spotify is rate limiting requests: \(message)"
+        case .authenticationFailed(let message): return String(localized: "Authentication Failed: \(message)")
+        case .invalidResponse: return String(localized: "Invalid response from Spotify server.")
+        case .decodingError(let error): return String(localized: "Failed to decode data: \(error.localizedDescription)")
+        case .missingData(let field): return String(localized: "Missing required data: \(field)")
+        case .urlConstructionFailed(let url): return String(localized: "Failed to construct URL: \(url)")
+        case .loginCancelled: return String(localized: "Login was cancelled by the user.")
+        case .connectionClosedUnexpectedly: return String(localized: "The server closed the connection unexpectedly.")
+        case .apiError(let message): return String(localized: "Spotify API Error: \(message)")
+        case .rateLimited(let message): return String(localized: "Spotify is rate limiting requests: \(message)")
         }
     }
 }

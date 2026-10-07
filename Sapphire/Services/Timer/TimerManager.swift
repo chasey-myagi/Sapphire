@@ -168,7 +168,7 @@ class TimerManager: ObservableObject {
         guard duration > 0 else { return nil }
         let timer = SapphireTimer(
             id: UUID().uuidString,
-            label: label ?? "Timer",
+            label: label ?? String(localized: "Timer"),
             state: .system,
             remainingTimeOnLastUpdate: duration,
             fireDate: Date().addingTimeInterval(duration)
@@ -620,8 +620,8 @@ class TimerManager: ObservableObject {
                 switch settings.authorizationStatus {
                 case .authorized, .provisional:
                     let content = UNMutableNotificationContent()
-                    content.title = "Timer Done"
-                    content.body = "\(currentTimer.label) finished."
+                    content.title = String(localized: "Timer Done")
+                    content.body = String(localized: "\(currentTimer.label) finished.")
                     content.sound = .default
                     let delay = max(fireDate.timeIntervalSinceNow, 1)
                     let trigger = UNTimeIntervalNotificationTrigger(timeInterval: delay, repeats: false)
