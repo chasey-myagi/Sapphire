@@ -43,6 +43,8 @@ Product and service names such as Spotify, Apple Music, Gemini and Shopify retai
 
 ## Verification
 
+Use Xcode 26.1.1 or newer: Sapphire uses Swift 6.2 isolated protocol conformances. CI selects Xcode 26.1.1 explicitly because the macOS 15 runner's default Xcode 16.4 cannot compile that syntax.
+
 Run `script/test_localization.sh` to build and execute the `SapphireLocalizationTests` scheme in English/US, Simplified Chinese/China, and Simplified Chinese/US, or add `build` to compile without executing. Both modes check the actual app and embedded Widget resources against freshly compiled catalogs, compare the app/NearbyShare/Widget compiler inventories, and run native bundle probes. Its test host suppresses application lifecycle work under XCTest. The original `SapphireTests` scheme remains available; missing private implementations in a public checkout must be reported separately rather than removing their tests.
 
 The native resource checks do not launch Sapphire or change preferences:

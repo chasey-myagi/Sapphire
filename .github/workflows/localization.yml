@@ -8,6 +8,10 @@ on:
 permissions:
   contents: read
 
+env:
+  # Sapphire uses Swift 6.2 isolated protocol conformances.
+  DEVELOPER_DIR: /Applications/Xcode_26.1.1.app/Contents/Developer
+
 jobs:
   resource-checks:
     runs-on: macos-15
