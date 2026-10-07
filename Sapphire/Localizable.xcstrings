@@ -11213,6 +11213,38 @@
         }
       }
     },
+    "Couldn’t start playback: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn’t start playback: %@"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "无法开始播放：%@"
+          }
+        }
+      }
+    },
+    "Couldn’t switch device: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn’t switch device: %@"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "无法切换设备：%@"
+          }
+        }
+      }
+    },
     "Cover the desktop wallpaper and icons with black for the duration of the session.": {
       "comment": "Settings interface",
       "localizations": {
@@ -28964,6 +28996,38 @@
         }
       }
     },
+    "Open the Spotify app or another speaker to play audio.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open the Spotify app or another speaker to play audio."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请打开 Spotify 应用或其他扬声器来播放音频。"
+          }
+        }
+      }
+    },
+    "Open the Spotify desktop app or another speaker to play audio.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open the Spotify desktop app or another speaker to play audio."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请打开 Spotify 桌面应用或其他扬声器来播放音频。"
+          }
+        }
+      }
+    },
     "Open the app": {
       "comment": "DMGPostInstallAction.displayName",
       "localizations": {
@@ -30408,6 +30472,22 @@
         }
       }
     },
+    "Playback moved to %@.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Playback moved to %@."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已切换到 %@ 播放。"
+          }
+        }
+      }
+    },
     "Playing": {
       "comment": "Native local UI wording in MultiAudioView.swift",
       "localizations": {
@@ -30438,6 +30518,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "正在 %@ 上播放"
+          }
+        }
+      }
+    },
+    "Playing on %@.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Playing on %@."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在 %@ 上播放。"
           }
         }
       }
@@ -33258,7 +33354,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "调整 XDR 范围内的亮度时，需要按住 Command（⌘）键。"
+            "value": "提高 XDR 范围内的亮度时，需要按住 Command（⌘）键。"
           }
         }
       }
@@ -34603,6 +34699,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sapphire 仅作为 Connect 控制器，音频始终由 Spotify 桌面应用或其他扬声器播放。"
+          }
+        }
+      }
+    },
+    "Sapphire is not a Spotify speaker. Choose the desktop app or another device.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sapphire is not a Spotify speaker. Choose the desktop app or another device."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sapphire 不是 Spotify 播放设备。请选择 Spotify 桌面应用或其他设备。"
           }
         }
       }
@@ -48057,6 +48169,22 @@
         }
       }
     },
+    "another device": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "another device"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "其他设备"
+          }
+        }
+      }
+    },
     "any Focus mode": {
       "comment": "Settings interface",
       "localizations": {
@@ -49108,6 +49236,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "未接通电源时"
+          }
+        }
+      }
+    },
+    "your speaker": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "your speaker"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "你的扬声器"
           }
         }
       }

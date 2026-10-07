@@ -92,6 +92,17 @@ check("weather-semantic-key-default",
       String(localized: "weather.condition.clear", defaultValue: "Clear", bundle: product),
       chinese ? "晴" : "Clear", scope: "product")
 
+let speakerName = "客厅 100% %@ 🎵 General"
+check("spotify-transferred-device-name-verbatim",
+      String(localized: "Playback moved to \(speakerName).", bundle: product),
+      chinese ? "已切换到 \(speakerName) 播放。" : "Playback moved to \(speakerName).",
+      scope: "product")
+let playbackError = "HTTP 429: %@ / 100% 🔒"
+check("spotify-switch-error-detail-verbatim",
+      String(localized: "Couldn’t switch device: \(playbackError)", bundle: product),
+      chinese ? "无法切换设备：\(playbackError)" : "Couldn’t switch device: \(playbackError)",
+      scope: "product")
+
 let expectedLanguage = chinese ? "zh-Hans" : "en"
 check("selected-product-language", product.preferredLocalizations.first ?? "<missing>",
       expectedLanguage, scope: "product")
