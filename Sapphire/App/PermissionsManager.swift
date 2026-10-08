@@ -29,6 +29,41 @@ enum PermissionStatus: String, CaseIterable {
     case granted, denied, notRequested
 }
 
+enum PermissionAction: Equatable {
+    case request
+    case openSettings(SystemPreferencesPane)
+
+    var title: LocalizedStringKey {
+        switch self {
+        case .request: return "Request"
+        case .openSettings: return "Open System Settings"
+        }
+    }
+}
+
+enum PermissionActionPolicy {
+    static func action(for type: PermissionType, status: PermissionStatus) -> PermissionAction? {
+        guard status != .granted else { return nil }
+        switch type {
+        case .fullDiskAccess:
+            return .openSettings(.allFiles)
+        case .notifications:
+            return status == .denied ? .openSettings(.notifications) : .request
+        default:
+            return status == .notRequested ? .request : nil
+        }
+    }
+
+    static func notificationStatus(for authorization: UNAuthorizationStatus) -> PermissionStatus {
+        switch authorization {
+        case .authorized, .provisional: return .granted
+        case .denied: return .denied
+        case .notDetermined: return .notRequested
+        @unknown default: return .notRequested
+        }
+    }
+}
+
 enum PermissionCategory: String, CaseIterable {
     case required = "Required"
     case recommended = "Recommended"
@@ -127,6 +162,7 @@ class PermissionsManager: NSObject, ObservableObject, @MainActor CLLocationManag
                 self?.checkFullDiskAccessStatus()
                 self?.checkScreenRecordingStatus()
                 self?.checkAutomationStatus()
+                self?.refreshNotificationsStatus()
             }
             .store(in: &cancellables)
 
@@ -175,16 +211,7 @@ class PermissionsManager: NSObject, ObservableObject, @MainActor CLLocationManag
         checkLocalNetworkStatus()
         checkAutomationStatus()
 
-        UNUserNotificationCenter.current().getNotificationSettings { settings in
-            DispatchQueue.main.async {
-                switch settings.authorizationStatus {
-                case .authorized, .provisional: self.notificationsStatus = PermissionStatus.granted
-                case .denied: self.notificationsStatus = PermissionStatus.denied
-                case .notDetermined: self.notificationsStatus = PermissionStatus.notRequested
-                @unknown default: self.notificationsStatus = PermissionStatus.notRequested
-                }
-            }
-        }
+        refreshNotificationsStatus()
 
         updateLocationStatus(for: locationManager?.authorizationStatus ?? .notDetermined)
 
@@ -231,6 +258,24 @@ class PermissionsManager: NSObject, ObservableObject, @MainActor CLLocationManag
         }
     }
 
+    func refreshNotificationsStatus() {
+        UNUserNotificationCenter.current().getNotificationSettings { [weak self] settings in
+            let status = PermissionActionPolicy.notificationStatus(for: settings.authorizationStatus)
+            DispatchQueue.main.async { self?.notificationsStatus = status }
+        }
+    }
+
+    func performPermissionAction(_ type: PermissionType) {
+        switch PermissionActionPolicy.action(for: type, status: status(for: type)) {
+        case .request:
+            requestPermission(type)
+        case .openSettings(let pane):
+            pane.open()
+        case nil:
+            break
+        }
+    }
+
     func requestPermission(_ type: PermissionType) {
         switch type {
         case .accessibility:
@@ -252,7 +297,7 @@ class PermissionsManager: NSObject, ObservableObject, @MainActor CLLocationManag
 
         case .notifications:
             UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { _, _ in
-                DispatchQueue.main.async { self.checkAllPermissions() }
+                DispatchQueue.main.async { self.refreshNotificationsStatus() }
             }
 
         case .location:

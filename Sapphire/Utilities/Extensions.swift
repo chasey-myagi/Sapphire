@@ -49,17 +49,20 @@ extension NSPasteboard {
     }
 }
 
-enum SystemPreferencesPane {
+enum SystemPreferencesPane: Equatable {
     case privacyRoot
     case accessibility
     case camera
     case screenCapture
     case bluetooth
     case allFiles
+    case notifications
 
     var url: URL {
         let suffix: String
         switch self {
+        case .notifications:
+            return URL(string: "x-apple.systempreferences:com.apple.Notifications-Settings.extension")!
         case .privacyRoot: suffix = "Privacy"
         case .accessibility: suffix = "Privacy_Accessibility"
         case .camera: suffix = "Privacy_Camera"

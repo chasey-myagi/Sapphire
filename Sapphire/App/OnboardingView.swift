@@ -110,6 +110,10 @@ private struct WelcomeStepView: View {
                 .foregroundColor(.secondary)
                 .padding(.horizontal)
 
+            AppLanguagePicker()
+                .frame(maxWidth: 360)
+                .padding(.horizontal)
+
             Spacer()
 
             OnboardingButton(title: "Get Started", action: onGetStarted)
@@ -674,9 +678,11 @@ private struct PermissionRowView: View {
             switch status {
             case .granted: Image(systemName: "checkmark.circle.fill").font(.title2).foregroundColor(.green)
             case .denied: Image(systemName: "xmark.circle.fill").font(.title2).foregroundColor(.red)
-            case .notRequested:
-                Button(action: { manager.requestPermission(permission.type) }) {
-                    Text("Request")
+            case .notRequested: EmptyView()
+            }
+            if let action = PermissionActionPolicy.action(for: permission.type, status: status) {
+                Button(action: { manager.performPermissionAction(permission.type) }) {
+                    Text(action.title)
                         .fontWeight(.bold)
                         .padding(.horizontal, 18)
                         .padding(.vertical, 8)

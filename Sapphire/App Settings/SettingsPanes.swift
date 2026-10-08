@@ -155,7 +155,11 @@ struct PermissionStatusRowView: View {
             switch status {
             case .granted: Image(systemName: "checkmark.circle.fill").font(.title2).foregroundColor(.green)
             case .denied: Image(systemName: "xmark.circle.fill").font(.title2).foregroundColor(.red)
-            case .notRequested: Button("Request") { permissionsManager.requestPermission(permission.type) }.buttonStyle(.bordered).tint(.accentColor)
+            case .notRequested: EmptyView()
+            }
+            if let action = PermissionActionPolicy.action(for: permission.type, status: status) {
+                Button(action.title) { permissionsManager.performPermissionAction(permission.type) }
+                    .buttonStyle(.bordered).tint(.accentColor)
             }
             PermissionFeatureInfoButton(permission: permission)
                 .padding(.trailing, 4)
@@ -1546,6 +1550,10 @@ struct GeneralSettingsView: View {
                 Text("General")
                     .font(.largeTitle.bold())
                     .padding(.bottom)
+
+                AppLanguagePicker()
+                    .padding()
+                    .modifier(SettingsContainerModifier())
 
                 VStack(alignment: .leading, spacing: 0) {
                     SettingsSectionHeader(title: "Behavior")

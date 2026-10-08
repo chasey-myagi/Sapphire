@@ -11195,6 +11195,23 @@
         }
       }
     },
+    "Current language setting": {
+      "comment": "Native app language preference; changing language requires quitting and reopening.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Current language setting"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "当前语言设置"
+          }
+        }
+      }
+    },
     "Current: %lld%%": {
       "comment": "Settings interface",
       "localizations": {
@@ -17111,6 +17128,23 @@
         }
       }
     },
+    "Follow System": {
+      "comment": "Native app language preference; changing language requires quitting and reopening.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Follow System"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "跟随系统"
+          }
+        }
+      }
+    },
     "For OpenBubbles": {
       "comment": "Compiler-extracted static interface text",
       "localizations": {
@@ -20848,6 +20882,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "标签（可选）"
+          }
+        }
+      }
+    },
+    "Language": {
+      "comment": "Native app language preference; changing language requires quitting and reopening.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Language"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "语言"
           }
         }
       }
@@ -31213,6 +31264,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "退出 Sapphire"
+          }
+        }
+      }
+    },
+    "Quit and reopen Sapphire to apply language changes.": {
+      "comment": "Native app language preference; changing language requires quitting and reopening.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quit and reopen Sapphire to apply language changes."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "退出并重新打开 Sapphire 后，语言更改才会生效。"
           }
         }
       }
