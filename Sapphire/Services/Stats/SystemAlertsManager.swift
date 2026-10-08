@@ -113,9 +113,9 @@ final class SystemAlertsManager {
                 guard Date().timeIntervalSince(self.lastPressureAlert) > 1800 else { return }
                 self.lastPressureAlert = Date()
                 if pressure.contains(.critical) {
-                    self.postAlert(title: "Memory Pressure", body: "Memory pressure is critical — consider closing some apps.")
+                    self.postAlert(title: String(localized: "Memory Pressure"), body: String(localized: "Memory pressure is critical — consider closing some apps."))
                 } else {
-                    self.postAlert(title: "Memory Pressure", body: "Memory pressure is high — consider closing some apps.")
+                    self.postAlert(title: String(localized: "Memory Pressure"), body: String(localized: "Memory pressure is high — consider closing some apps."))
                 }
             }
         }
@@ -154,8 +154,8 @@ final class SystemAlertsManager {
         lastCPUAlert = Date()
         cpuHistory.removeAll()
         postAlert(
-            title: "High CPU Load",
-            body: "CPU has been at \(Int((average * 100).rounded()))% for about a minute."
+            title: String(localized: "High CPU Load"),
+            body: String(localized: "CPU has been at \(Int((average * 100).rounded()))% for about a minute.")
         )
     }
 
@@ -171,8 +171,8 @@ final class SystemAlertsManager {
               Date().timeIntervalSince(lastDiskAlert) > 3600 else { return }
         lastDiskAlert = Date()
         postAlert(
-            title: "Low Disk Space",
-            body: "Only \(String(format: "%.1f", freeGB)) GB free on your startup disk."
+            title: String(localized: "Low Disk Space"),
+            body: String(localized: "Only \(freeGB.formatted(.number.precision(.fractionLength(1)))) GB free on your startup disk.")
         )
     }
 

@@ -133,7 +133,7 @@ struct CalendarNotificationView: View {
         CalendarNotificationLayout(
             color: .red,
             systemImage: "calendar.badge.clock",
-            category: "Calendar",
+            category: String(localized: "Calendar"),
             onDismiss: { liveActivityManager.dismissCalendarNotification() },
             onSnooze: {
                 liveActivityManager.snoozeCalendarNotification(

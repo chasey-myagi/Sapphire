@@ -1,6 +1,8 @@
 Sapphire.xcodeproj/project.xcworkspace/xcuserdata/
 Sapphire.xcodeproj/xcuserdata/
 *.xcuserstate
+/.local-build/
+/.codex/environments/
 
 .DS_Store
 Sapphire/.DS_Store

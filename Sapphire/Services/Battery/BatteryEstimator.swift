@@ -16,6 +16,7 @@ class BatteryEstimator: ObservableObject {
     @Published var estimatedTimeRemaining: String?
     @Published var batteryLevel: Int = 100
     @Published var isCharging: Bool = false
+    @Published private(set) var isFullyCharged: Bool = false
 
     private var batteryMonitor: BatteryMonitor
     private var cancellables = Set<AnyCancellable>()
@@ -32,6 +33,7 @@ class BatteryEstimator: ObservableObject {
     }
 
     private func update(with state: BatteryState?) {
+        isFullyCharged = false
         guard let state = state else {
             self.estimatedTimeRemaining = nil
             return
@@ -51,9 +53,10 @@ class BatteryEstimator: ObservableObject {
         let timeToEmpty = info[kIOPSTimeToEmptyKey] as? Int ?? 0
         let timeToFull = info[kIOPSTimeToFullChargeKey] as? Int ?? 0
         let isCharged = info[kIOPSIsChargedKey] as? Bool ?? false
+        isFullyCharged = isCharged
 
         if isCharged {
-            self.estimatedTimeRemaining = "Charged"
+            self.estimatedTimeRemaining = String(localized: "Charged")
         } else if state.isCharging, timeToFull > 0 {
             self.estimatedTimeRemaining = "\(formatTime(minutes: timeToFull))"
         } else if !state.isCharging, timeToEmpty > 0 {
@@ -64,15 +67,10 @@ class BatteryEstimator: ObservableObject {
     }
 
     private func formatTime(minutes: Int) -> String {
-        if minutes < 60 {
-            return "\(minutes)m"
-        } else {
-            let hours = minutes / 60
-            let remainingMinutes = minutes % 60
-            if remainingMinutes == 0 {
-                return "\(hours)h"
-            }
-            return "\(hours)h \(remainingMinutes)m"
-        }
+        let formatter = DateComponentsFormatter()
+        formatter.allowedUnits = [.hour, .minute]
+        formatter.unitsStyle = .abbreviated
+        formatter.zeroFormattingBehavior = .dropAll
+        return formatter.string(from: TimeInterval(minutes) * 60) ?? ""
     }
 }

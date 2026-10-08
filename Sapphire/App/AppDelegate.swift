@@ -529,7 +529,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
             window.standardWindowButton(.closeButton)?.isHidden = true
             window.standardWindowButton(.miniaturizeButton)?.isHidden = true
             window.standardWindowButton(.zoomButton)?.isHidden = true
-            window.title = "Sapphire Onboarding"
+            window.title = String(localized: "Sapphire Onboarding")
             window.isMovableByWindowBackground = true
             window.isOpaque = false
             window.backgroundColor = .clear
@@ -914,10 +914,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
 
         DispatchQueue.main.async {
             HelperAlertPresenter.presentModal(
-                messageText: "Signed Out of Sapphire",
+                messageText: String(localized: "Signed Out of Sapphire"),
                 informativeText: reason.alertMessage,
                 alertStyle: .warning,
-                buttonTitles: ["Open Account Settings", "OK"]
+                buttonTitles: [String(localized: "Open Account Settings"), String(localized: "OK")]
             ) { buttonIndex in
                 if buttonIndex == 0 {
                     NotificationCenter.default.post(name: .sapphireOpenAccountPane, object: nil)
@@ -1137,6 +1137,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
+        guard !Self.isRunningUnitTests else { return }
         mouseControlManager.restoreSystemSettings()
         settingsModel.flushPendingSave()
         NearbyConnectionManager.shared.becomeInvisible()
@@ -1248,9 +1249,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
                     accessibilityDescription: "Sapphire Launchpad"
                 )
                 let menu = NSMenu()
-                menu.addItem(NSMenuItem(title: "Show Launchpad", action: #selector(showLaunchpadAction), keyEquivalent: ""))
+                menu.addItem(NSMenuItem(title: String(localized: "Show Launchpad"), action: #selector(showLaunchpadAction), keyEquivalent: ""))
                 menu.addItem(.separator())
-                menu.addItem(NSMenuItem(title: "Quit Sapphire", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
+                menu.addItem(NSMenuItem(title: String(localized: "Quit Sapphire"), action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
                 for item in menu.items { item.target = self }
                 statusItem?.menu = menu
             }
@@ -1577,7 +1578,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
             backing: .buffered,
             defer: false
         )
-        window.title = "Settings"
+        window.title = String(localized: "Settings")
         window.titleVisibility = .hidden
         window.titlebarAppearsTransparent = true
         window.titlebarSeparatorStyle = .none
@@ -1627,7 +1628,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
             backing: .buffered,
             defer: false
         )
-        window.title = "Lyrics"
+        window.title = String(localized: "Lyrics")
         window.isMovableByWindowBackground = false
         window.backgroundColor = .clear
         window.isOpaque = false
