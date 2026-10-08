@@ -37,11 +37,11 @@ struct NotchExpandedChrome: View {
 
     private var currentViewTitle: String? {
         switch mode {
-        case .multiAudioDeviceAdjust: return "Adjust"
-        case .multiAudioEQ: return "EQ"
-        case .musicDevices: return "Devices"
-        case .musicQueueAndPlaylists: return "Queue & Playlists"
-        case .multiAudio: return "Audio Devices"
+        case .multiAudioDeviceAdjust: return String(localized: "Adjust")
+        case .multiAudioEQ: return String(localized: "EQ")
+        case .musicDevices: return String(localized: "Devices")
+        case .musicQueueAndPlaylists: return String(localized: "Queue & Playlists")
+        case .multiAudio: return String(localized: "Audio Devices")
         default: return nil
         }
     }

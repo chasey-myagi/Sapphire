@@ -26,15 +26,15 @@ enum SpotAPIError: Error, LocalizedError {
 
     var errorDescription: String? {
         switch self {
-        case .authenticationFailed(let message): return "Authentication Failed: \(message)"
-        case .invalidResponse: return "Invalid response from Spotify server."
-        case .decodingError(let error): return "Failed to decode data: \(error.localizedDescription)"
-        case .missingData(let field): return "Missing required data: \(field)"
-        case .urlConstructionFailed(let url): return "Failed to construct URL: \(url)"
-        case .loginCancelled: return "Login was cancelled by the user."
-        case .connectionClosedUnexpectedly: return "The server closed the connection unexpectedly."
-        case .apiError(let message): return "Spotify API Error: \(message)"
-        case .rateLimited(let message): return "Spotify is rate limiting requests: \(message)"
+        case .authenticationFailed(let message): return String(localized: "Authentication Failed: \(message)")
+        case .invalidResponse: return String(localized: "Invalid response from Spotify server.")
+        case .decodingError(let error): return String(localized: "Failed to decode data: \(error.localizedDescription)")
+        case .missingData(let field): return String(localized: "Missing required data: \(field)")
+        case .urlConstructionFailed(let url): return String(localized: "Failed to construct URL: \(url)")
+        case .loginCancelled: return String(localized: "Login was cancelled by the user.")
+        case .connectionClosedUnexpectedly: return String(localized: "The server closed the connection unexpectedly.")
+        case .apiError(let message): return String(localized: "Spotify API Error: \(message)")
+        case .rateLimited(let message): return String(localized: "Spotify is rate limiting requests: \(message)")
         }
     }
 }
@@ -1523,7 +1523,7 @@ class SpotifyPrivateAPIManager: ObservableObject {
     func transferPlayback(to toDeviceId: String) async -> Bool {
         if toDeviceId == controllerDeviceID {
             await MainActor.run {
-                self.deviceTransferNotice = "Sapphire is not a Spotify speaker. Choose the desktop app or another device."
+                self.deviceTransferNotice = String(localized: "Sapphire is not a Spotify speaker. Choose the desktop app or another device.")
                 self.scheduleDeviceTransferNoticeClear()
             }
             return false
@@ -1540,7 +1540,7 @@ class SpotifyPrivateAPIManager: ObservableObject {
         } catch {
             print("[SpotifyPrivateAPIManager] Error transferring playback: \(error.localizedDescription)")
             await MainActor.run {
-                self.deviceTransferNotice = "Couldn’t switch device: \(error.localizedDescription)"
+                self.deviceTransferNotice = String(localized: "Couldn’t switch device: \(error.localizedDescription)")
                 self.scheduleDeviceTransferNoticeClear()
             }
             return false
@@ -2641,7 +2641,7 @@ class SpotifyPrivateAPIManager: ObservableObject {
         Task {
             guard let external = preferredExternalPlaybackDeviceID(excluding: selfId) else {
                 await MainActor.run {
-                    self.deviceTransferNotice = "Open the Spotify app or another speaker to play audio."
+                    self.deviceTransferNotice = String(localized: "Open the Spotify app or another speaker to play audio.")
                     self.scheduleDeviceTransferNoticeClear()
                 }
                 return
@@ -2650,8 +2650,9 @@ class SpotifyPrivateAPIManager: ObservableObject {
                 try await transferDevice(from: selfId, to: external)
                 await MainActor.run {
                     self.isConnectStreamingSession = true
-                    self.deviceTransferNotice =
-                        "Playback moved to \(self.devices.first(where: { $0.deviceId == external })?.name ?? "your speaker")."
+                    let deviceName = self.devices.first(where: { $0.deviceId == external })?.name
+                        ?? String(localized: "your speaker")
+                    self.deviceTransferNotice = String(localized: "Playback moved to \(deviceName).")
                     self.scheduleDeviceTransferNoticeClear()
                 }
             } catch {
@@ -2852,7 +2853,7 @@ extension SpotifyPrivateAPIManager {
                 try? await refreshPlayerAndDeviceState()
             }
             guard let playbackDevice = preferredExternalPlaybackDeviceID(excluding: deviceId) else {
-                let reason = "Open the Spotify desktop app or another speaker to play audio."
+                let reason = String(localized: "Open the Spotify desktop app or another speaker to play audio.")
                 await MainActor.run {
                     self.isConnectStreamingSession = false
                     self.deviceTransferNotice = reason
@@ -2877,10 +2878,10 @@ extension SpotifyPrivateAPIManager {
                 trackIndex: trackIndex,
                 targetDeviceID: playbackDevice
             )
-            let deviceName = devices.first(where: { $0.deviceId == playbackDevice })?.name ?? "another device"
+            let deviceName = devices.first(where: { $0.deviceId == playbackDevice })?.name ?? String(localized: "another device")
             await MainActor.run {
                 self.isConnectStreamingSession = true
-                self.deviceTransferNotice = "Playing on \(deviceName)."
+                self.deviceTransferNotice = String(localized: "Playing on \(deviceName).")
                 self.scheduleDeviceTransferNoticeClear()
             }
             print("[SpotifyConnect] Playback on \(deviceName) (\(playbackDevice.prefix(8))…)")
@@ -2889,7 +2890,7 @@ extension SpotifyPrivateAPIManager {
             print("[SpotifyConnect] play failed: \(error.localizedDescription)")
             await MainActor.run {
                 self.isConnectStreamingSession = false
-                self.deviceTransferNotice = "Couldn’t start playback: \(error.localizedDescription)"
+                self.deviceTransferNotice = String(localized: "Couldn’t start playback: \(error.localizedDescription)")
                 self.scheduleDeviceTransferNoticeClear()
             }
             return .failure(reason: error.localizedDescription)
