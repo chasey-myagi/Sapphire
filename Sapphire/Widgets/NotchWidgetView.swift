@@ -22,6 +22,47 @@ enum MusicWidgetVisibilityPolicy {
     }
 }
 
+private struct WidgetViewportWidthKey: EnvironmentKey {
+    static let defaultValue: CGFloat = 720
+}
+
+private struct WidgetStripHoverKey: EnvironmentKey {
+    static let defaultValue: (Bool) -> Void = { _ in }
+}
+
+extension EnvironmentValues {
+    var onWidgetStripHover: (Bool) -> Void {
+        get { self[WidgetStripHoverKey.self] }
+        set { self[WidgetStripHoverKey.self] = newValue }
+    }
+
+    var widgetViewportWidth: CGFloat {
+        get { self[WidgetViewportWidthKey.self] }
+        set { self[WidgetViewportWidthKey.self] = newValue }
+    }
+}
+
+struct BoundedWidgetStrip<Content: View>: View {
+    let maximumWidth: CGFloat
+    @State private var contentSize: CGSize
+    let content: Content
+
+    init(maximumWidth: CGFloat, initialWidth: CGFloat, @ViewBuilder content: () -> Content) {
+        self.maximumWidth = maximumWidth
+        _contentSize = State(initialValue: CGSize(width: max(1, initialWidth), height: 100))
+        self.content = content()
+    }
+
+    var body: some View {
+        ScrollView(.horizontal) {
+            content
+                .fixedSize(horizontal: true, vertical: true)
+                .measureIdealSize(into: $contentSize)
+        }
+        .frame(width: max(1, min(maximumWidth, contentSize.width)), height: max(1, contentSize.height))
+    }
+}
+
 private struct NavigationStackKey: EnvironmentKey {
     static let defaultValue: Binding<[NotchWidgetMode]> = .constant([.defaultWidgets])
 }
@@ -266,6 +307,8 @@ struct NotchWidgetView: View {
 private struct NotchDefaultWidgetsView: View {
     @Environment(\.navigationStack) private var navigationStack
     @Environment(\.isCalendarHovered) private var isCalendarHovered
+    @Environment(\.widgetViewportWidth) private var viewportWidth
+    @Environment(\.onWidgetStripHover) private var onStripHover
     @EnvironmentObject private var settings: SettingsModel
     @State private var musicVisibility: MusicWidgetVisibilitySnapshot
 
@@ -280,34 +323,34 @@ private struct NotchDefaultWidgetsView: View {
     }
 
     private var enabledAndOrderedWidgets: [WidgetType] {
-        let enabled = WidgetLayoutPolicy.enabledWidgets(
+        WidgetLayoutPolicy.enabledWidgets(
             settings: settings.settings,
             isMusicPlaying: musicVisibility.isPlaying,
             isSpotifyPausedWithNoOtherPlayback: musicVisibility.isSpotifyPausedWithNoOtherPlayback
-        )
-
-        return WidgetLayoutPolicy.fittingWidgets(
-            from: enabled,
-            availableWidth: WidgetLayoutPolicy.availableBarWidth(),
-            showDividers: settings.settings.showDividersBetweenWidgets,
-            bypassSpaceLimit: settings.settings.bypassWidgetSpaceLimit
         )
     }
 
     var body: some View {
         let widgets = enabledAndOrderedWidgets
-        HStack(spacing: 20) {
-            ForEach(widgets) { widgetType in
-                widgetView(for: widgetType)
-                    .id(widgetType)
+        BoundedWidgetStrip(
+            maximumWidth: viewportWidth,
+            initialWidth: WidgetLayoutPolicy.totalWidth(for: widgets, showDividers: settings.settings.showDividersBetweenWidgets)
+        ) {
+            HStack(spacing: WidgetLayoutPolicy.interWidgetSpacing) {
+                ForEach(widgets) { widgetType in
+                    widgetView(for: widgetType)
+                        .id(widgetType)
 
-                if widgetType != widgets.last && settings.settings.showDividersBetweenWidgets {
-                    Divider()
-                        .frame(height: 60)
-                        .background(Color.white.opacity(0.3))
+                    if widgetType != widgets.last && settings.settings.showDividersBetweenWidgets {
+                        Divider()
+                            .frame(height: 60)
+                            .background(Color.white.opacity(0.3))
+                    }
                 }
             }
         }
+        .onHover(perform: onStripHover)
+        .onDisappear { onStripHover(false) }
         .onAppear(perform: refreshMusicVisibility)
         .onReceive(
             musicWidget.objectWillChange

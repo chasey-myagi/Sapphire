@@ -185,25 +185,6 @@ struct WidgetRowView: View {
     let enabledWidgetCount: Int
     @EnvironmentObject var settings: SettingsEditingSession
 
-    private var availableBarWidth: CGFloat {
-        WidgetLayoutPolicy.availableBarWidth()
-    }
-
-    private var enabledWidgetTypes: [WidgetType] {
-        settings.settings.enabledWidgetTypes
-    }
-
-    private var isAtCapacity: Bool {
-        guard !isEnabledBinding.wrappedValue else { return false }
-        return !WidgetLayoutPolicy.canFit(
-            widgetType,
-            in: enabledWidgetTypes,
-            availableWidth: availableBarWidth,
-            showDividers: settings.settings.showDividersBetweenWidgets,
-            bypassSpaceLimit: settings.settings.bypassWidgetSpaceLimit
-        )
-    }
-
     private var baseEnabledBinding: Binding<Bool> {
         switch widgetType {
         case .weather: return $settings.settings.weatherWidgetEnabled
@@ -236,17 +217,12 @@ struct WidgetRowView: View {
                             .font(.caption2)
                             .foregroundStyle(.secondary)
                     }
-                    if isAtCapacity {
-                        Text("Not enough notch space on this display.")
-                            .font(.caption2)
-                            .foregroundStyle(.orange)
-                    }
                 }
 
                 Spacer()
 
                 SettingsSwitch(isOn: isEnabledBinding)
-                    .disabled(widgetType == .sports || widgetType == .storage || (isEnabledBinding.wrappedValue && enabledWidgetCount <= 1) || isAtCapacity)
+                    .disabled(widgetType == .sports || widgetType == .storage || (isEnabledBinding.wrappedValue && enabledWidgetCount <= 1))
 
                 ReorderHandle()
             }

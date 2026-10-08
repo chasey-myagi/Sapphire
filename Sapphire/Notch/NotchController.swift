@@ -83,6 +83,8 @@ struct NotchController: View {
     @State private var animatedContentScale: CGFloat = 1.0
 
     @State private var shadowOpacity: Double = 0
+    @State private var isWidgetStripHovered = false
+    @State private var isToolbarScrollHovered = false
     @State private var measuredClickContentSize: CGSize = .zero
     @State private var measuredAutoContentSize: CGSize = .zero
     @State private var notchIconsLeftWidth: CGFloat = 0
@@ -214,8 +216,27 @@ struct NotchController: View {
 
     private var currentMode: NotchWidgetMode { navigationStack.last ?? .defaultWidgets }
 
+    private var defaultWidgetsWidthLimit: CGFloat {
+        WidgetLayoutPolicy.availableBarWidth(for: notchWindow?.screen)
+    }
+
+    private func boundedDefaultWidgetsWidth(_ width: CGFloat) -> CGFloat {
+        WidgetLayoutPolicy.boundedExpandedWidth(
+            contentWidth: width,
+            minimumWidth: max(config?.initialSize.width ?? 1, notchIconsIntrinsicWidth),
+            screenWidth: notchWindow?.screen?.frame.width ?? NSScreen.main?.frame.width ?? 1440
+        )
+    }
+
+    private var toolbarCutoutWidth: CGFloat {
+        guard let screen = notchWindow?.screen, NotchConfiguration.hasHardwareNotch(on: screen) else { return 0 }
+        return NotchConfiguration.measuredNotchSize(for: screen).width
+    }
+
     private var notchIconsIntrinsicWidth: CGFloat {
-        notchIconsLeftWidth + notchIconsRightWidth + (config?.defaultModeIconsHorizontalPadding ?? 0) * 2
+        let padding = (config?.defaultModeIconsHorizontalPadding ?? 0) * 2
+        let contentWidth = notchIconsLeftWidth + notchIconsRightWidth + NotchToolbarMetrics.gearWidth + NotchToolbarMetrics.gearSpacing
+        return toolbarCutoutWidth + max(contentWidth, NotchToolbarMetrics.minimumWingWidth * 2) + padding
     }
 
     private var activeAppearanceSettings: NotchAppearanceSettings {
@@ -766,6 +787,8 @@ struct NotchController: View {
             notchWidget
                 .environmentObject(fileShelfState)
                 .environmentObject(dragState)
+                .environment(\.onWidgetStripHover, { isWidgetStripHovered = $0 })
+                .environment(\.widgetViewportWidth, max(1, defaultWidgetsWidthLimit - 2 * config.contentHorizontalPadding - 2 * CustomNotchShape.calculateHorizontalPadding()))
                 .environment(\.navigationStack, $navigationStack)
                 .environment(\.activeDropZone, $activeDropZone)
                 .environment(\.isCalendarHovered, $isCalendarHovered)
@@ -801,11 +824,12 @@ struct NotchController: View {
             notchState: notchState,
             animatedWidth: animatedWidth,
             showRightHUDOverlay: showRightHUDOverlay,
+            cutoutWidth: toolbarCutoutWidth,
+            isScrollHovered: $isToolbarScrollHovered,
             navigationStack: $navigationStack,
             isPinned: $isPinned,
             iconsLeftWidth: $notchIconsLeftWidth,
             iconsRightWidth: $notchIconsRightWidth,
-            iconsIntrinsicWidth: notchIconsIntrinsicWidth,
             onPin: { pinned in
                 if pinned {
                     collapseTask?.cancel()
@@ -1559,8 +1583,7 @@ struct NotchController: View {
         guard config != nil else { return }
         if state == .clickExpanded && notchState == .clickExpanded {
             guard newSize.width > 1 && newSize.height > 1 else { return }
-            let minimumWidth = currentMode == .defaultWidgets ? notchIconsIntrinsicWidth : 0
-            let targetWidth = max(newSize.width, minimumWidth)
+            let targetWidth = currentMode == .defaultWidgets ? boundedDefaultWidgetsWidth(newSize.width) : newSize.width
             guard abs(targetWidth - animatedWidth) > 1 || abs(newSize.height - animatedHeight) > 1 else { return }
             withAnimation(self.expansionAnimation) {
                 animatedWidth = targetWidth
@@ -1575,7 +1598,7 @@ struct NotchController: View {
 
     private func applyNotchIconsWidthFloor() {
         guard notchState == .clickExpanded, currentMode == .defaultWidgets else { return }
-        let targetWidth = max(animatedWidth, notchIconsIntrinsicWidth)
+        let targetWidth = boundedDefaultWidgetsWidth(measuredClickContentSize.width > 1 ? measuredClickContentSize.width : animatedWidth)
         guard abs(targetWidth - animatedWidth) > 1 else { return }
         withAnimation(self.expansionAnimation) {
             animatedWidth = targetWidth
@@ -1587,6 +1610,10 @@ struct NotchController: View {
             navigationStack.append(.musicLyrics)
             DispatchQueue.main.async { self.showLyrics = false }
         }
+    }
+
+    static func allowsMenuSwipe(mode: NotchWidgetMode, navigationDepth: Int, enabled: Bool, isScrollHovered: Bool) -> Bool {
+        enabled && navigationDepth <= 1 && !isScrollHovered && (mode == .defaultWidgets || mode == .fileShelf)
     }
 
     private func handleTrackpadSwipe(vector: CGVector) {
@@ -1634,9 +1661,12 @@ struct NotchController: View {
                 return
             }
 
-            let allowsMenuSwitch = settings.settings.swipeToSwitchWidgets
-                && navigationStack.count <= 1
-                && (currentMode == .defaultWidgets || currentMode == .fileShelf)
+            let allowsMenuSwitch = Self.allowsMenuSwipe(
+                mode: currentMode,
+                navigationDepth: navigationStack.count,
+                enabled: settings.settings.swipeToSwitchWidgets,
+                isScrollHovered: isWidgetStripHovered || isToolbarScrollHovered
+            )
 
             if allowsMenuSwitch, abs(vector.dx) > abs(vector.dy) && abs(vector.dx) > 10 {
                 haptic()
