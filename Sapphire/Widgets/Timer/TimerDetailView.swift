@@ -57,7 +57,7 @@ struct TimerDetailView: View {
                         useCustomDuration = false
                         presetMinutes = minutes
                     } label: {
-                        Text(minutes >= 60 ? "1 hr" : "\(minutes) min")
+                        Text(minutes >= 60 ? String(localized: "1 hr") : String(localized: "\(minutes) min"))
                             .font(.system(size: 12, weight: .semibold))
                             .padding(.horizontal, 10)
                             .padding(.vertical, 6)
@@ -76,9 +76,9 @@ struct TimerDetailView: View {
 
             DisclosureGroup(isExpanded: $useCustomDuration) {
                 HStack(spacing: 12) {
-                    durationStepper(value: $customHours, range: 0...23, label: "hr")
-                    durationStepper(value: $customMinutes, range: 0...59, label: "min")
-                    durationStepper(value: $customSeconds, range: 0...59, label: "sec")
+                    durationStepper(value: $customHours, range: 0...23, label: String(localized: "hr"))
+                    durationStepper(value: $customMinutes, range: 0...59, label: String(localized: "min"))
+                    durationStepper(value: $customSeconds, range: 0...59, label: String(localized: "sec"))
                 }
                 .padding(.top, 8)
             } label: {
@@ -171,7 +171,7 @@ struct TimerDetailView: View {
                                 .font(.caption)
                                 .foregroundColor(.orange)
                         } else {
-                            Text(timer.isRunning ? "Running" : "Paused")
+                            Text(timer.isRunning ? String(localized: "Running") : String(localized: "Paused"))
                                 .font(.caption)
                                 .foregroundColor(timer.isRunning ? .orange : .secondary)
                         }
@@ -239,7 +239,7 @@ struct TimerDetailView: View {
                         Image(systemName: "timer")
                         SystemTimerClockText(timer: timer)
                         Spacer()
-                        Text(timer.state == .system ? "Running" : "Paused")
+                        Text(timer.state == .system ? String(localized: "Running") : String(localized: "Paused"))
                             .font(.caption)
                             .foregroundColor(timer.state == .system ? .orange : .secondary)
                     }
@@ -264,7 +264,7 @@ struct TimerDetailView: View {
                             Image(systemName: "stopwatch")
                             SystemStopwatchClockText(stopwatch: stopwatch)
                             Spacer()
-                            Text(stopwatch.state == .stopwatch ? "Running" : "Paused")
+                            Text(stopwatch.state == .stopwatch ? String(localized: "Running") : String(localized: "Paused"))
                                 .font(.caption)
                                 .foregroundColor(stopwatch.state == .stopwatch ? .green : .secondary)
                         }

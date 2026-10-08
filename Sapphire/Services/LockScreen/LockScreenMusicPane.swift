@@ -204,7 +204,7 @@ struct LockScreenFullScreenMusicPane: View {
             Spacer()
 
             VStack(spacing: 2) {
-                Text(musicManager.title ?? "Not Playing")
+                Text(musicManager.title ?? String(localized: "Not Playing"))
                     .font(.system(size: 13, weight: .bold, design: .rounded))
                     .foregroundStyle(.white)
                     .lineLimit(1)
@@ -311,13 +311,13 @@ struct LockScreenFullScreenMusicPane: View {
                         .shadow(color: musicManager.accentColor.opacity(0.5), radius: 32, y: 16)
 
                     VStack(spacing: 6) {
-                        Text(musicManager.title ?? "Not Playing")
+                        Text(musicManager.title ?? String(localized: "Not Playing"))
                             .font(.system(size: 34, weight: .black, design: .rounded))
                             .foregroundStyle(.white)
                             .lineLimit(2)
                             .multilineTextAlignment(.center)
 
-                        Text(musicManager.artist ?? "Unknown Artist")
+                        Text(musicManager.artist ?? String(localized: "Unknown Artist"))
                             .font(.system(size: 18, weight: .semibold, design: .rounded))
                             .foregroundStyle(.white.opacity(0.55))
                             .lineLimit(1)
@@ -494,10 +494,10 @@ struct LockScreenFullScreenMusicPane: View {
                                                 .foregroundStyle(.white.opacity(0.2))
                                                 .frame(width: 18)
                                             VStack(alignment: .leading, spacing: 1) {
-                                                Text(track.metadata?.title ?? "Unknown")
+                                                Text(track.metadata?.title ?? String(localized: "Unknown"))
                                                     .font(.system(size: 13, weight: .semibold, design: .rounded))
                                                     .foregroundStyle(.white).lineLimit(1)
-                                                Text(track.metadata?.artistName ?? "Unknown Artist")
+                                                Text(track.metadata?.artistName ?? String(localized: "Unknown Artist"))
                                                     .font(.system(size: 11, weight: .medium, design: .rounded))
                                                     .foregroundStyle(.white.opacity(0.35)).lineLimit(1)
                                             }
@@ -673,11 +673,11 @@ struct LockScreenFullScreenMusicPane: View {
                     .shadow(color: musicManager.accentColor.opacity(0.35), radius: 24, y: 12)
 
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(musicManager.title ?? "Not Playing")
+                    Text(musicManager.title ?? String(localized: "Not Playing"))
                         .font(.system(size: 20, weight: .bold, design: .rounded))
                         .foregroundStyle(.white)
                         .lineLimit(2)
-                    Text(musicManager.artist ?? "Unknown Artist")
+                    Text(musicManager.artist ?? String(localized: "Unknown Artist"))
                         .font(.system(size: 14, weight: .medium, design: .rounded))
                         .foregroundStyle(.white.opacity(0.45))
                         .lineLimit(1)
@@ -1020,8 +1020,8 @@ struct LockScreenFullScreenMusicPane: View {
                         ForEach(Array(nativeQueue.enumerated()), id: \.offset) { index, track in
                             trackRow(
                                 index: index + 1,
-                                title: track.metadata?.title ?? "Unknown Track",
-                                subtitle: track.metadata?.artistName ?? "Unknown Artist",
+                                title: track.metadata?.title ?? String(localized: "Unknown Track"),
+                                subtitle: track.metadata?.artistName ?? String(localized: "Unknown Artist"),
                                 imageURL: track.metadata?.imageURL
                             )
                         }

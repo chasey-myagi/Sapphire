@@ -50,7 +50,7 @@ struct FileDragLandingView: View {
                 standardCard(
                     zone: .shelf,
                     icon: "tray.and.arrow.down.fill",
-                    text: "Add to Shelf"
+                    text: String(localized: "Add to Shelf")
                 )
             }
 
@@ -267,6 +267,15 @@ private struct DeviceDropCell: View {
 
     private var zone: DropZone { .device(peer.id) }
     private var isEnabled: Bool { peer.linkState.isUsable }
+    private var foregroundColor: Color {
+        isTargeted ? .white : (isEnabled ? .secondary : .secondary.opacity(0.45))
+    }
+    private var backgroundColor: Color {
+        isTargeted ? .accentColor.opacity(0.85) : .white.opacity(isEnabled ? 0.06 : 0.025)
+    }
+    private var borderColor: Color {
+        isTargeted ? .white.opacity(0.6) : .clear
+    }
 
     var body: some View {
         VStack(spacing: 2) {
@@ -283,15 +292,15 @@ private struct DeviceDropCell: View {
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
         }
-        .foregroundStyle(isTargeted ? Color.white : (isEnabled ? Color.secondary : Color.secondary.opacity(0.45)))
+        .foregroundStyle(foregroundColor)
         .frame(maxWidth: .infinity, minHeight: 42)
         .background(
             RoundedRectangle(cornerRadius: 10, style: .continuous)
-                .fill(isTargeted ? Color.accentColor.opacity(0.85) : Color.white.opacity(isEnabled ? 0.06 : 0.025))
+                .fill(backgroundColor)
         )
         .overlay(
             RoundedRectangle(cornerRadius: 10, style: .continuous)
-                .strokeBorder(isTargeted ? Color.white.opacity(0.6) : Color.clear, lineWidth: 1)
+                .strokeBorder(borderColor, lineWidth: 1)
         )
         .background {
             GeometryReader { geometry in
@@ -303,7 +312,7 @@ private struct DeviceDropCell: View {
         }
         .scaleEffect(isTargeted ? 1.04 : 1.0)
         .animation(.spring(response: 0.2, dampingFraction: 0.65), value: isTargeted)
-        .help(isEnabled ? "Send to \(peer.displayName)" : "\(peer.displayName) is offline")
+        .help(isEnabled ? String(localized: "Send to \(peer.displayName)") : String(localized: "\(peer.displayName) is offline"))
     }
 }
 
@@ -372,9 +381,9 @@ enum FileProviderError: Error, LocalizedError {
     case loadingFailed, noValidURLFound, duplicationFailed(Error)
     var errorDescription: String? {
         switch self {
-        case .loadingFailed: return "Failed to load data from the item provider."
-        case .noValidURLFound: return "Could not retrieve a valid file URL from the dropped item."
-        case .duplicationFailed(let e): return "Failed to copy the file: \(e.localizedDescription)"
+        case .loadingFailed: return String(localized: "Failed to load data from the item provider.")
+        case .noValidURLFound: return String(localized: "Could not retrieve a valid file URL from the dropped item.")
+        case .duplicationFailed(let e): return String(localized: "Failed to copy the file: \(e.localizedDescription)")
         }
     }
 }

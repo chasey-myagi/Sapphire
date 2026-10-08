@@ -215,7 +215,7 @@ final class ArchiveExtractor: ObservableObject {
 
     private func extract(_ url: URL) async {
         let archiveName = url.lastPathComponent
-        currentActivity = "Preparing \(archiveName)…"
+        currentActivity = String(localized: "Preparing \(archiveName)…")
 
         await requestNotificationAuthorizationIfNeeded()
 
@@ -224,7 +224,7 @@ final class ArchiveExtractor: ObservableObject {
             return
         }
 
-        currentActivity = "Reading \(archiveName)…"
+        currentActivity = String(localized: "Reading \(archiveName)…")
 
         let parent = url.deletingLastPathComponent()
         let baseName = url.deletingPathExtension().lastPathComponent
@@ -250,7 +250,7 @@ final class ArchiveExtractor: ObservableObject {
             return
         }
 
-        currentActivity = "Extracting \(archiveName)…"
+        currentActivity = String(localized: "Extracting \(archiveName)…")
 
         let archiveAttrs = try? FileManager.default.attributesOfItem(atPath: url.path)
         let archiveBytes = (archiveAttrs?[.size] as? NSNumber)?.int64Value ?? 0
@@ -423,16 +423,16 @@ final class ArchiveExtractor: ObservableObject {
     private func promptForPassword(archiveName: String) async -> String? {
         await withCheckedContinuation { continuation in
             let alert = NSAlert()
-            alert.messageText = "\"\(archiveName)\" is password protected"
-            alert.informativeText = "Enter the password to extract this archive. Sapphire does not store it."
+            alert.messageText = String(localized: "\"\(archiveName)\" is password protected")
+            alert.informativeText = String(localized: "Enter the password to extract this archive. Sapphire does not store it.")
             alert.alertStyle = .informational
 
             let field = NSSecureTextField(frame: NSRect(x: 0, y: 0, width: 260, height: 24))
-            field.placeholderString = "Password"
+            field.placeholderString = String(localized: "Password")
             alert.accessoryView = field
 
-            alert.addButton(withTitle: "Extract")
-            alert.addButton(withTitle: "Cancel")
+            alert.addButton(withTitle: String(localized: "Extract"))
+            alert.addButton(withTitle: String(localized: "Cancel"))
 
             let response = alert.runModal()
             if response == .alertFirstButtonReturn {
