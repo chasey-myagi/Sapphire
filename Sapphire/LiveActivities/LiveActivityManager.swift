@@ -265,7 +265,18 @@ class LiveActivityManager: ObservableObject {
     private var lastPersistentWeatherLiveActivityEnabled: Bool?
     private var tickerRefreshTimer: Timer?
     private var tickerFetchTick = 0
-    private var sportsWatchTimer: Timer?
+    private lazy var sportsWatcher = SportsActivityWatcher(
+        bootstrap: { SportsAPIService.shared.bootstrapIfNeeded() },
+        refresh: { [weak self] in
+            await self?.refreshSportsData(forceRefresh: true)
+        },
+        onTick: { [weak self] in
+            guard let self, self.currentActivity != .sports else { return }
+            await self.refreshSportsData(forceRefresh: true)
+            self.lastEvalTime = 0
+            self.evaluateAndDisplayActivity()
+        }
+    )
     private var lastKnownFocusStatus: FocusStatus?
     private var hasShownPluggedInAlert = false, hasShownLowBatteryAlert = false, hasShownCurrentEyeBreak = false
     private var lastShownDesktopNumber: Int?, lastShownFocusModeID: String?
@@ -357,8 +368,7 @@ class LiveActivityManager: ObservableObject {
         dismissGraceTimer = nil
         tickerRefreshTimer?.invalidate()
         tickerRefreshTimer = nil
-        sportsWatchTimer?.invalidate()
-        sportsWatchTimer = nil
+        sportsWatcher.stop()
 
         lyricContentUpdateTask?.cancel()
         lyricContentUpdateTask = nil
@@ -2143,35 +2153,10 @@ class LiveActivityManager: ObservableObject {
     }
 
     private func updateSportsWatchTimer() {
-        #if SAPPHIRE_FULL_BUILD
-        let needsWatch = settingsModel.settings.sportsLiveActivityEnabled
-        if needsWatch {
-            let onScreen = currentActivity == .sports
-            let interval: TimeInterval = onScreen ? 60.0 : 30.0
-            if let sportsWatchTimer, sportsWatchTimer.isValid,
-               abs(sportsWatchTimer.timeInterval - interval) < 0.01 {
-                return
-            }
-            sportsWatchTimer?.invalidate()
-            SportsAPIService.shared.bootstrapIfNeeded()
-            sportsWatchTimer = Timer.scheduledCoalescing(withTimeInterval: interval, repeats: true) { [weak self] _ in
-                Task { @MainActor [weak self] in
-                    guard let self else { return }
-                    guard self.currentActivity != .sports else { return }
-                    await self.refreshSportsData(forceRefresh: true)
-                    self.lastEvalTime = 0
-                    self.evaluateAndDisplayActivity()
-                }
-            }
-            Task { await refreshSportsData(forceRefresh: true) }
-        } else {
-            sportsWatchTimer?.invalidate()
-            sportsWatchTimer = nil
-        }
-        #else
-        sportsWatchTimer?.invalidate()
-        sportsWatchTimer = nil
-        #endif
+        sportsWatcher.update(
+            enabled: settingsModel.settings.sportsLiveActivityEnabled,
+            isOnScreen: currentActivity == .sports
+        )
     }
 
     private func refreshSportsData(forceRefresh: Bool = false) async {

@@ -7,6 +7,51 @@
 import AppKit
 
 enum WidgetLayoutPolicy {
+    static func enabledWidgets(
+        settings: Settings,
+        isMusicPlaying: Bool,
+        isSpotifyPausedWithNoOtherPlayback: Bool
+    ) -> [WidgetType] {
+        return settings.widgetOrder.filter { widgetType in
+            #if !SAPPHIRE_FULL_BUILD
+            // Public placeholders have no widget content; retain saved preferences.
+            if widgetType == .sports || widgetType == .storage { return false }
+            #endif
+            switch widgetType {
+            case .music:
+                return MusicWidgetVisibilityPolicy.shouldShow(
+                    isEnabled: settings.musicWidgetEnabled,
+                    hideWhenNotPlaying: settings.hideMusicWidgetWhenNotPlaying,
+                    isPlaying: isMusicPlaying,
+                    hidePausedSpotifyWhenIdle: settings.hideMusicWidgetWhenSpotifyPausedAndIdle,
+                    isSpotifyPausedWithNoOtherPlayback: isSpotifyPausedWithNoOtherPlayback
+                )
+            case .weather:
+                return settings.weatherWidgetEnabled
+            case .sports:
+                return settings.sportsWidgetEnabled
+            case .calendar:
+                return settings.calendarWidgetEnabled
+            case .battery:
+                return settings.batteryWidgetEnabled
+            case .timer:
+                return settings.timerWidgetEnabled
+            case .shortcuts:
+                return settings.shortcutsWidgetEnabled
+            case .notes:
+                return settings.notesWidgetEnabled
+            case .clipboard:
+                return settings.clipboardWidgetEnabled
+            case .mirror:
+                return settings.mirrorWidgetEnabled
+            case .storage:
+                return settings.storageWidgetEnabled
+            case .focusSession:
+                return settings.focusSessionWidgetEnabled
+            }
+        }
+    }
+
     static let interWidgetSpacing: CGFloat = 20
     static let dividerWidth: CGFloat = 1
     static let headerIconReserve: CGFloat = 140

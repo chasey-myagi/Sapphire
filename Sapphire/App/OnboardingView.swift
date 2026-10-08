@@ -292,23 +292,13 @@ private struct PrivacyStepView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 18) {
                     PrivacySection(
-                        title: "Data We Collect (Analytics)",
-                        content: "To improve Sapphire, we collect completely anonymous, aggregated usage data. This helps us understand which features are popular, identify bugs, and make the app better for everyone."
+                        title: "Analytics and Crash Reports",
+                        content: "This build does not include usage analytics or automatic crash-report uploads."
                     )
 
                     PrivacySection(
-                        title: "What This Includes:",
-                        content: "• Feature usage frequency (e.g., how often a widget is used)\n• App version and macOS version\n• Anonymous crash reports"
-                    )
-
-                    PrivacySection(
-                        title: "Data We NEVER Collect",
-                        content: "We are committed to your privacy. We DO NOT automatically collect, store, or transmit any personal or sensitive information. This includes, but is not limited to:\n• Your name, email, or other personal identifiers\n• Screen contents or keyboard input\n• Application data from other apps"
-                    )
-
-                    PrivacySection(
-                        title: "Data Storage & Third Parties",
-                        content: "Anonymous data is processed by google for analytics. This data is always aggregated and cannot be used to identify you."
+                        title: "macOS Permissions",
+                        content: "You can review Sapphire's macOS permissions in System Settings."
                     )
                 }
                 .padding(20)

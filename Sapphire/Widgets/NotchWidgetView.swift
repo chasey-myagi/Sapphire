@@ -280,44 +280,11 @@ private struct NotchDefaultWidgetsView: View {
     }
 
     private var enabledAndOrderedWidgets: [WidgetType] {
-        let enabled = settings.settings.widgetOrder.filter { widgetType in
-            #if !SAPPHIRE_FULL_BUILD
-            // Public placeholders have no widget content; retain saved preferences.
-            if widgetType == .sports || widgetType == .storage { return false }
-            #endif
-            switch widgetType {
-            case .music:
-                return MusicWidgetVisibilityPolicy.shouldShow(
-                    isEnabled: settings.settings.musicWidgetEnabled,
-                    hideWhenNotPlaying: settings.settings.hideMusicWidgetWhenNotPlaying,
-                    isPlaying: musicVisibility.isPlaying,
-                    hidePausedSpotifyWhenIdle: settings.settings.hideMusicWidgetWhenSpotifyPausedAndIdle,
-                    isSpotifyPausedWithNoOtherPlayback: musicVisibility.isSpotifyPausedWithNoOtherPlayback
-                )
-            case .weather:
-                return settings.settings.weatherWidgetEnabled
-            case .sports:
-                return settings.settings.sportsWidgetEnabled
-            case .calendar:
-                return settings.settings.calendarWidgetEnabled
-            case .battery:
-                return settings.settings.batteryWidgetEnabled
-            case .timer:
-                return settings.settings.timerWidgetEnabled
-            case .shortcuts:
-                return settings.settings.shortcutsWidgetEnabled
-            case .notes:
-                return settings.settings.notesWidgetEnabled
-            case .clipboard:
-                return settings.settings.clipboardWidgetEnabled
-            case .mirror:
-                return settings.settings.mirrorWidgetEnabled
-            case .storage:
-                return settings.settings.storageWidgetEnabled
-            case .focusSession:
-                return settings.settings.focusSessionWidgetEnabled
-            }
-        }
+        let enabled = WidgetLayoutPolicy.enabledWidgets(
+            settings: settings.settings,
+            isMusicPlaying: musicVisibility.isPlaying,
+            isSpotifyPausedWithNoOtherPlayback: musicVisibility.isSpotifyPausedWithNoOtherPlayback
+        )
 
         return WidgetLayoutPolicy.fittingWidgets(
             from: enabled,

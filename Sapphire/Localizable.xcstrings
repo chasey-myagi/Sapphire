@@ -4123,6 +4123,23 @@
         }
       }
     },
+    "Analytics and Crash Reports": {
+      "comment": "Onboarding privacy information for the build without analytics or crash uploads.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Analytics and Crash Reports"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "使用分析与崩溃报告"
+          }
+        }
+      }
+    },
     "Android Studio update service unavailable": {
       "comment": "Settings dynamic presentation at literal source; reconcile with final compiler extraction.",
       "localizations": {
@@ -4187,23 +4204,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "动画预设"
-          }
-        }
-      }
-    },
-    "Anonymous data is processed by google for analytics. This data is always aggregated and cannot be used to identify you.": {
-      "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Anonymous data is processed by google for analytics. This data is always aggregated and cannot be used to identify you."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "匿名数据由 Google 处理并用于分析。这些数据始终以汇总形式呈现，无法用于识别你的身份。"
           }
         }
       }
@@ -11735,57 +11735,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "数据时间范围"
-          }
-        }
-      }
-    },
-    "Data Storage & Third Parties": {
-      "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Data Storage & Third Parties"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "数据存储与第三方"
-          }
-        }
-      }
-    },
-    "Data We Collect (Analytics)": {
-      "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Data We Collect (Analytics)"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "我们收集的数据（分析）"
-          }
-        }
-      }
-    },
-    "Data We NEVER Collect": {
-      "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Data We NEVER Collect"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "我们绝不收集的数据"
           }
         }
       }
@@ -42487,6 +42436,23 @@
         }
       }
     },
+    "This build does not include usage analytics or automatic crash-report uploads.": {
+      "comment": "Onboarding privacy information for the build without analytics or crash uploads.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This build does not include usage analytics or automatic crash-report uploads."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "此版本不包含使用情况分析，也不会自动上传崩溃报告。"
+          }
+        }
+      }
+    },
     "This feature works best on devices with XDR displays (14in and 16in Macbook Pro's and Pro Display XDR). M4 Macbook Pro's already display this behaviour in bright environments like in direct sunlight, this feature will allow you to do it in any type of environment.": {
       "comment": "Settings interface",
       "localizations": {
@@ -43095,23 +43061,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "请在 Sapphire 设置中添加 API 凭据，以启用 Spotify 集成。"
-          }
-        }
-      }
-    },
-    "To improve Sapphire, we collect completely anonymous, aggregated usage data. This helps us understand which features are popular, identify bugs, and make the app better for everyone.": {
-      "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "To improve Sapphire, we collect completely anonymous, aggregated usage data. This helps us understand which features are popular, identify bugs, and make the app better for everyone."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "为了改进 Sapphire，我们会收集完全匿名的汇总使用数据。这有助于了解常用功能、发现问题，并为所有用户改进应用。"
           }
         }
       }
@@ -45922,23 +45871,6 @@
         }
       }
     },
-    "We are committed to your privacy. We DO NOT automatically collect, store, or transmit any personal or sensitive information. This includes, but is not limited to:\n• Your name, email, or other personal identifiers\n• Screen contents or keyboard input\n• Application data from other apps": {
-      "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "We are committed to your privacy. We DO NOT automatically collect, store, or transmit any personal or sensitive information. This includes, but is not limited to:\n• Your name, email, or other personal identifiers\n• Screen contents or keyboard input\n• Application data from other apps"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "我们承诺保护你的隐私，不会自动收集、存储或传输任何个人或敏感信息，包括但不限于：\n• 姓名、电子邮箱或其他个人标识\n• 屏幕内容或键盘输入\n• 其他应用的数据"
-          }
-        }
-      }
-    },
     "We believe in transparency. Please review our data handling practices below.": {
       "comment": "User-facing Sapphire interface text. Keep product names and interpolated user content unchanged.",
       "localizations": {
@@ -46173,23 +46105,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "欢迎，%@"
-          }
-        }
-      }
-    },
-    "What This Includes:": {
-      "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "What This Includes:"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "包括以下内容："
           }
         }
       }
@@ -46938,6 +46853,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "已是最新版本！"
+          }
+        }
+      }
+    },
+    "You can review Sapphire's macOS permissions in System Settings.": {
+      "comment": "Onboarding privacy information for the build without analytics or crash uploads.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You can review Sapphire's macOS permissions in System Settings."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "你可以在系统设置中查看 Sapphire 的 macOS 权限。"
           }
         }
       }
@@ -47895,6 +47827,23 @@
         }
       }
     },
+    "macOS Permissions": {
+      "comment": "Onboarding privacy information for the build without analytics or crash uploads.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "macOS Permissions"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "macOS 权限"
+          }
+        }
+      }
+    },
     "macOS lost the helper (status 3). Reset the helper; Sapphire will relaunch if it stays stuck.": {
       "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
       "localizations": {
@@ -48473,23 +48422,6 @@
         }
       },
       "shouldTranslate": false
-    },
-    "• Feature usage frequency (e.g., how often a widget is used)\n• App version and macOS version\n• Anonymous crash reports": {
-      "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "• Feature usage frequency (e.g., how often a widget is used)\n• App version and macOS version\n• Anonymous crash reports"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "• 功能使用频率（例如使用小组件的频率）\n• 应用版本和 macOS 版本\n• 匿名崩溃报告"
-          }
-        }
-      }
     },
     "↑ Improving": {
       "comment": "Settings dynamic presentation at literal source; reconcile with final compiler extraction.",
