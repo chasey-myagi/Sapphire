@@ -131,8 +131,10 @@ final class NotchLayoutTests: XCTestCase {
 
     @MainActor
     func testRealToolbarKeepsViewportsOutsidePhysicalCutout() throws {
+        let physicalCutout: CGFloat = 185
+        let reservedGap: CGFloat = 189
         let host = NSHostingView(rootView: NotchToolbarLayout(
-            width: 720, height: 40, horizontalPadding: 40, cutoutWidth: 185,
+            width: 720, height: 40, horizontalPadding: 40, cutoutWidth: reservedGap,
             isScrollHovered: .constant(false),
             gear: Button {} label: { Text("Gear").frame(width: 32, height: 24) }.buttonStyle(.plain),
             left: HStack(spacing: 0) { ForEach(0..<10) { index in Text("L\(index)").frame(width: 40, height: 24) } }.fixedSize(),
@@ -155,17 +157,17 @@ final class NotchLayoutTests: XCTestCase {
         guard scrolls.count == 2 else { return }
         let left = scrolls[0].convert(scrolls[0].bounds, to: host)
         let right = scrolls[1].convert(scrolls[1].bounds, to: host)
-        XCTAssertLessThanOrEqual(left.maxX, 720 / 2 - 185 / 2)
-        XCTAssertGreaterThanOrEqual(right.minX, 720 / 2 + 185 / 2)
+        XCTAssertLessThanOrEqual(left.maxX, 720 / 2 - physicalCutout / 2)
+        XCTAssertGreaterThanOrEqual(right.minX, 720 / 2 + physicalCutout / 2)
     }
 
     @MainActor
     func testRealToolbarGearAndBothScrollEndpointsStayVisibleOnNarrowAndNotchlessPanels() throws {
-        for (width, gap) in [(CGFloat(720), CGFloat(185)), (480, 185), (272, 0)] {
-            var hovered = false
+        // Hardware measurement reserves four points beyond the physical cutout.
+        for (width, physicalCutout, reservedGap) in [(CGFloat(720), CGFloat(185), CGFloat(189)), (480, 185, 189), (272, 0, 0)] {
             let host = NSHostingView(rootView: NotchToolbarLayout(
-                width: width, height: 40, horizontalPadding: 40, cutoutWidth: gap,
-                isScrollHovered: Binding(get: { hovered }, set: { hovered = $0 }),
+                width: width, height: 40, horizontalPadding: 40, cutoutWidth: reservedGap,
+                isScrollHovered: .constant(false),
                 gear: SubtleIconButton(systemName: "gearshape", action: {}).background(ToolbarTestMarker(name: "gear")),
                 left: HStack(spacing: 0) {
                     ForEach(0..<10) { index in
@@ -182,7 +184,6 @@ final class NotchLayoutTests: XCTestCase {
             ))
             let window = NSWindow(contentRect: CGRect(x: 0, y: 0, width: width, height: 40), styleMask: .borderless, backing: .buffered, defer: false)
             window.isReleasedWhenClosed = false
-            window.acceptsMouseMovedEvents = true
             window.contentView = host
             defer { window.close() }
             func settle() {
@@ -198,7 +199,7 @@ final class NotchLayoutTests: XCTestCase {
             let gearBounds = gear.convert(gear.bounds, to: host)
             XCTAssertGreaterThan(gearBounds.width, 20)
             XCTAssertGreaterThanOrEqual(gearBounds.minX, 0)
-            XCTAssertLessThanOrEqual(gearBounds.maxX, width / 2 - gap / 2)
+            XCTAssertLessThanOrEqual(gearBounds.maxX, width / 2 - physicalCutout / 2)
             let scrolls = views.compactMap { $0 as? NSScrollView }.sorted { $0.convert($0.bounds, to: host).minX < $1.convert($1.bounds, to: host).minX }
             XCTAssertEqual(scrolls.count, 2)
             for (index, scroll) in scrolls.enumerated() {
@@ -208,8 +209,8 @@ final class NotchLayoutTests: XCTestCase {
                 XCTAssertGreaterThan(viewport.height, 0)
                 XCTAssertGreaterThanOrEqual(viewport.minX, 0)
                 XCTAssertLessThanOrEqual(viewport.maxX, width)
-                if index == 0 { XCTAssertLessThanOrEqual(viewport.maxX, width / 2 - gap / 2) }
-                else { XCTAssertGreaterThanOrEqual(viewport.minX, width / 2 + gap / 2) }
+                if index == 0 { XCTAssertLessThanOrEqual(viewport.maxX, width / 2 - physicalCutout / 2) }
+                else { XCTAssertGreaterThanOrEqual(viewport.minX, width / 2 + physicalCutout / 2) }
                 let prefix = index == 0 ? "L" : "R"
                 let first = try XCTUnwrap(views.first { $0.identifier?.rawValue == prefix + "0" })
                 let last = try XCTUnwrap(views.first { $0.identifier?.rawValue == prefix + "9" })
@@ -222,11 +223,7 @@ final class NotchLayoutTests: XCTestCase {
                     XCTAssertLessThanOrEqual(bounds.maxX, viewport.maxX + 1)
                 }
             }
-            let leftViewport = scrolls[0].convert(scrolls[0].bounds, to: host)
-            let event = try XCTUnwrap(NSEvent.mouseEvent(with: .mouseMoved, location: host.convert(CGPoint(x: leftViewport.midX, y: leftViewport.midY), to: nil), modifierFlags: [], timestamp: 0, windowNumber: window.windowNumber, context: nil, eventNumber: 0, clickCount: 0, pressure: 0))
-            window.sendEvent(event)
-            settle()
-            print("LOCAL_HOVER_PROBE", width, hovered, "trackingAreas", views.reduce(0) { $0 + $1.trackingAreas.count })
+
         }
     }
 
