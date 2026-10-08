@@ -2,7 +2,7 @@
   "sourceLanguage": "en",
   "strings": {
     "NSAppleEventsUsageDescription": {
-      "comment": "System permission purpose. Preserve the permission meaning and Sapphire/Blip product names.",
+      "comment": "System permission purpose. Preserve the permission meaning and product names.",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -19,7 +19,7 @@
       }
     },
     "NSAppleMusicUsageDescription": {
-      "comment": "System permission purpose. Preserve the permission meaning and Sapphire/Blip product names.",
+      "comment": "System permission purpose. Preserve the permission meaning and product names.",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -36,7 +36,7 @@
       }
     },
     "NSAudioCaptureUsageDescription": {
-      "comment": "System permission purpose. Preserve the permission meaning and Sapphire/Blip product names.",
+      "comment": "System permission purpose. Preserve the permission meaning and product names.",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -53,24 +53,24 @@
       }
     },
     "NSBluetoothAlwaysUsageDescription": {
-      "comment": "System permission purpose. Preserve the permission meaning and Sapphire/Blip product names.",
+      "comment": "System permission purpose. Preserve the permission meaning and product names.",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Sapphire needs bluetooth to show new connections and battery low notifications"
+            "value": "Sapphire uses Bluetooth for device connection notifications, battery status, and proximity-based unlock."
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "Sapphire 需要使用蓝牙来显示新连接和设备低电量通知。"
+            "value": "Sapphire 使用蓝牙显示设备连接通知和电池状态，并提供近距离解锁。"
           }
         }
       }
     },
     "NSCalendarsFullAccessUsageDescription": {
-      "comment": "System permission purpose. Preserve the permission meaning and Sapphire/Blip product names.",
+      "comment": "System permission purpose. Preserve the permission meaning and product names.",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -87,24 +87,24 @@
       }
     },
     "NSCalendarsUsageDescription": {
-      "comment": "System permission purpose. Preserve the permission meaning and Sapphire/Blip product names.",
+      "comment": "System permission purpose. Preserve the permission meaning and product names.",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Blip can learn from your calendar patterns to better understand your schedule and preferences."
+            "value": "Sapphire uses calendar access to show upcoming events."
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "Blip 可以根据你的日历安排，更好地理解你的日程和偏好。"
+            "value": "Sapphire 使用日历权限显示即将到来的日程。"
           }
         }
       }
     },
     "NSCameraUsageDescription": {
-      "comment": "System permission purpose. Preserve the permission meaning and Sapphire/Blip product names.",
+      "comment": "System permission purpose. Preserve the permission meaning and product names.",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -121,7 +121,7 @@
       }
     },
     "NSContactsUsageDescription": {
-      "comment": "System permission purpose. Preserve the permission meaning and Sapphire/Blip product names.",
+      "comment": "System permission purpose. Preserve the permission meaning and product names.",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -138,7 +138,7 @@
       }
     },
     "NSFocusStatusUsageDescription": {
-      "comment": "System permission purpose. Preserve the permission meaning and Sapphire/Blip product names.",
+      "comment": "System permission purpose. Preserve the permission meaning and product names.",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -155,24 +155,24 @@
       }
     },
     "NSLocalNetworkUsageDescription": {
-      "comment": "System permission purpose. Preserve the permission meaning and Sapphire/Blip product names.",
+      "comment": "System permission purpose. Preserve the permission meaning and product names.",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Sapphire needs this to provide nearby share functionality"
+            "value": "Sapphire uses the local network for Nearby Share transfers and music device connections."
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "Sapphire 需要访问本地网络来提供附近互传功能。"
+            "value": "Sapphire 使用本地网络进行附近共享文件传输和音乐设备连接。"
           }
         }
       }
     },
     "NSLocationAlwaysAndWhenInUseUsageDescription": {
-      "comment": "System permission purpose. Preserve the permission meaning and Sapphire/Blip product names.",
+      "comment": "System permission purpose. Preserve the permission meaning and product names.",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -189,7 +189,7 @@
       }
     },
     "NSLocationUsageDescription": {
-      "comment": "System permission purpose. Preserve the permission meaning and Sapphire/Blip product names.",
+      "comment": "System permission purpose. Preserve the permission meaning and product names.",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -206,41 +206,41 @@
       }
     },
     "NSLocationWhenInUseUsageDescription": {
-      "comment": "System permission purpose. Preserve the permission meaning and Sapphire/Blip product names.",
+      "comment": "System permission purpose. Preserve the permission meaning and product names.",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Blip uses your location for local weather, nearby places, and location-aware tasks."
+            "value": "Sapphire uses your location to show local weather."
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "Blip 会使用你的位置来提供本地天气、附近地点和基于位置的任务。"
+            "value": "Sapphire 使用你的位置显示本地天气。"
           }
         }
       }
     },
     "NSMicrophoneUsageDescription": {
-      "comment": "System permission purpose. Preserve the permission meaning and Sapphire/Blip product names.",
+      "comment": "System permission purpose. Preserve the permission meaning and product names.",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Sapphire uses the microphone for Gemini Live voice conversations."
+            "value": "Sapphire uses the microphone for audio capture."
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "Sapphire 使用麦克风进行 Gemini Live 语音对话。"
+            "value": "Sapphire 使用麦克风采集音频。"
           }
         }
       }
     },
     "NSNetworkVolumesUsageDescription": {
-      "comment": "System permission purpose. Preserve the permission meaning and Sapphire/Blip product names.",
+      "comment": "System permission purpose. Preserve the permission meaning and product names.",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -257,7 +257,7 @@
       }
     },
     "NSRemindersFullAccessUsageDescription": {
-      "comment": "System permission purpose. Preserve the permission meaning and Sapphire/Blip product names.",
+      "comment": "System permission purpose. Preserve the permission meaning and product names.",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -274,7 +274,7 @@
       }
     },
     "NSRemindersUsageDescription": {
-      "comment": "System permission purpose. Preserve the permission meaning and Sapphire/Blip product names.",
+      "comment": "System permission purpose. Preserve the permission meaning and product names.",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -291,35 +291,18 @@
       }
     },
     "NSScreenCaptureUsageDescription": {
-      "comment": "System permission purpose. Preserve the permission meaning and Sapphire/Blip product names.",
+      "comment": "System permission purpose. Preserve the permission meaning and product names.",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Needed for gemini live activity"
+            "value": "Sapphire uses screen recording for per-app audio capture and live window previews."
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "Gemini 实时活动需要屏幕录制权限。"
-          }
-        }
-      }
-    },
-    "NSSystemExtensionUsageDescription": {
-      "comment": "System permission purpose. Preserve the permission meaning and Sapphire/Blip product names.",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sapphire needs this extension to create a virtual multi-output audio device."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sapphire 需要此扩展来创建虚拟多输出音频设备。"
+            "value": "Sapphire 使用屏幕录制权限采集应用音频并显示实时窗口预览。"
           }
         }
       }

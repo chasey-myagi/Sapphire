@@ -12,7 +12,6 @@ struct NotchSurfaceBackground: View, Equatable {
     let config: ResolvedNotchConfiguration
     let shape: CustomNotchShape
     let notchState: NotchController.NotchState
-    let isGeminiActive: Bool
     let isManuallyHidden: Bool
     let surfaceShadowOpacity: Double
     let radialEndRadius: CGFloat
@@ -71,16 +70,6 @@ struct NotchSurfaceBackground: View, Equatable {
     }
 
     private var nativeSurfaceShadow: LiquidGlassShadow {
-        if isGeminiActive {
-            let color = NSColor.systemPurple.blended(withFraction: 0.5, of: .systemIndigo)
-                ?? .systemPurple
-            return LiquidGlassShadow(
-                color: color,
-                opacity: notchState == .initial || isManuallyHidden ? 0 : 0.56,
-                radius: shadowRadius,
-                offset: CGSize(width: 0, height: shadowYOffset)
-            )
-        }
 
         return LiquidGlassShadow(
             color: NSColor(config.expandedShadowColor),
@@ -92,13 +81,6 @@ struct NotchSurfaceBackground: View, Equatable {
 
     @ViewBuilder
     private func directlyPaintedSurface(fillStyle: some ShapeStyle) -> some View {
-        if isGeminiActive {
-            let opacity = notchState == .initial || isManuallyHidden ? 0.0 : 0.75
-            shape
-                .fill(fillStyle)
-                .shadow(color: .purple.opacity(opacity * 0.7), radius: shadowRadius, x: -2, y: shadowYOffset)
-                .shadow(color: .indigo.opacity(opacity * 0.8), radius: shadowRadius, x: 2, y: shadowYOffset)
-        } else {
             shape
                 .fill(fillStyle)
                 .shadow(
@@ -106,7 +88,6 @@ struct NotchSurfaceBackground: View, Equatable {
                     radius: shadowRadius,
                     y: shadowYOffset
                 )
-        }
     }
 
     private var glassTint: NSColor? {

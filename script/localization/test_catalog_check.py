@@ -76,10 +76,10 @@ class CatalogCheckTests(unittest.TestCase):
             path.write_text(json.dumps({"tables": {"Localizable": [{"key": "Hello"}, {"key": "Hello"}, {"key": ""}]}}))
             self.assertEqual(CHECK.compiler_keys(root), {"Hello"})
 
-    def test_built_bundle_cannot_omit_widget_translation_or_change_plural_values(self):
+    def test_built_bundle_cannot_omit_translation_or_change_plural_values(self):
         with tempfile.TemporaryDirectory() as directory:
             expected = Path(directory) / "expected"
-            actual = Path(directory) / "SapphireAndroidWidgets.appex/Contents/Resources"
+            actual = Path(directory) / "Sapphire.app/Contents/Resources"
             for language in ("en", "zh-Hans"):
                 path = expected / f"{language}.lproj/Localizable.strings"
                 path.parent.mkdir(parents=True)
@@ -107,16 +107,16 @@ class CatalogCheckTests(unittest.TestCase):
             script = root / "script/check_localization.py"
             script.parent.mkdir()
             shutil.copy2(Path(CHECK.__file__), script)
-            for relative in ("Sapphire/Localizable.xcstrings", "Sapphire/App/InfoPlist.xcstrings", "SapphireAndroidWidgets/Localizable.xcstrings"):
+            for relative in ("Sapphire/Localizable.xcstrings", "Sapphire/App/InfoPlist.xcstrings"):
                 path = root / relative
                 path.parent.mkdir(parents=True, exist_ok=True)
                 path.write_text(json.dumps(catalog()))
             command = [sys.executable, str(script)]
-            for target in ("app", "library", "widget"):
+            for target in ("app", "library"):
                 path = root / target / "File.stringsdata"
                 path.parent.mkdir()
                 path.write_text(json.dumps({"tables": {"Localizable": [{"key": "Hello %@"}]}}))
-                command += ["--widget-stringsdata" if target == "widget" else "--app-stringsdata", str(path.parent)]
+                command += ["--app-stringsdata", str(path.parent)]
             passed = subprocess.run(command, capture_output=True, text=True)
             self.assertEqual(passed.returncode, 0, passed.stdout + passed.stderr)
             self.assertEqual(json.loads(passed.stdout)["catalogs"]["app"]["compiler_keys"], 1)

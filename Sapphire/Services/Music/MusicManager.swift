@@ -225,10 +225,6 @@ class MusicManager: ObservableObject {
     @Published var currentSourceKey: String?
     private var sourcePinnedByUser = false
     private let spotifyLiveSourceKey = "com.spotify.client:spotify-live"
-    private let phoneMediaSourceKey = "com.shariq.sapphire.phone-media"
-    private var phoneMediaSource: TrackInfo?
-    @Published private(set) var phoneMediaDeviceName: String?
-    @Published private(set) var phoneMediaAppName: String?
     private var lastPublishedSourceSignature: Int = 0
     private var lastExtractedArtworkToken: String?
 
@@ -702,11 +698,6 @@ class MusicManager: ObservableObject {
         beginPlayStateHold(preferPlaying: true, duration: 1.2)
         applyPlayingState(true)
 
-        if isPhoneMediaSourceSelected {
-            ContinuityManager.shared.sendMediaCommand(.play)
-            return
-        }
-
         guard isSpotifySourceSelected else {
             mediaController.play()
             return
@@ -735,11 +726,6 @@ class MusicManager: ObservableObject {
     func pause() async {
         beginPlayStateHold(preferPlaying: false, duration: 1.2)
         applyPlayingState(false)
-
-        if isPhoneMediaSourceSelected {
-            ContinuityManager.shared.sendMediaCommand(.pause)
-            return
-        }
 
         guard isSpotifySourceSelected else {
             mediaController.pause()
@@ -777,10 +763,6 @@ class MusicManager: ObservableObject {
 
     func nextTrack() async {
         beginPlayStateHold(preferPlaying: true, duration: 1.2)
-        if isPhoneMediaSourceSelected {
-            ContinuityManager.shared.sendMediaCommand(.next)
-            return
-        }
         if isSpotifySourceSelected {
             if await skipSpotifyViaConnectIfPossible(direction: .next) { return }
         }
@@ -789,10 +771,6 @@ class MusicManager: ObservableObject {
 
     func previousTrack() async {
         beginPlayStateHold(preferPlaying: true, duration: 1.2)
-        if isPhoneMediaSourceSelected {
-            ContinuityManager.shared.sendMediaCommand(.previous)
-            return
-        }
         if isSpotifySourceSelected {
             if await skipSpotifyViaConnectIfPossible(direction: .previous) { return }
         }
@@ -828,12 +806,6 @@ class MusicManager: ObservableObject {
     func seek(to seconds: Double) async {
         let clamped = max(0.0, totalDuration > 0 ? min(seconds, totalDuration) : seconds)
 
-        if isPhoneMediaSourceSelected {
-            ContinuityManager.shared.sendMediaCommand(.seek, seekMs: Int(clamped * 1000))
-            applyOptimisticSeek(to: clamped)
-            return
-        }
-
         if isSpotifySourceSelected {
             if spotifyPrivateAPI.isLoggedIn {
                 let ok = await spotifyPrivateAPI.connectSeek(to: clamped)
@@ -860,14 +832,6 @@ class MusicManager: ObservableObject {
 
     var isSpotifyLiveSourceSelected: Bool {
         currentSourceKey == spotifyLiveSourceKey
-    }
-
-    var isPhoneMediaSourceSelected: Bool {
-        currentSourceKey == phoneMediaSourceKey
-    }
-
-    func isPhoneMediaSource(_ key: String) -> Bool {
-        key == phoneMediaSourceKey
     }
 
     private var isSpotifyDisplayedInUI: Bool {
@@ -1077,13 +1041,6 @@ class MusicManager: ObservableObject {
         return true
     }
 
-    private var shouldInjectPhoneMediaSource: Bool {
-        settingsModel.settings.continuityEnabled
-            && settingsModel.settings.continuityMediaControls
-            && settingsModel.settings.continuityPhoneMediaInMusicPlayer
-            && phoneMediaSource != nil
-    }
-
     private func bundleID(fromSourceKey key: String) -> String? {
         if key == spotifyLiveSourceKey || key.contains("spotify-live") {
             return "com.spotify.client"
@@ -1099,7 +1056,6 @@ class MusicManager: ObservableObject {
     }
 
     private func isSystemSourceAlive(key: String, track: TrackInfo?) -> Bool {
-        guard key != phoneMediaSourceKey else { return false }
         guard !isSpotifySourceKey(key) else { return false }
         guard isSourceVisible(key) else { return false }
 
@@ -1130,10 +1086,6 @@ class MusicManager: ObservableObject {
            settingsModel.settings.isMediaAppVisible(bundleID: "com.spotify.client"),
            let spotifyLive = buildSpotifyLiveTrackInfo() {
             merged[spotifyLiveSourceKey] = spotifyLive
-        }
-
-        if shouldInjectPhoneMediaSource, let phoneMediaSource {
-            merged[phoneMediaSourceKey] = phoneMediaSource
         }
 
         return merged
@@ -1179,14 +1131,13 @@ class MusicManager: ObservableObject {
         guard !sources.isEmpty else { return nil }
 
         let localPlayingKeys = sources.compactMap { key, track -> String? in
-            guard key != phoneMediaSourceKey,
-                  key != spotifyLiveSourceKey,
+            guard key != spotifyLiveSourceKey,
                   isSystemSourceAlive(key: key, track: track),
                   resolvedIsPlaying(from: track.payload) == true else { return nil }
             return key
         }
         if !localPlayingKeys.isEmpty,
-           !sourcePinnedByUser || currentSourceKey == phoneMediaSourceKey {
+           !sourcePinnedByUser {
             return preferredSourceKey(restrictedTo: localPlayingKeys)
         }
 
@@ -1225,15 +1176,7 @@ class MusicManager: ObservableObject {
         if sourcePinnedByUser,
            let current = currentSourceKey,
            sources[current] != nil {
-            if current != phoneMediaSourceKey { return }
-            let hasPlayingLocalSource = sources.contains { key, track in
-                key != phoneMediaSourceKey
-                    && key != spotifyLiveSourceKey
-                    && isSystemSourceAlive(key: key, track: track)
-                    && resolvedIsPlaying(from: track.payload) == true
-            }
-            if !hasPlayingLocalSource { return }
-            sourcePinnedByUser = false
+            return
         }
 
         if sourcePinnedByUser {
@@ -1513,15 +1456,10 @@ class MusicManager: ObservableObject {
         }
         let switching = key != currentSourceKey
         let wasSpotify = currentSourceKey.map(isSpotifySourceKey) ?? false
-        let wasPhone = currentSourceKey == phoneMediaSourceKey
         let isNowSpotify = isSpotifySourceKey(key)
         currentSourceKey = key
 
         if switching {
-            if wasPhone || key == phoneMediaSourceKey {
-                artwork = nil
-                artworkURL = nil
-            }
             if !(wasSpotify && isNowSpotify) {
                 lastTrackIdentity = nil
                 lastMediaFingerprint = nil
@@ -1710,67 +1648,6 @@ class MusicManager: ObservableObject {
         let systemClients = mediaController.activeClients
         let merged = mergedSourcesWithSpotifyLive(systemClients)
         publishMergedSources(merged, reselect: false)
-    }
-
-    func updatePhoneMediaSource(
-        _ state: ContinuityMediaState,
-        artwork: NSImage?,
-        deviceName: String?,
-        sampledAt: Date
-    ) {
-        guard state.sessionId != "mac",
-              !state.title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-            clearPhoneMediaSource()
-            return
-        }
-
-        phoneMediaDeviceName = deviceName
-        phoneMediaAppName = state.appName
-        let position = max(0, TimeInterval(state.positionMs) / 1000)
-        let durationMicros = state.durationMs > 0 ? Int64(state.durationMs) * 1_000 : nil
-        let timestampMicros = Int64(sampledAt.timeIntervalSince1970 * 1_000_000)
-        let trackID = [state.sessionId, state.appId, state.title, state.artist ?? ""]
-            .joined(separator: "|")
-        let phoneTrackChanged = phoneMediaSource?.payload.contentItemIdentifier != trackID
-
-        let payload = TrackInfo.Payload(
-            bundleIdentifier: phoneMediaSourceKey,
-            title: state.title,
-            artist: state.artist,
-            album: state.album,
-            isPlaying: state.isPlaying,
-            durationMicros: durationMicros,
-            currentElapsedTime: position,
-            elapsedTimeMicros: Int64(position * 1_000_000),
-            playbackRate: state.isPlaying ? 1 : 0,
-            timestampEpochMicros: timestampMicros,
-            isMusicApp: true,
-            contentItemIdentifier: trackID,
-            uniqueIdentifier: trackID,
-            mediaType: "music",
-            artwork: artwork
-        )
-        let track = TrackInfo(payload: payload)
-        phoneMediaSource = track
-        if phoneTrackChanged, artwork == nil, currentSourceKey == phoneMediaSourceKey {
-            self.artwork = nil
-            artworkURL = nil
-        }
-
-        let merged = mergedSourcesWithSpotifyLive(mediaController.activeClients)
-        publishMergedSources(merged, reselect: true)
-        if currentSourceKey == phoneMediaSourceKey {
-            applyTrackPayload(payload, sourceKey: phoneMediaSourceKey)
-            publishPlaybackTime(force: true, includeProgressUI: true)
-        }
-    }
-
-    func clearPhoneMediaSource() {
-        guard phoneMediaSource != nil || activeMediaSources[phoneMediaSourceKey] != nil else { return }
-        phoneMediaSource = nil
-        phoneMediaDeviceName = nil
-        phoneMediaAppName = nil
-        publishMergedSources(mergedSourcesWithSpotifyLive(mediaController.activeClients), reselect: true)
     }
 
     private func rebindToBestSystemMediaSource(forceReapply: Bool) {
@@ -2358,10 +2235,6 @@ class MusicManager: ObservableObject {
     }
 
     func sourceAppIcon(for key: String) -> NSImage {
-        if key == phoneMediaSourceKey {
-            return NSImage(systemSymbolName: "iphone.gen3", accessibilityDescription: "Phone")
-                ?? NSImage(size: NSSize(width: 16, height: 16))
-        }
         let bundleID: String?
         if key.contains("spotify-live") || key.lowercased().contains("spotify") {
             bundleID = "com.spotify.client"
@@ -2972,7 +2845,6 @@ class MusicManager: ObservableObject {
     }
 
     func openInSourceApp() {
-        if isPhoneMediaSourceSelected { return }
         guard let bundleId = lastKnownBundleID else { return }
         if bundleId == "com.apple.Music" { appleMusic.revealCurrentTrack(); return }
         if ["com.google.Chrome", "com.microsoft.edgemac", "company.thebrowser.Browser", "com.apple.Safari"].contains(bundleId) {
@@ -3239,21 +3111,6 @@ class MusicManager: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 self?.refreshSpotifyLiveSource()
-            }
-            .store(in: &cancellables)
-
-        settingsModel.$settings
-            .map {
-                ($0.continuityEnabled, $0.continuityMediaControls, $0.continuityPhoneMediaInMusicPlayer)
-            }
-            .removeDuplicates { $0 == $1 }
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                guard let self else { return }
-                self.publishMergedSources(
-                    self.mergedSourcesWithSpotifyLive(self.mediaController.activeClients),
-                    reselect: true
-                )
             }
             .store(in: &cancellables)
 

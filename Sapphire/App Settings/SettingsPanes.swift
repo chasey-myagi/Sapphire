@@ -25,23 +25,13 @@ private extension SensorGroup {
 }
 
 struct SettingsDetailView: View {
-    @ObservedObject private var subscriptionManager = SubscriptionManager.shared
     var selectedSection: SettingsSection?
-
-    private var isSelectedSectionLocked: Bool {
-        selectedSection?.isPremiumLocked ?? false
-    }
 
     var body: some View {
         VStack {
-            if let selectedSection, isSelectedSectionLocked {
-                LockedSettingsSectionView(section: selectedSection)
-            } else {
-                settingsPane(for: selectedSection)
-            }
+            settingsPane(for: selectedSection)
         }
         .animation(.easeOut(duration: 0.15), value: selectedSection)
-        .animation(.easeOut(duration: 0.15), value: subscriptionManager.activeTier)
     }
 
     @ViewBuilder
@@ -65,7 +55,6 @@ struct SettingsDetailView: View {
         case .hud: HUDSettingsView()
         case .notifications: NotificationsSettingsView()
         case .neardrop: NeardropSettingsView()
-        case .continuity: ContinuitySettingsView()
         case .fileShelf: FileShelfSettingsView()
         case .notes: NotesSettingsView()
         case .clipboard: ClipboardSettingsView()
@@ -81,10 +70,7 @@ struct SettingsDetailView: View {
         case .calendar: CalendarSettingsView()
         case .eyeBreak: EyeBreakSettingsView()
         case .focusSession: FocusSessionSettingsView()
-        case .appLock: AppLockSettingsView()
-        case .intelligence: IntelligenceSettingsView()
         case .sports: SportsSettingsView()
-        case .finance: FinanceSettingsView()
         case .dockLayouts: DockLayoutsSettingsView()
         case .mediaOptimizer: MediaOptimizerSettingsView()
         case .about: AboutSettingsView()
@@ -99,40 +85,6 @@ struct SettingsDetailView: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
-    }
-}
-
-struct LockedSettingsSectionView: View {
-    let section: SettingsSection
-
-    private var requiredTierName: String {
-        guard let tier = section.minimumRequiredTier else { return "Premium" }
-        return SubscriptionFeatureCatalog.tierDisplayName(tier)
-    }
-
-    var body: some View {
-        VStack(spacing: 16) {
-            Image(systemName: "lock.fill")
-                .font(.system(size: 34, weight: .semibold))
-                .foregroundStyle(.secondary)
-
-            Text("\(section.label) requires Sapphire \(requiredTierName)")
-                .font(.title2.bold())
-                .multilineTextAlignment(.center)
-
-            Text("Upgrade from Account to unlock this section.")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
-                .frame(maxWidth: 380)
-
-            Button("Open Account Settings") {
-                NotificationCenter.default.post(name: .sapphireOpenAccountPane, object: nil)
-            }
-            .buttonStyle(.borderedProminent)
-            .tint(.purple)
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
 
@@ -445,7 +397,9 @@ struct SystemEnhanceSettingsView: View {
                 SystemEnhanceHingeAnimationSettingsCard()
 
                 VStack(alignment: .leading, spacing: 0) {
-                    PremiumFeatureView(feature: .windowsPreview) {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Not included in this build.").font(.caption).foregroundStyle(.secondary)
+                        Group {
                         VStack(alignment: .leading, spacing: 0) {
                             Text("App Switching").font(.headline).padding([.top, .horizontal])
                             ToggleRow(title: "Window Switcher", description: "Replace the switcher with a keyboard-driven, window-aware overlay. Hold the shortcut and press Tab to cycle, arrows to move, Q to quit an app, W to close a window.", isOn: $settings.settings.systemEnhanceAltTabEnabled)
@@ -468,6 +422,7 @@ struct SystemEnhanceSettingsView: View {
                                 )) { Text("Grid").tag(SEPreviewLayout.grid.rawValue); Text("List").tag(SEPreviewLayout.list.rawValue); Text("Carousel").tag(SEPreviewLayout.carousel.rawValue) }.labelsHidden().frame(width: 150) }.padding()
                             }
                         }
+                    }.disabled(true)
                     }
                 }.modifier(SettingsContainerModifier())
 
@@ -1409,7 +1364,7 @@ struct StorageSettingsView: View {
 
     var body: some View {
         ScrollView {
-            PremiumFeatureView(feature: .basicStorageFeatures) {
+            Group {
                 VStack(alignment: .leading, spacing: 20) {
                     VStack(alignment: .leading, spacing: 6) {
                         Text("Storage")
@@ -1639,7 +1594,6 @@ struct GeneralSettingsView: View {
                     ToggleRow(title: "Hide from Screen Sharing", description: "Never include Sapphire in screen sharing, screenshots, or screen recordings.", isOn: $settings.settings.hideFromScreenSharing)
                     Divider().padding(.leading, 20)
 
-                    ToggleRow(title: "Google Analytics", description: "Send anonymous usage events to Google to help improve Sapphire. Disable this to opt out of analytics collection.", isOn: $settings.settings.googleAnalyticsEnabled)
                     Divider().padding(.leading, 20)
 
                     ToggleRow(
@@ -2122,7 +2076,6 @@ struct CustomNotchConfigView: View {
 
 struct FileShelfSettingsView: View {
     @EnvironmentObject var settings: SettingsEditingSession
-    @ObservedObject private var continuity = ContinuityManager.shared
 
     var body: some View {
         ScrollView {
@@ -2166,13 +2119,6 @@ struct FileShelfSettingsView: View {
                         isOn: $settings.settings.fileShelfAirDropDestinationEnabled
                     )
 
-                    Divider().padding(.leading, 20)
-
-                    ToggleRow(
-                        title: Text("Share to Devices"),
-                        description: Text(verbatim: deviceDestinationDescription),
-                        isOn: $settings.settings.fileShelfDeviceDestinationsEnabled
-                    )
                 }
             }
             .padding(25)
@@ -2180,16 +2126,6 @@ struct FileShelfSettingsView: View {
         }
     }
 
-    private var deviceDestinationDescription: String {
-        let count = continuity.peers.count
-        if count == 0 {
-            return String(localized: "Show a same-size card for your paired Continuity devices. Pair a device in Continuity settings to make it available.")
-        }
-        if count == 1 {
-            return String(localized: "Show your paired device in an adaptive, same-size sharing card. Offline devices stay visible.")
-        }
-        return String(localized: "Show all \(count) paired devices in an adaptive, same-size sharing card. Offline devices stay visible.")
-    }
 }
 
 struct NotesSettingsView: View {
@@ -2271,7 +2207,9 @@ struct ClipboardSettingsView: View {
 
     private var quickPickerSection: some View {
         VStack(alignment: .leading, spacing: 0) {
-            PremiumFeatureView(feature: .clipboardPicker) {
+            VStack(alignment: .leading, spacing: 8) {
+                        Text("Not included in this build.").font(.caption).foregroundStyle(.secondary)
+                        Group {
                 VStack(alignment: .leading, spacing: 0) {
                     SettingsSectionHeader(title: "Quick Picker", description: "Open the unified Sapphire picker right where you're typing with a global shortcut. Selecting a clipboard item copies it and pastes it at the cursor; the Emoji tab types emoji directly. (The emoji shortcut opens the same panel on its Emoji tab.)")
 
@@ -2339,7 +2277,8 @@ struct ClipboardSettingsView: View {
                     }
                     .padding()
                 }
-            }
+            }.disabled(true)
+                    }
         }
         .modifier(SettingsContainerModifier())
     }
@@ -2475,7 +2414,9 @@ struct ClipboardSettingsView: View {
                 }
 
                 VStack(alignment: .leading, spacing: 0) {
-                    PremiumFeatureView(feature: .clipboardAdvancedTools) {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Not included in this build.").font(.caption).foregroundStyle(.secondary)
+                        Group {
                         VStack(alignment: .leading, spacing: 0) {
                             SettingsSectionHeader(title: "Auto-Clear Clipboard", description: "Empty the system clipboard a set time after copying, or when the Mac sleeps or the screen locks. Saved history items are never touched.")
 
@@ -2529,12 +2470,15 @@ struct ClipboardSettingsView: View {
                                 )
                             }
                         }
+                    }.disabled(true)
                     }
                 }
                 .modifier(SettingsContainerModifier())
 
                 VStack(alignment: .leading, spacing: 0) {
-                    PremiumFeatureView(feature: .clipboardAdvancedTools) {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Not included in this build.").font(.caption).foregroundStyle(.secondary)
+                        Group {
                         VStack(alignment: .leading, spacing: 0) {
                             SettingsSectionHeader(title: "Clean URL", description: "Strip tracking parameters (utm_*, fbclid, gclid, …) from copied links automatically. Images, files and rich text pass through untouched.")
 
@@ -2553,12 +2497,15 @@ struct ClipboardSettingsView: View {
                                 )
                             }
                         }
+                    }.disabled(true)
                     }
                 }
                 .modifier(SettingsContainerModifier())
 
                 VStack(alignment: .leading, spacing: 0) {
-                    PremiumFeatureView(feature: .clipboardAdvancedTools) {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Not included in this build.").font(.caption).foregroundStyle(.secondary)
+                        Group {
                         VStack(alignment: .leading, spacing: 0) {
                             SettingsSectionHeader(title: "Finder Cut & Paste", description: "⌘X then ⌘V moves copied files instead of copying them, ⌘V pastes copied images as PNG files into the front Finder folder, and F2 renames the selected item.")
 
@@ -2584,12 +2531,15 @@ struct ClipboardSettingsView: View {
                                 )
                             }
                         }
+                    }.disabled(true)
                     }
                 }
                 .modifier(SettingsContainerModifier())
 
                 VStack(alignment: .leading, spacing: 0) {
-                    PremiumFeatureView(feature: .clipboardAdvancedTools) {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Not included in this build.").font(.caption).foregroundStyle(.secondary)
+                        Group {
                         VStack(alignment: .leading, spacing: 0) {
                             SettingsSectionHeader(title: "Text Snippets", description: "Type a short trigger anywhere and it becomes your text. Use \"{{date}}\", \"{{time}}\", \"{{date:MMMM d}}\" or \"{{clipboard}}\" in the replacement. Sapphire never expands while you type inside Sapphire itself.")
 
@@ -2657,6 +2607,7 @@ struct ClipboardSettingsView: View {
                                 }
                             }
                         }
+                    }.disabled(true)
                     }
                 }
                 .modifier(SettingsContainerModifier())
@@ -2801,17 +2752,12 @@ struct CaffeineSettingsView: View {
 
 struct WidgetsSettingsView: View {
     @EnvironmentObject var settings: SettingsEditingSession
-    @ObservedObject private var subscriptionManager = SubscriptionManager.shared
 
     private var enabledWidgetCount: Int {
         settings.settings.enabledWidgetTypes.count
     }
 
     var body: some View {
-        let lockedWidgetTypes = Set(WidgetType.allCases.filter { type in
-            type.requiredPremiumFeature
-                .map { !subscriptionManager.hasAccess(to: $0) } ?? false
-        })
 
         ScrollView {
             LazyVStack(alignment: .leading, spacing: 20) {
@@ -2842,29 +2788,16 @@ struct WidgetsSettingsView: View {
                 }
                 .modifier(SettingsContainerModifier())
 
-                if settings.settings.shopifyWidgetEnabled {
-                    VStack(alignment: .leading, spacing: 10) {
-                        Text("Shopify Orders").font(.headline).padding([.horizontal, .top])
-                        Text("Connect a Shopify custom app with read_orders access. The Admin API token is stored in the macOS Keychain.").font(.caption).foregroundColor(.secondary).padding(.horizontal)
-                        TextField("Store domain (example.myshopify.com)", text: Binding(get: { APIKeyManager.shared.shopifyStoreDomain }, set: { APIKeyManager.shared.shopifyStoreDomain = $0 })).textFieldStyle(.roundedBorder).padding(.horizontal)
-                        SecureField("Admin API access token", text: Binding(get: { APIKeyManager.shared.shopifyAdminToken }, set: { APIKeyManager.shared.shopifyAdminToken = $0 })).textFieldStyle(.roundedBorder).padding(.horizontal)
-                        Text("Create it in Shopify Admin → Settings → Apps and sales channels → Develop apps, with read_orders permission.").font(.caption2).foregroundColor(.secondary).padding(.horizontal).padding(.bottom)
-                    }
-                    .modifier(SettingsContainerModifier())
-                }
 
                 VStack(alignment: .leading, spacing: 10) {
                     Text("Widget Visibility & Order").font(.headline).padding([.horizontal, .top])
                     Text("Enable, disable, and reorder the widgets that appear in the notch. Space is limited by your display width.")
                         .font(.caption).foregroundColor(.secondary).padding(.horizontal).padding(.bottom, 5)
                     ReorderableVStack(items: $settings.settings.widgetOrder) { widget in
-                        if widget != .agent {
                             WidgetRowView(
                                 widgetType: widget,
-                                enabledWidgetCount: enabledWidgetCount,
-                                isPremiumLocked: lockedWidgetTypes.contains(widget)
+                                enabledWidgetCount: enabledWidgetCount
                             )
-                        }
                     }
                     .modifier(SettingsContainerModifier())
                 }
@@ -2876,7 +2809,6 @@ struct WidgetsSettingsView: View {
 
 struct LiveActivitiesSettingsView: View {
     @EnvironmentObject var settings: SettingsEditingSession
-    @ObservedObject private var subscriptionManager = SubscriptionManager.shared
     @State private var availableSensors: [any Sensor_p] = []
 
     private enum PersistentActivitySelection: String, CaseIterable, Identifiable {
@@ -2937,10 +2869,6 @@ struct LiveActivitiesSettingsView: View {
     }
 
     var body: some View {
-        let lockedActivityTypes = Set(LiveActivityType.allCases.filter { type in
-            type.requiredPremiumFeature
-                .map { !subscriptionManager.hasAccess(to: $0) } ?? false
-        })
 
         ScrollView {
             LazyVStack(alignment: .leading, spacing: 20) {
@@ -3078,8 +3006,7 @@ struct LiveActivitiesSettingsView: View {
                     }
                     ReorderableVStack(items: $settings.settings.liveActivityOrder) { activity in
                         LiveActivityRowView(
-                            activityType: activity,
-                            isPremiumLocked: lockedActivityTypes.contains(activity)
+                            activityType: activity
                         )
                     }
                     .modifier(SettingsContainerModifier())
@@ -4356,7 +4283,7 @@ struct SnapZonesSettingsView: View {
     private var snapShortcutsManagementSection: some View {
         DisclosureGroup(isExpanded: $snapShortcutsExpanded) {
             VStack(alignment: .leading, spacing: 0) {
-                PremiumFeatureView(feature: .snapZonesKeyboardShortcuts) {
+                Group {
                     VStack(alignment: .leading, spacing: 0) {
                         Text("Assign a shortcut to a zone to snap the currently focused window there. Recording a shortcut already used by another zone moves it to this zone.")
                             .font(.caption)
@@ -10248,14 +10175,13 @@ struct AboutSettingsView: View {
         Binding(
             get: { displayedReleaseChannel },
             set: { newValue in
-                guard SubscriptionAccess.hasAccess(to: .betaSoftwareUpdates) || newValue == .stable else { return }
                 settingsModel.settings.releaseChannel = newValue
             }
         )
     }
 
     private var versionLabel: String {
-        if BetaEntitlementRuntime.isBetaBuild {
+        if ReleaseChannelPolicy.runningBuildChannel == .beta {
             return String(localized: "Version \(currentAppVersion) Beta")
         }
         return String(localized: "Version \(currentAppVersion)")
@@ -10352,7 +10278,6 @@ struct AboutSettingsView: View {
                 Text("© 2025 Shariq Charolia. All rights reserved.").font(.caption).foregroundStyle(.tertiary).frame(maxWidth: .infinity, alignment: .center).padding(.top, 20)
             }.padding(25).frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             .onAppear {
-                ReleaseChannelPolicy.reconcileStoredPreference(&settingsModel.settings)
                 settingsModel.commitNow()
                 updateChecker.checkForUpdatesMatchingCurrentChannel()
             }
@@ -10548,27 +10473,17 @@ struct AboutSettingsView: View {
 
                 ModernChannelSwitcher(
                     selection: releaseChannelBinding,
-                    hasBetaAccess: SubscriptionAccess.hasAccess(to: .betaSoftwareUpdates),
                     isLockedToRunningBuild: false
                 )
                 .padding(.horizontal)
                 .padding(.bottom)
 
-                if BetaEntitlementRuntime.isBetaBuild && settingsModel.settings.releaseChannel == .stable {
+                if ReleaseChannelPolicy.runningBuildChannel == .beta && settingsModel.settings.releaseChannel == .stable {
                     Text("You're on a beta build. Switching to Stable lets you install the latest stable release.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                         .padding(.horizontal)
                         .padding(.bottom, 12)
-                } else if !SubscriptionAccess.hasAccess(to: .betaSoftwareUpdates) {
-                    HStack(spacing: 6) {
-                        Image(systemName: "lock.fill").font(.caption2)
-                        Text("Beta access requires a Plus subscription or higher.")
-                            .font(.caption)
-                    }
-                    .foregroundStyle(.secondary)
-                    .padding(.horizontal)
-                    .padding(.bottom, 12)
                 }
             }
             .modifier(SettingsContainerModifier())
@@ -10895,7 +10810,6 @@ struct DownloadingView: View {
 
 struct ModernChannelSwitcher: View {
     @Binding var selection: ReleaseChannel
-    let hasBetaAccess: Bool
     var isLockedToRunningBuild: Bool = false
     @Namespace private var namespace
 
@@ -10920,12 +10834,11 @@ struct ModernChannelSwitcher: View {
                     .contentShape(Capsule())
                     .onTapGesture {
                         guard !isLockedToRunningBuild else { return }
-                        guard hasBetaAccess || channel == .stable else { return }
                         withAnimation(.interactiveSpring(response: 0.35, dampingFraction: 0.85)) {
                             selection = channel
                         }
                     }
-                    .opacity(isLockedToRunningBuild && channel != selection ? 0.35 : ((channel == .beta && !hasBetaAccess) ? 0.4 : 1))
+                    .opacity(isLockedToRunningBuild && channel != selection ? 0.35 : 1)
             }
         }
         .background(Color.white.opacity(0.08))
@@ -10947,20 +10860,6 @@ fileprivate struct NotchButtonRowView: View {
         case .fileShelf: return $settings.settings.fileShelfIconEnabled
         case .notes: return $settings.settings.notesIconEnabled
         case .clipboard: return $settings.settings.clipboardIconEnabled
-        case .intelligenceLive, .intelligence:
-            return Binding(
-                get: {
-                    settings.settings.intelligenceEnabled
-                        && permissionsManager.areIntelligencePermissionsGranted
-                },
-                set: { newValue in
-                    guard permissionsManager.areIntelligencePermissionsGranted else {
-                        settings.settings.intelligenceEnabled = false
-                        return
-                    }
-                    settings.settings.intelligenceEnabled = newValue
-                }
-            )
         case .focusSession: return $settings.settings.focusSessionIconEnabled
         case .caffeine: return $settings.settings.caffeinateEnabled
         case .battery: return $settings.settings.batteryEstimatorEnabled
@@ -10973,8 +10872,6 @@ fileprivate struct NotchButtonRowView: View {
         switch buttonType {
         case .settings, .spacer:
             return true
-        case .intelligenceLive, .intelligence:
-            return !permissionsManager.areIntelligencePermissionsGranted
         case .focusSession:
             return false
         default:
@@ -11305,8 +11202,14 @@ struct MenuBarProfilesSettingsView: View {
                 Text("Reveal hidden menu bar items when a condition is met — battery level, active Focus, Wi-Fi network, or a script's exit code — and bind profiles to displays, Spaces, or Focus filters.").font(.caption).foregroundColor(.secondary)
             }
 
+            #if !SAPPHIRE_FULL_BUILD
+            Text("Not included in this build.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            #endif
+
             VStack(spacing: 0) {
-                PremiumFeatureView(feature: .menuBarProfiles) {
+                Group {
                     ToggleRow(
                         title: "Enable Menu Bar Profiles",
                         description: "Evaluate profile conditions in the background to reveal hidden items automatically",
@@ -11314,10 +11217,15 @@ struct MenuBarProfilesSettingsView: View {
                     )
                 }
             }.modifier(SettingsContainerModifier())
+            #if !SAPPHIRE_FULL_BUILD
+            .disabled(true)
+            #endif
 
             if settings.settings.menuBarProfilesEnabled {
                 MenuBarProfileEditorView()
-                    .premiumFeature(.menuBarProfiles)
+                #if !SAPPHIRE_FULL_BUILD
+                .disabled(true)
+                #endif
             }
         }
         .animation(.easeInOut, value: settings.settings.menuBarProfilesEnabled)
@@ -12210,208 +12118,6 @@ struct ModernSegmentedPicker: View {
     }
 }
 
-typealias GeminiSettingsView = IntelligenceSettingsView
-
-// MARK: - Legacy Settings View Shims
-
-// MARK: - Task Runner Interface
-
-struct IntelligenceRunnerView: View {
-    let apiKey: String
-    var backend: LLMBackend = .auto
-    var geminiSpeedMode: GeminiSpeedMode = .fast
-    @ObservedObject private var vm: IntelligenceNotchViewModel
-    @State private var isRunningScreenshotDebug = false
-
-    init(
-        apiKey: String,
-        backend: LLMBackend = .gemini,
-        geminiSpeedMode: GeminiSpeedMode = .fast,
-        vm: IntelligenceNotchViewModel? = nil
-    ) {
-        self.apiKey = apiKey
-        self.backend = backend
-        self.geminiSpeedMode = geminiSpeedMode
-        let resolvedVM = vm ?? (NSApp.delegate as? AppDelegate)?.intelligenceViewModel ?? IntelligenceNotchViewModel()
-        self._vm = ObservedObject(wrappedValue: resolvedVM)
-    }
-
-    private var isLaunchDisabled: Bool {
-        if vm.taskInput.trimmingCharacters(in: .whitespaces).isEmpty {
-            return true
-        }
-        return !backend.isKeyConfigured && backend.resolveAPIKey(fallbackGeminiKey: apiKey).isEmpty
-    }
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack(spacing: 8) {
-                TextField("Describe a task...", text: $vm.taskInput)
-                    .textFieldStyle(.plain)
-                    .padding(8)
-                    .background(Color.black.opacity(0.2))
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
-                    .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.white.opacity(0.15)))
-                    .onSubmit {
-                        if !vm.isRunning && !isLaunchDisabled {
-                            let activeKey = backend.resolveAPIKey(fallbackGeminiKey: apiKey)
-                            vm.run(
-                                apiKey: activeKey,
-                                backend: backend,
-                                geminiSpeedMode: geminiSpeedMode
-                            )
-                        }
-                    }
-
-                if vm.isRunning {
-                    Button(action: vm.stop) {
-                        Image(systemName: "stop.fill")
-                            .foregroundStyle(.red)
-                    }
-                    .buttonStyle(.plain)
-                    .frame(width: 32, height: 32)
-                    .background(Color.red.opacity(0.15))
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
-                } else {
-                    Button {
-                        let activeKey = backend.resolveAPIKey(fallbackGeminiKey: apiKey)
-                        vm.run(
-                            apiKey: activeKey,
-                            backend: backend,
-                            geminiSpeedMode: geminiSpeedMode
-                        )
-                    } label: {
-                        Image(systemName: "play.fill")
-                            .foregroundStyle(.white)
-                    }
-                    .buttonStyle(.plain)
-                    .frame(width: 32, height: 32)
-                    .background(isLaunchDisabled ? Color.gray.opacity(0.3) : Color.blue)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
-                    .disabled(isLaunchDisabled)
-                }
-
-                Button {
-                    runScreenshotDebug()
-                } label: {
-                    Image(systemName: isRunningScreenshotDebug ? "camera.fill" : "camera")
-                        .foregroundStyle(isRunningScreenshotDebug ? .yellow : .white)
-                }
-                .buttonStyle(.plain)
-                .frame(width: 32, height: 32)
-                .background(Color.orange.opacity(0.18))
-                .clipShape(RoundedRectangle(cornerRadius: 8))
-                .help("Capture 10 screenshots at 1.5 second intervals")
-                .disabled(isRunningScreenshotDebug)
-            }
-
-            if backend == .hackclub {
-                VStack(alignment: .leading, spacing: 6) {
-                    Text("Hack Club AI Integration")
-                        .font(.caption.bold())
-                        .foregroundStyle(.secondary)
-
-                    HStack(spacing: 8) {
-                        SecureField("Hack Club API Key", text: Binding(
-                            get: { APIKeyManager.shared.hackClubAPIKey },
-                            set: { APIKeyManager.shared.hackClubAPIKey = $0 }
-                        ))
-                        .textFieldStyle(.plain)
-                        .padding(6)
-                        .background(Color.black.opacity(0.2))
-                        .clipShape(RoundedRectangle(cornerRadius: 6))
-                        .overlay(RoundedRectangle(cornerRadius: 6).stroke(Color.white.opacity(0.12)))
-
-                        TextField("Model Name", text: Binding(
-                            get: { UserDefaults.standard.string(forKey: "hackClubModel") ?? "qwen/qwen3-32b" },
-                            set: { UserDefaults.standard.set($0, forKey: "hackClubModel") }
-                        ))
-                        .textFieldStyle(.plain)
-                        .padding(6)
-                        .background(Color.black.opacity(0.2))
-                        .clipShape(RoundedRectangle(cornerRadius: 6))
-                        .overlay(RoundedRectangle(cornerRadius: 6).stroke(Color.white.opacity(0.12)))
-                    }
-                }
-                .padding(.top, 4)
-            }
-
-            if vm.isRunning && vm.subtaskProgress.total > 0 {
-                VStack(alignment: .leading, spacing: 4) {
-                    HStack {
-                        Text("Subtask \(vm.subtaskProgress.current) of \(vm.subtaskProgress.total)")
-                            .font(.caption2)
-                            .foregroundStyle(.secondary)
-                        Spacer()
-                        ProgressView().scaleEffect(0.6)
-                    }
-                    ProgressView(value: Double(vm.subtaskProgress.current),
-                                 total: Double(vm.subtaskProgress.total))
-                        .tint(.blue)
-                }
-            }
-
-            if let result = vm.lastResult {
-                HStack(spacing: 6) {
-                    Image(systemName: result.success ? "checkmark.circle.fill" : "exclamationmark.circle.fill")
-                        .foregroundStyle(result.success ? .green : .orange)
-                    Text(result.success ? "Completed" : "Partial")
-                        .font(.caption.bold())
-                    Text("· \(result.subtasksCompleted)/\(result.subtasksTotal) subtasks · \(result.actionsTaken) actions · \(String(format: "%.1fs", result.duration))")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-            }
-
-            if !vm.logEntries.isEmpty {
-                ScrollView {
-                    LazyVStack(alignment: .leading, spacing: 3) {
-                        ForEach(vm.logEntries.reversed()) { line in
-                            Text(line.text)
-                                .font(.system(size: 11, design: .monospaced))
-                                .foregroundStyle(
-                                    line.isError ? Color.red :
-                                    line.isSubtask ? Color.orange :
-                                    Color.secondary
-                                )
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                        }
-                    }
-                    .padding(8)
-                }
-                .frame(maxHeight: 140)
-                .background(Color.black.opacity(0.25))
-                .clipShape(RoundedRectangle(cornerRadius: 8))
-            }
-        }
-    }
-
-    private func runScreenshotDebug() {
-        guard !isRunningScreenshotDebug else { return }
-        isRunningScreenshotDebug = true
-
-        Task { @MainActor in
-            defer { isRunningScreenshotDebug = false }
-
-            let perception = ScreenPerception()
-            vm.logEntries.append(.init(text: " Screenshot debug started (10 captures / 1.5s)", isError: false, isSubtask: true))
-
-            for index in 1...10 {
-                let (image, elements) = await perception.captureAnnotatedScreen()
-                let imageNote = image == nil ? "no image" : "image ok"
-                vm.logEntries.append(.init(text: " [\(index)/10] \(imageNote) · \(elements.count) elements", isError: false, isSubtask: true))
-                if index < 10 {
-                    try? await Task.sleep(nanoseconds: 1_500_000_000)
-                }
-            }
-
-            vm.logEntries.append(.init(text: " Screenshot debug finished", isError: false, isSubtask: true))
-        }
-    }
-}
-
-// MARK: - Focus Session Settings
-
 struct FocusSessionSettingsView: View {
     private struct AppCandidate: Identifiable, Sendable {
         let name: String
@@ -12464,7 +12170,7 @@ struct FocusSessionSettingsView: View {
     private var streakSection: some View {
         VStack(alignment: .leading, spacing: 0) {
             sectionLabel(String(localized: "Streaks"))
-            Text("Miss a day without breaking your streak by reporting immunity days at least 3 days in advance (unlimited). If a streak still breaks, spend a streak pass to revive it — everyone gets a few free every month by plan.")
+            Text("Report immunity days at least 3 days in advance to protect your streak. If a streak breaks, use your monthly streak pass to restore it.")
                 .font(.caption)
                 .foregroundColor(.secondary)
                 .padding(.horizontal, 16)

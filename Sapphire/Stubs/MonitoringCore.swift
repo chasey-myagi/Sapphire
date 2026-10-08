@@ -38,11 +38,4 @@ final class MemorySystemManager {
     func getDataSummary() throws -> DataSummary { DataSummary() }
 }
 
-struct IntelligenceSettingsView: View {
-    var body: some View {
-        Text("Intelligence features are not included in this build.")
-            .foregroundColor(.secondary)
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-    }
-}
 #endif

@@ -57,7 +57,6 @@ struct FocusStreakSnapshot: Equatable {
     let passesAvailableThisMonth: Int
     let passesBaseAllowance: Int
     let passesUsedThisMonth: Int
-    let tierName: String
     let upcomingImmunityDays: [DateComponents]
 }
 
@@ -647,17 +646,9 @@ final class FocusSessionManager: ObservableObject {
         return true
     }
 
-    // MARK: Monthly streak pass allowance (by subscription tier)
+    // MARK: Monthly streak pass allowance
 
-    var streakPassBaseAllowance: Int {
-        switch SubscriptionAccess.resolvedTier() {
-        case .ultra: return 4
-        case .pro: return 3
-        case .basic: return 2
-        case .core: return 1
-        case .free: return 1
-        }
-    }
+    var streakPassBaseAllowance: Int { 1 }
 
     private var currentMonthKey: String {
         Self.monthKeyFormatter.string(from: Date())
@@ -734,7 +725,6 @@ final class FocusSessionManager: ObservableObject {
             passesAvailableThisMonth: streakPassesAvailableThisMonth,
             passesBaseAllowance: streakPassBaseAllowance,
             passesUsedThisMonth: streakPassesUsedThisMonth,
-            tierName: SubscriptionFeatureCatalog.tierDisplayName(SubscriptionAccess.resolvedTier()),
             upcomingImmunityDays: upcomingImmunityDays.map { $0.date }
         )
     }

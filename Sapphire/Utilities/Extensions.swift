@@ -7,8 +7,6 @@
 
 import SwiftUI
 import AppKit
-import Combine
-import ScreenCaptureKit
 import UniformTypeIdentifiers
 
 extension UTType {
@@ -262,48 +260,6 @@ extension NSColor {
         let c = hsba
         guard c.brightness < minBrightness else { return self }
         return NSColor(hue: c.hue, saturation: c.saturation, brightness: minBrightness, alpha: c.alpha)
-    }
-}
-
-enum PickerResult {
-    case success(SCContentFilter)
-    case failure(Error?)
-}
-
-class ContentPickerHelper: NSObject, ObservableObject, SCContentSharingPickerObserver {
-    let pickerResultPublisher = PassthroughSubject<PickerResult, Never>()
-    private lazy var picker = SCContentSharingPicker.shared
-
-    override init() {
-        super.init()
-    }
-
-    deinit {
-        picker.remove(self)
-    }
-
-    func showPicker() {
-        picker.add(self)
-        picker.isActive = true
-        picker.present()
-    }
-
-    func contentSharingPicker(_ picker: SCContentSharingPicker, didUpdateWith filter: SCContentFilter, for stream: SCStream?) {
-        picker.remove(self)
-        picker.isActive = false
-        self.pickerResultPublisher.send(.success(filter))
-    }
-
-    func contentSharingPicker(_ picker: SCContentSharingPicker, didCancelFor stream: SCStream?) {
-        picker.remove(self)
-        picker.isActive = false
-        self.pickerResultPublisher.send(.failure(nil))
-    }
-
-    func contentSharingPickerStartDidFailWithError(_ error: Error) {
-        picker.remove(self)
-        picker.isActive = false
-        self.pickerResultPublisher.send(.failure(error))
     }
 }
 

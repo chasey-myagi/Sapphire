@@ -82,8 +82,8 @@ class PermissionsManager: NSObject, ObservableObject, @MainActor CLLocationManag
 
     public let allPermissions: [PermissionItem] = [
         .init(type: .accessibility, title: String(localized: "Accessibility"), description: String(localized: "Needed for media key presses, window snapping, and HUDs."), iconName: "figure.wave.circle.fill", iconColor: .purple, category: .required),
-        .init(type: .fullDiskAccess, title: String(localized: "Full Disk Access"), description: String(localized: "Enables File Shelf, Intelligence file access, and deeper system integrations."), iconName: "folder.badge.gearshape", iconColor: .gray, category: .recommended),
-        .init(type: .screenRecording, title: String(localized: "Screen Recording"), description: String(localized: "Required for Gemini Live screen sharing, per-app audio capture, live window previews, and the hinge-driven desktop animation."), iconName: "record.circle", iconColor: .orange, category: .recommended),
+        .init(type: .fullDiskAccess, title: String(localized: "Full Disk Access"), description: String(localized: "Enables File Shelf and deeper system integrations."), iconName: "folder.badge.gearshape", iconColor: .gray, category: .recommended),
+        .init(type: .screenRecording, title: String(localized: "Screen Recording"), description: String(localized: "Required for per-app audio capture, live window previews, and the hinge-driven desktop animation."), iconName: "record.circle", iconColor: .orange, category: .recommended),
         .init(type: .localNetwork, title: String(localized: "Local Network"), description: String(localized: "Needed to discover and control supported media players on your network."), iconName: "network", iconColor: .cyan, category: .recommended),
         .init(type: .automation, title: String(localized: "Automation"), description: String(localized: "Needed to control playback and get track info from Spotify and Music."), iconName: "play.display", iconColor: .green, category: .recommended),
         .init(type: .notifications, title: String(localized: "Notifications"), description: String(localized: "Needed to show custom alerts for messages and system events."), iconName: "bell.badge.fill", iconColor: .red, category: .recommended),
@@ -114,9 +114,6 @@ class PermissionsManager: NSObject, ObservableObject, @MainActor CLLocationManag
         types.compactMap { type in allPermissions.first(where: { $0.type == type }) }
     }
 
-    var areIntelligencePermissionsGranted: Bool {
-        arePermissionsGranted(for: SettingsSection.intelligence.requiredPermissions)
-    }
 
     private override init() {
         super.init()

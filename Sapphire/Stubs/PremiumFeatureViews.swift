@@ -39,12 +39,10 @@ private struct PremiumUnavailableView: View {
 }
 
 struct KeyboardShortcutsSettingsView: View { var body: some View { PremiumUnavailableView(title: String(localized: "Keyboard Shortcuts")) } }
-struct ContinuitySettingsView: View { var body: some View { PremiumUnavailableView(title: String(localized: "Continuity")) } }
 struct EmojiSettingsView: View { var body: some View { PremiumUnavailableView(title: String(localized: "Emoji")) } }
 struct MouseSettingsView: View { var body: some View { PremiumUnavailableView(title: String(localized: "Mouse")) } }
 struct MonitoringSettingsView: View { var body: some View { PremiumUnavailableView(title: String(localized: "Monitoring")) } }
 struct ArchivesAndDMGInstallerSettingsView: View { var body: some View { PremiumUnavailableView(title: String(localized: "Archives")) } }
-struct AppLockSettingsView: View { var body: some View { PremiumUnavailableView(title: String(localized: "App Lock")) } }
 struct DockLayoutsSettingsView: View { var body: some View { PremiumUnavailableView(title: String(localized: "Dock Layouts")) } }
 struct MediaOptimizerSettingsView: View { var body: some View { PremiumUnavailableView(title: String(localized: "Media Optimizer")) } }
 

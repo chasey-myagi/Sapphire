@@ -185,9 +185,6 @@ class MultiAudioManager: ObservableObject {
         configureProcessMonitor()
         if isAuthorized { startProcessMonitorIfNeeded() }
 
-        premiumAccessCancellable = PremiumGate.accessChanges
-            .sink { [weak self] in self?.applyPremiumDSPAccess() }
-
         NotificationCenter.default.addObserver(
             forName: NSApplication.didBecomeActiveNotification,
             object: nil,
@@ -243,28 +240,11 @@ class MultiAudioManager: ObservableObject {
         }
     }
 
-    private var premiumAccessCancellable: AnyCancellable?
-
     func eightDAudioSettings(for bundleID: String) -> EightDAudioSettings {
-        guard PremiumGate.hasAccess(.audio8D) else { return EightDAudioSettings() }
         return eightDAudioSettingsByBundleID[bundleID] ?? EightDAudioSettings()
     }
 
-    private func applyPremiumDSPAccess() {
-        for (bundleID, taps) in activeTaps {
-            let eightD = eightDAudioSettings(for: bundleID)
-            let surround = surroundAudioSettings(for: bundleID)
-            for tap in taps.values {
-                tap.updateEightDAudio(settings: eightD)
-                tap.updateSurroundAudio(settings: surround)
-            }
-        }
-        objectWillChange.send()
-        reconcileRunningApps()
-    }
-
     func setEightDAudioSettings(_ settings: EightDAudioSettings, for bundleID: String) {
-        guard SubscriptionAccess.hasAccess(to: .audio8D) else { return }
         var clamped = settings
         clamped.rotationSpeed = min(max(clamped.rotationSpeed, 0.01), 1.0)
         clamped.depth = min(max(clamped.depth, 0.0), 1.0)
@@ -289,12 +269,10 @@ class MultiAudioManager: ObservableObject {
     }
 
     func surroundAudioSettings(for bundleID: String) -> SurroundAudioSettings {
-        guard PremiumGate.hasAccess(.surroundSound) else { return SurroundAudioSettings() }
         return surroundAudioSettingsByBundleID[bundleID] ?? SurroundAudioSettings()
     }
 
     func setSurroundAudioSettings(_ settings: SurroundAudioSettings, for bundleID: String) {
-        guard SubscriptionAccess.hasAccess(to: .surroundSound) else { return }
         var clamped = settings
         clamped.width = min(max(clamped.width, 1.0), 2.5)
         clamped.crossfeed = min(max(clamped.crossfeed, 0.0), 0.5)

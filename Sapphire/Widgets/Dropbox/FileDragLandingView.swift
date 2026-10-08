@@ -24,7 +24,6 @@ struct DropZonePreferenceKey: PreferenceKey {
 enum DropZone: Hashable {
     case shelf
     case airdrop
-    case device(String)
 }
 
 enum FileDragMode {
@@ -62,13 +61,6 @@ struct FileDragLandingView: View {
                 )
             }
 
-            if settings.settings.fileShelfDeviceDestinationsEnabled {
-                ContinuityDeviceDropZone(
-                    activeZone: activeZone,
-                    cardWidth: Self.cardWidth,
-                    cardHeight: Self.cardHeight
-                )
-            }
 
             if destinationCardCount == 0 {
                 EmptyDropZoneView()
@@ -102,7 +94,6 @@ struct FileDragLandingView: View {
     private var destinationCardCount: Int {
         (mode == .newFile ? 1 : 0)
             + (settings.settings.fileShelfAirDropDestinationEnabled ? 1 : 0)
-            + (settings.settings.fileShelfDeviceDestinationsEnabled ? 1 : 0)
     }
 
     private var landingWidth: CGFloat {
@@ -175,146 +166,8 @@ private struct FileDropHitTestObserver: View {
     }
 }
 
-private struct ContinuityDeviceDropZone: View {
-    @ObservedObject private var continuity = ContinuityManager.shared
 
-    let activeZone: DropZone?
-    let cardWidth: CGFloat
-    let cardHeight: CGFloat
 
-    var body: some View {
-        DeviceDropZoneView(
-            peers: continuity.peers.filter { $0.supports(.files) },
-            activeZone: activeZone,
-            cardWidth: cardWidth,
-            cardHeight: cardHeight
-        )
-    }
-}
-
-private struct DeviceDropZoneView: View {
-    let peers: [ContinuityPeer]
-    let activeZone: DropZone?
-    let cardWidth: CGFloat
-    let cardHeight: CGFloat
-
-    private var isTargeted: Bool {
-        guard case .device = activeZone else { return false }
-        return true
-    }
-
-    private var columns: [GridItem] {
-        let count: Int
-        switch peers.count {
-        case 0, 1: count = 1
-        case 2, 3: count = peers.count
-        default: count = min(4, Int(ceil(Double(peers.count) / 2.0)))
-        }
-        return Array(repeating: GridItem(.flexible(), spacing: 6), count: count)
-    }
-
-    var body: some View {
-        VStack(spacing: 7) {
-            HStack(spacing: 6) {
-                Image(systemName: "rectangle.connected.to.line.below")
-                Text("Share to Devices")
-                    .lineLimit(1)
-            }
-            .font(.system(size: 12, weight: .semibold, design: .rounded))
-            .foregroundStyle(isTargeted ? .white : .secondary)
-
-            if peers.isEmpty {
-                VStack(spacing: 3) {
-                    Image(systemName: "iphone.slash")
-                        .font(.system(size: 20, weight: .light))
-                    Text("No paired devices")
-                        .font(.system(size: 10, weight: .medium, design: .rounded))
-                }
-                .foregroundStyle(.tertiary)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-            } else {
-                ScrollView(.vertical) {
-                    LazyVGrid(columns: columns, spacing: 6) {
-                        ForEach(peers) { peer in
-                            DeviceDropCell(
-                                peer: peer,
-                                isTargeted: activeZone == .device(peer.id)
-                            )
-                        }
-                    }
-                }
-                .scrollIndicators(.hidden)
-            }
-        }
-        .padding(10)
-        .frame(width: cardWidth, height: cardHeight)
-        .background(
-            RoundedRectangle(cornerRadius: 24, style: .continuous)
-                .fill(isTargeted ? Color.accentColor.opacity(0.28) : Color.white.opacity(0.05))
-        )
-        .overlay(
-            RoundedRectangle(cornerRadius: 24, style: .continuous)
-                .strokeBorder(isTargeted ? Color.accentColor : Color.white.opacity(0.2), lineWidth: 1.5)
-        )
-        .scaleEffect(isTargeted ? 1.03 : 1.0)
-        .animation(.spring(response: 0.2, dampingFraction: 0.6), value: isTargeted)
-    }
-}
-
-private struct DeviceDropCell: View {
-    @ObservedObject var peer: ContinuityPeer
-    let isTargeted: Bool
-
-    private var zone: DropZone { .device(peer.id) }
-    private var isEnabled: Bool { peer.linkState.isUsable }
-    private var foregroundColor: Color {
-        isTargeted ? .white : (isEnabled ? .secondary : .secondary.opacity(0.45))
-    }
-    private var backgroundColor: Color {
-        isTargeted ? .accentColor.opacity(0.85) : .white.opacity(isEnabled ? 0.06 : 0.025)
-    }
-    private var borderColor: Color {
-        isTargeted ? .white.opacity(0.6) : .clear
-    }
-
-    var body: some View {
-        VStack(spacing: 2) {
-            ZStack(alignment: .bottomTrailing) {
-                Image(systemName: peer.record.deviceType.glyph)
-                    .font(.system(size: 16, weight: .medium))
-                Circle()
-                    .fill(isEnabled ? Color.green : Color.secondary)
-                    .frame(width: 5, height: 5)
-                    .overlay(Circle().stroke(Color.black.opacity(0.6), lineWidth: 1))
-            }
-            Text(peer.displayName)
-                .font(.system(size: 9, weight: .medium, design: .rounded))
-                .lineLimit(1)
-                .minimumScaleFactor(0.7)
-        }
-        .foregroundStyle(foregroundColor)
-        .frame(maxWidth: .infinity, minHeight: 42)
-        .background(
-            RoundedRectangle(cornerRadius: 10, style: .continuous)
-                .fill(backgroundColor)
-        )
-        .overlay(
-            RoundedRectangle(cornerRadius: 10, style: .continuous)
-                .strokeBorder(borderColor, lineWidth: 1)
-        )
-        .background {
-            GeometryReader { geometry in
-                Color.clear.preference(
-                    key: DropZonePreferenceKey.self,
-                    value: isEnabled ? [zone: geometry.frame(in: .global)] : [:]
-                )
-            }
-        }
-        .scaleEffect(isTargeted ? 1.04 : 1.0)
-        .animation(.spring(response: 0.2, dampingFraction: 0.65), value: isTargeted)
-        .help(isEnabled ? String(localized: "Send to \(peer.displayName)") : String(localized: "\(peer.displayName) is offline"))
-    }
-}
 
 private struct EmptyDropZoneView: View {
     var body: some View {

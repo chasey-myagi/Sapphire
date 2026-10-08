@@ -4787,29 +4787,6 @@ struct ApiKeysMissingView: View {
     }
 }
 
-struct GeminiApiKeysMissingView: View {
-    @Binding var navigationStack: [NotchWidgetMode]
-
-    var body: some View {
-        VStack(spacing: 20) {
-            Image(systemName: "key.viewfinder")
-                .font(.system(size: 40))
-                .symbolRenderingMode(.multicolor)
-
-            Text("Gemini API Key Missing")
-                .font(.title2).bold()
-
-            Text("To use Gemini Live, please add your Google AI Studio API key in Sapphire's settings.")
-                .font(.subheadline).foregroundColor(.secondary).multilineTextAlignment(.center)
-
-            Text("Use the back control in the notch to return.")
-                .font(.caption)
-                .foregroundStyle(.tertiary)
-        }
-        .padding(30)
-        .frame(width: 400)
-    }
-}
 
 // MARK: - Consolidated from AppleMusicSearchView.swift
 

@@ -19,8 +19,6 @@ struct NotchExpandedChrome: View {
     @Binding var iconsRightWidth: CGFloat
     let iconsIntrinsicWidth: CGFloat
     let onPin: (Bool) -> Void
-    let onOpenBlipHub: () -> Void
-    let onOpenAgentS: () -> Void
 
     @EnvironmentObject private var settings: SettingsModel
     @ObservedObject private var caffeineManager = CaffeineManager.shared
@@ -147,18 +145,6 @@ struct NotchExpandedChrome: View {
             if settings.settings.clipboardIconEnabled {
                 SubtleIconButton(systemName: "list.clipboard", action: { navigationStack.append(.clipboardPlayer) })
             }
-        case .intelligence:
-            if settings.settings.intelligenceEnabled {
-                NotchIntelligenceControls(
-                    notchState: notchState,
-                    onOpenBlipHub: onOpenBlipHub,
-                    onOpenAgentS: onOpenAgentS
-                )
-            } else {
-                EmptyView()
-            }
-        case .intelligenceLive:
-            EmptyView()
         case .focusSession:
             if settings.settings.focusSessionIconEnabled {
                 SubtleIconButton(
@@ -219,146 +205,5 @@ private struct NotchBatteryInfoSlot: View {
             timeRemaining: batteryEstimator.estimatedTimeRemaining
         )
         .padding(.horizontal, NotchConfiguration.batteryHorizontalPadding)
-    }
-}
-
-private struct NotchIntelligenceControls: View {
-    @EnvironmentObject private var geminiLiveManager: GeminiLiveManager
-    @ObservedObject private var microphoneManager = MicrophoneUsageManager.shared
-
-    let notchState: NotchController.NotchState
-    let onOpenBlipHub: () -> Void
-    let onOpenAgentS: () -> Void
-
-    @State private var isHovered = false
-
-    var body: some View {
-        HStack(spacing: 8) {
-            intelligenceButton
-            if microphoneManager.isMicInUse && notchState == .clickExpanded {
-                microphonePill
-            }
-        }
-    }
-
-    private var intelligenceButton: some View {
-        let isLiveRunning = geminiLiveManager.isSessionRunning
-        let baseSize = NotchConfiguration.geminiButtonBaseSize
-        let activeGradient = LinearGradient(
-            colors: [Color.purple.opacity(0.8), Color.indigo.opacity(0.6)],
-            startPoint: .topLeading,
-            endPoint: .bottomTrailing
-        )
-        let stopGradient = LinearGradient(
-            colors: [Color.orange.opacity(0.8), Color.red],
-            startPoint: .topLeading,
-            endPoint: .bottomTrailing
-        )
-
-        return Button {
-            if isLiveRunning {
-                geminiLiveManager.stopSession()
-            } else {
-                onOpenBlipHub()
-            }
-        } label: {
-            HStack(spacing: 4) {
-                Image(systemName: isLiveRunning ? "stop.fill" : "sparkle")
-                    .font(.system(
-                        size: isHovered
-                            ? NotchConfiguration.geminiButtonActiveIconSize
-                            : NotchConfiguration.geminiButtonInactiveIconSize,
-                        weight: .medium
-                    ))
-                    .rotationEffect(.degrees(isHovered ? 90 : 0))
-                    .foregroundStyle(
-                        isHovered
-                            ? LinearGradient(
-                                colors: [.white, .white.opacity(0.5)],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                            : LinearGradient(
-                                colors: [.purple, .indigo],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                    )
-                    .animation(
-                        .spring(
-                            response: NotchConfiguration.geminiButtonSpringResponse,
-                            dampingFraction: NotchConfiguration.geminiButtonSpringDamping
-                        ),
-                        value: isHovered
-                    )
-
-                if isHovered {
-                    Text(isLiveRunning ? "Stop" : "Blip")
-                        .font(.system(size: NotchConfiguration.geminiButtonTextFontSize, weight: .semibold))
-                        .fixedSize()
-                        .foregroundColor(.white)
-                        .transition(.opacity.combined(with: .move(edge: .leading)))
-                }
-            }
-            .padding(.horizontal, isHovered ? NotchConfiguration.geminiButtonActiveHorizontalPadding : 0)
-            .frame(width: isHovered ? nil : baseSize, height: baseSize)
-            .background(isHovered ? (isLiveRunning ? stopGradient : activeGradient) : nil)
-            .clipShape(Capsule())
-        }
-        .buttonStyle(.plain)
-        .onHover { hovering in
-            withAnimation(.spring(
-                response: NotchConfiguration.geminiButtonSpringResponse,
-                dampingFraction: 1
-            )) {
-                isHovered = hovering
-            }
-        }
-        .simultaneousGesture(TapGesture(count: 2).onEnded(onOpenAgentS))
-    }
-
-    @ViewBuilder
-    private var microphonePill: some View {
-        if microphoneManager.isMicInUse {
-            Button {
-                haptic()
-                microphoneManager.toggleMute()
-            } label: {
-                HStack(spacing: 8) {
-                    Image(systemName: microphoneManager.isMuted ? "mic.slash.fill" : "mic.fill")
-                        .font(.system(size: 13, weight: .semibold))
-                        .foregroundColor(microphoneManager.isMuted ? .white.opacity(0.85) : .red)
-                    Text(microphoneManager.isMuted ? "Muted" : "Mic")
-                        .font(.system(size: 12, weight: .semibold, design: .rounded))
-                        .foregroundColor(.white)
-                }
-                .padding(.horizontal, 10)
-                .padding(.vertical, 6)
-                .background(Capsule().fill(Color.black.opacity(0.25)))
-            }
-            .buttonStyle(.plain)
-        }
-    }
-}
-
-struct GeminiPickerBridge: View {
-    @EnvironmentObject private var pickerHelper: ContentPickerHelper
-    @EnvironmentObject private var geminiLiveManager: GeminiLiveManager
-    @EnvironmentObject private var liveActivityManager: LiveActivityManager
-
-    var body: some View {
-        Color.clear
-            .frame(width: 0, height: 0)
-            .allowsHitTesting(false)
-            .onReceive(pickerHelper.pickerResultPublisher) { result in
-                switch result {
-                case .success(let filter):
-                    geminiLiveManager.startSession(with: filter)
-                    liveActivityManager.startGeminiLive()
-                case .failure(let error):
-                    if let error { print("Picker failed with error: \(error)") }
-                    else { print("Picker was cancelled by the user.") }
-                }
-            }
     }
 }

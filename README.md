@@ -48,7 +48,7 @@ Sapphire is a sleek notch app that displays current activities neatly around the
     <h3 style="margin-top: 0;">Advanced Audio Features (Beta)</h3>
     <p>Adjust individual app volumes, device volumes, app EQs and device EQs right from the notch</p>
   </div>
-  
+
   <div style="border: 1px solid #30363d; border-radius: 8px; padding: 16px; width: 300px; background-color: #1c1c1e;">
     <h3 style="margin-top: 0;">Eye Break</h3>
     <p>Health should always be your priority. With the sleek notch UI, a reminder is given every 20 minutes to look 20 feet away for 20 seconds, and more.</p>
@@ -57,11 +57,6 @@ Sapphire is a sleek notch app that displays current activities neatly around the
   <div style="border: 1px solid #30363d; border-radius: 8px; padding: 16px; width: 300px; background-color: #1c1c1e;">
     <h3 style="margin-top: 0;">Weather</h3>
     <p>Current weather is persistently shown in the notch, so you're in the know about your surroundings, and more.</p>
-  </div>
-
-  <div style="border: 1px solid #30363d; border-radius: 8px; padding: 16px; width: 300px; background-color: #1c1c1e;">
-    <h3 style="margin-top: 0;">Gemini</h3>
-    <p>Share your screen and discuss topics conveniently using Gemini Live, and more.</p>
   </div>
 
   <div style="border: 1px solid #30363d; border-radius: 8px; padding: 16px; width: 300px; background-color: #1c1c1e;">

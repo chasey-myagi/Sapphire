@@ -39,7 +39,6 @@ python3 "$PROJECT_DIR/script/localization/test_catalog_check.py"
 python3 "$PROJECT_DIR/script/check_localization.py" --app "$APP" \
   --app-stringsdata "$INTERMEDIATES/Sapphire.build/Objects-normal" \
   --app-stringsdata "$INTERMEDIATES/NearbyShare.build/Objects-normal" \
-  --widget-stringsdata "$INTERMEDIATES/SapphireAndroidWidgets.build/Objects-normal" \
   | tee "$RESULTS/catalogs.json"
 python3 "$PROJECT_DIR/script/test_localization.py" --app "$APP" \
   --output "$RESULTS/native-resources.json"

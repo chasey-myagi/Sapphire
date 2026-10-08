@@ -21,50 +21,5 @@ struct SportsSettingsView: View {
     var body: some View { UnavailableFeatureView(name: String(localized: "Sports")) }
 }
 
-struct FinanceSettingsView: View {
-    var body: some View { UnavailableFeatureView(name: String(localized: "Finance")) }
-}
 
-struct AccountSettingsView: View {
-    var body: some View { UnavailableFeatureView(name: String(localized: "Account management")) }
-}
-
-struct BetaBlockerView: View {
-    var onValidationComplete: () -> Void
-
-    var body: some View {
-        VStack(spacing: 12) {
-            Text("Beta validation is not included in this build.")
-                .foregroundColor(.secondary)
-            Button("Continue", action: onValidationComplete)
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-    }
-}
-
-struct NativePaymentSheetView: View {
-    var tier: SubscriptionTier
-    var deviceCount: Int
-    var isAddingOnly: Bool
-    var onDismiss: () -> Void
-
-    var body: some View {
-        VStack(spacing: 12) {
-            Text("Purchases are not included in this build.")
-                .foregroundColor(.secondary)
-            Button("Close", action: onDismiss)
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-    }
-}
-
-enum SubscriptionRevocationReason: String {
-    case sessionExpired
-
-    var alertMessage: String { String(localized: "Your session has expired. Please sign in again.") }
-}
-
-final class ScreenPerception {
-    func captureAnnotatedScreen() async -> (NSImage?, [String]) { (nil, []) }
-}
 #endif

@@ -9,9 +9,6 @@
 /* Begin PBXBuildFile section */
 		A0C100000000000000002001 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = A0C100000000000000002002 /* Localizable.xcstrings */; };
 		3EA625D8CDF343379815DBE6 /* FirebaseAppCheck in Frameworks */ = {isa = PBXBuildFile; productRef = 350EC0B0ACC04131989F6CB6 /* FirebaseAppCheck */; };
-		A17D00000000000000000007 /* SapphireAndroidWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17D00000000000000000003 /* SapphireAndroidWidgets.swift */; };
-		A17D00000000000000000008 /* AndroidWidgetSnapshotStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17D00000000000000000006 /* AndroidWidgetSnapshotStore.swift */; };
-		A17D00000000000000000009 /* SapphireAndroidWidgets.appex in Embed Widget Extensions */ = {isa = PBXBuildFile; fileRef = A17D00000000000000000001 /* SapphireAndroidWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C0DE20000000000000000001 /* comptest in Embed iDevice Tools */ = {isa = PBXBuildFile; fileRef = C0DE10000000000000000001 /* comptest */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		C0DE20000000000000000002 /* idevice_id in Embed iDevice Tools */ = {isa = PBXBuildFile; fileRef = C0DE10000000000000000002 /* idevice_id */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		C0DE20000000000000000003 /* ideviceinfo in Embed iDevice Tools */ = {isa = PBXBuildFile; fileRef = C0DE10000000000000000003 /* ideviceinfo */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
@@ -23,19 +20,12 @@
 		C0DE20000000000000000009 /* libplist-2.0.4.dylib in Embed iDevice Libraries */ = {isa = PBXBuildFile; fileRef = C0DE10000000000000000009 /* libplist-2.0.4.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		C0DE2000000000000000000A /* libssl.3.dylib in Embed iDevice Libraries */ = {isa = PBXBuildFile; fileRef = C0DE1000000000000000000A /* libssl.3.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		C0DE2000000000000000000B /* libusbmuxd-2.0.6.dylib in Embed iDevice Libraries */ = {isa = PBXBuildFile; fileRef = C0DE1000000000000000000B /* libusbmuxd-2.0.6.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		CAFE100000000000000007AA /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAFE100000000000000003AA /* main.swift */; };
-		CAFE100000000000000013AA /* SapphireCameraExtension.systemextension in Embed System Extensions */ = {isa = PBXBuildFile; fileRef = CAFE100000000000000001AA /* SapphireCameraExtension.systemextension */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		CAFE200000000000000006BB /* SapphireAudioDriver.c in Sources */ = {isa = PBXBuildFile; fileRef = CAFE200000000000000003BB /* SapphireAudioDriver.c */; };
-		CAFE200000000000000010BB /* SapphireAudioDriver.driver in Embed Audio Driver */ = {isa = PBXBuildFile; fileRef = CAFE200000000000000001BB /* SapphireAudioDriver.driver */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		CAFE200000000000000013BB /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CAFE200000000000000014BB /* CoreAudio.framework */; };
 		DA1D1AB72EAA76DA00E7F1B4 /* com.shariq.sapphireHelper in Embed Helper Executable */ = {isa = PBXBuildFile; fileRef = DA452EAF2EAA57C90070E5C9 /* com.shariq.sapphireHelper */; };
 		DA262AE02EA4841B0027CA69 /* OSD.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA262ADF2EA4841B0027CA69 /* OSD.framework */; };
 		DA262AE62EA485150027CA69 /* CoreDisplay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA262AE52EA485150027CA69 /* CoreDisplay.framework */; };
 		DA262AF52EA5D1B70027CA69 /* MultitouchSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA262AF42EA5D1B70027CA69 /* MultitouchSupport.framework */; };
 		DA48B01B2E93DF9B0099BF74 /* SQLite in Frameworks */ = {isa = PBXBuildFile; productRef = DA48B01A2E93DF9B0099BF74 /* SQLite */; };
-		DA5E100A304CBB63003D1D37 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = DA5E1009304CBB63003D1D37 /* FirebaseAnalytics */; };
 		DA5E1010304CBB63003D1D37 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = DA5E100F304CBB63003D1D37 /* FirebaseCore */; };
-		DA5E1012304CBB63003D1D37 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = DA5E1011304CBB63003D1D37 /* FirebaseCrashlytics */; };
 		DA6344C82E5AA816007EAB5F /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA52567A2E162FA900D8F42E /* ShareViewController.swift */; };
 		DA7C49992E15D33A0049937A /* wire_format.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA7C49942E15D33A0049937A /* wire_format.pb.swift */; };
 		DA7C499A2E15D33A0049937A /* securemessage.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA7C49922E15D33A0049937A /* securemessage.pb.swift */; };
@@ -139,36 +129,11 @@
 		DACA66622E8B70E60056ED60 /* QRCode in Frameworks */ = {isa = PBXBuildFile; productRef = DACA66612E8B70E60056ED60 /* QRCode */; };
 		DACBB01D2E20321D00740C9B /* libNearbyShare.dylib in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DA7C49802E15CCA50049937A /* libNearbyShare.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		DAF7D8AE2E20801E00AB0820 /* SwiftProtobuf_SwiftProtobuf.bundle in CopyFiles */ = {isa = PBXBuildFile; fileRef = DAF7D8AD2E20801E00AB0820 /* SwiftProtobuf_SwiftProtobuf.bundle */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		F1CE00000000000000001AA /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1CE000000000000000002AA /* main.swift */; };
-		F1CE00000000000000002AA /* SapphireFinderSync.appex in Embed Finder Extensions */ = {isa = PBXBuildFile; fileRef = F1CE000000000000000001AA /* SapphireFinderSync.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		F2DE000000000000000013BB /* FileProviderExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2DE000000000000000002BB /* FileProviderExtension.swift */; };
-		F2DE000000000000000018BB /* SapphireFileProvider.appex in Embed Finder Extensions */ = {isa = PBXBuildFile; fileRef = F2DE000000000000000001BB /* SapphireFileProvider.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		F3A600000000000000000003 /* Yams in Frameworks */ = {isa = PBXBuildFile; productRef = F3A600000000000000000002 /* Yams */; };
 		F4C6BD0940E54C6EBC832604 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = FD831867A2F947938E17E286 /* FirebaseFirestore */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		A17D0000000000000000000F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DA46CF6E2DCBCA0000F00EC5 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = A17D0000000000000000000E;
-			remoteInfo = SapphireAndroidWidgets;
-		};
-		CAFE100000000000000015AA /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DA46CF6E2DCBCA0000F00EC5 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = CAFE10000000000000000EAA;
-			remoteInfo = SapphireCameraExtension;
-		};
-		CAFE200000000000000012BB /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DA46CF6E2DCBCA0000F00EC5 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = CAFE20000000000000000BBB;
-			remoteInfo = SapphireAudioDriver;
-		};
 		DA452EB82EAA58100070E5C9 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = DA46CF6E2DCBCA0000F00EC5 /* Project object */;
@@ -190,20 +155,6 @@
 			remoteGlobalIDString = DA7C497F2E15CCA50049937A;
 			remoteInfo = NearbyShare;
 		};
-		F1CE00000000000000000DAA /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DA46CF6E2DCBCA0000F00EC5 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = F1CE000000000000000008AA;
-			remoteInfo = SapphireFinderSync;
-		};
-		F2DE000000000000000012BB /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DA46CF6E2DCBCA0000F00EC5 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = F2DE00000000000000000ABB;
-			remoteInfo = SapphireFileProvider;
-		};
 		A0C100000000000000001001 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = DA46CF6E2DCBCA0000F00EC5 /* Project object */;
@@ -214,15 +165,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		A17D0000000000000000000D /* Embed Widget Extensions */ = {
-			isa = PBXCopyFilesBuildPhase;
-			dstPath = "";
-			dstSubfolder = PlugIns;
-			files = (
-				A17D00000000000000000009 /* SapphireAndroidWidgets.appex in Embed Widget Extensions */,
-			);
-			name = "Embed Widget Extensions";
-		};
 		C0DE40000000000000000001 /* Embed iDevice Tools */ = {
 			isa = PBXCopyFilesBuildPhase;
 			dstPath = libimobiledevice/bin;
@@ -249,24 +191,6 @@
 				C0DE2000000000000000000B /* libusbmuxd-2.0.6.dylib in Embed iDevice Libraries */,
 			);
 			name = "Embed iDevice Libraries";
-		};
-		CAFE100000000000000012AA /* Embed System Extensions */ = {
-			isa = PBXCopyFilesBuildPhase;
-			dstPath = Contents/Library/SystemExtensions;
-			dstSubfolder = Wrapper;
-			files = (
-				CAFE100000000000000013AA /* SapphireCameraExtension.systemextension in Embed System Extensions */,
-			);
-			name = "Embed System Extensions";
-		};
-		CAFE20000000000000000FBB /* Embed Audio Driver */ = {
-			isa = PBXCopyFilesBuildPhase;
-			dstPath = Contents/Resources;
-			dstSubfolder = Wrapper;
-			files = (
-				CAFE200000000000000010BB /* SapphireAudioDriver.driver in Embed Audio Driver */,
-			);
-			name = "Embed Audio Driver";
 		};
 		DA262B242EA942750027CA69 /* Embed Helper Executable */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -310,25 +234,10 @@
 				DAF7D8AE2E20801E00AB0820 /* SwiftProtobuf_SwiftProtobuf.bundle in CopyFiles */,
 			);
 		};
-		F1CE00000000000000003AA /* Embed Finder Extensions */ = {
-			isa = PBXCopyFilesBuildPhase;
-			dstPath = "";
-			dstSubfolder = PlugIns;
-			files = (
-				F1CE00000000000000002AA /* SapphireFinderSync.appex in Embed Finder Extensions */,
-				F2DE000000000000000018BB /* SapphireFileProvider.appex in Embed Finder Extensions */,
-			);
-			name = "Embed Finder Extensions";
-		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		A0C100000000000000002002 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
-		A17D00000000000000000001 /* SapphireAndroidWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = SapphireAndroidWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		A17D00000000000000000003 /* SapphireAndroidWidgets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SapphireAndroidWidgets.swift; sourceTree = "<group>"; };
-		A17D00000000000000000004 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		A17D00000000000000000005 /* SapphireAndroidWidgets.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SapphireAndroidWidgets.entitlements; sourceTree = "<group>"; };
-		A17D00000000000000000006 /* AndroidWidgetSnapshotStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AndroidWidgetSnapshotStore.swift; path = Sapphire/Services/AndroidWidgetSnapshotStore.swift; sourceTree = SOURCE_ROOT; };
 		C0DE10000000000000000001 /* comptest */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = comptest; sourceTree = "<group>"; };
 		C0DE10000000000000000002 /* idevice_id */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = idevice_id; sourceTree = "<group>"; };
 		C0DE10000000000000000003 /* ideviceinfo */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = ideviceinfo; sourceTree = "<group>"; };
@@ -340,17 +249,6 @@
 		C0DE10000000000000000009 /* libplist-2.0.4.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "libplist-2.0.4.dylib"; sourceTree = "<group>"; };
 		C0DE1000000000000000000A /* libssl.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libssl.3.dylib; sourceTree = "<group>"; };
 		C0DE1000000000000000000B /* libusbmuxd-2.0.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "libusbmuxd-2.0.6.dylib"; sourceTree = "<group>"; };
-		CAFE100000000000000001AA /* SapphireCameraExtension.systemextension */ = {isa = PBXFileReference; explicitFileType = "wrapper.system-extension"; includeInIndex = 0; path = SapphireCameraExtension.systemextension; sourceTree = BUILT_PRODUCTS_DIR; };
-		CAFE100000000000000003AA /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = main.swift; path = PublicExtensionStubs/Camera/main.swift; sourceTree = SOURCE_ROOT; };
-		CAFE100000000000000004AA /* SapphireCameraProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SapphireCameraProvider.swift; sourceTree = "<group>"; };
-		CAFE100000000000000005AA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		CAFE100000000000000006AA /* SapphireCameraExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SapphireCameraExtension.entitlements; sourceTree = "<group>"; };
-		CAFE10000000000000000AAA /* SapphireCameraIdentifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SapphireCameraIdentifiers.swift; path = Sapphire/Services/Continuity/SapphireCameraIdentifiers.swift; sourceTree = SOURCE_ROOT; };
-		CAFE200000000000000001BB /* SapphireAudioDriver.driver */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SapphireAudioDriver.driver; sourceTree = BUILT_PRODUCTS_DIR; };
-		CAFE200000000000000003BB /* SapphireAudioDriver.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = SapphireAudioDriver.c; path = PublicExtensionStubs/AudioDriver/SapphireAudioDriver.c; sourceTree = SOURCE_ROOT; };
-		CAFE200000000000000004BB /* SapphireMicRing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SapphireMicRing.h; sourceTree = "<group>"; };
-		CAFE200000000000000005BB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		CAFE200000000000000014BB /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
 		DA262ADF2EA4841B0027CA69 /* OSD.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OSD.framework; path = ../../../../System/Library/PrivateFrameworks/OSD.framework; sourceTree = "<group>"; };
 		DA262AE22EA484A70027CA69 /* Sapphire.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = Sapphire.xcodeproj; sourceTree = "<group>"; };
 		DA262AE52EA485150027CA69 /* CoreDisplay.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreDisplay.framework; path = ../../../../System/Library/Frameworks/CoreDisplay.framework; sourceTree = "<group>"; };
@@ -470,19 +368,6 @@
 		DACE9E002EADC9D000D01379 /* DriverKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DriverKit.framework; path = System/Library/Frameworks/DriverKit.framework; sourceTree = SDKROOT; };
 		DAF7D8AD2E20801E00AB0820 /* SwiftProtobuf_SwiftProtobuf.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = SwiftProtobuf_SwiftProtobuf.bundle; sourceTree = "<group>"; };
 		DAF9CD382E54EA4600348E9F /* Network.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Network.framework; path = System/Library/Frameworks/Network.framework; sourceTree = SDKROOT; };
-		F1CE000000000000000001AA /* SapphireFinderSync.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = SapphireFinderSync.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		F1CE000000000000000002AA /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = main.swift; path = PublicExtensionStubs/FinderSync/main.swift; sourceTree = SOURCE_ROOT; };
-		F1CE000000000000000004AA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		F1CE000000000000000005AA /* SapphireFinderSync.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SapphireFinderSync.entitlements; sourceTree = "<group>"; };
-		F2DE000000000000000001BB /* SapphireFileProvider.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = SapphireFileProvider.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		F2DE000000000000000002BB /* FileProviderExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = FileProviderExtension.swift; path = PublicExtensionStubs/FileProvider/FileProviderExtension.swift; sourceTree = SOURCE_ROOT; };
-		F2DE000000000000000003BB /* FileProviderItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileProviderItem.swift; sourceTree = "<group>"; };
-		F2DE000000000000000004BB /* FileProviderEnumerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileProviderEnumerator.swift; sourceTree = "<group>"; };
-		F2DE000000000000000005BB /* HostConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostConnection.swift; sourceTree = "<group>"; };
-		F2DE000000000000000006BB /* ContinuityFileProviderShared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ContinuityFileProviderShared.swift; path = Sapphire/Services/Continuity/FileProvider/ContinuityFileProviderShared.swift; sourceTree = SOURCE_ROOT; };
-		F2DE000000000000000007BB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		F2DE000000000000000008BB /* SapphireFileProvider.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SapphireFileProvider.entitlements; sourceTree = "<group>"; };
-		F2DE000000000000000019BB /* PhoneDrive.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = PhoneDrive.icns; sourceTree = "<group>"; };
 		A0C100000000000000001002 /* SapphireLocalizationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SapphireLocalizationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -608,22 +493,6 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		A17D0000000000000000000A /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			files = (
-			);
-		};
-		CAFE10000000000000000CAA /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			files = (
-			);
-		};
-		CAFE200000000000000008BB /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			files = (
-				CAFE200000000000000013BB /* CoreAudio.framework in Frameworks */,
-			);
-		};
 		DA452EAC2EAA57C90070E5C9 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			files = (
@@ -649,11 +518,9 @@
 				DA7C49AD2E15D3800049937A /* libNearbyShare.dylib in Frameworks */,
 				DABC6CDD2E17457A00A5CF83 /* IOKit.framework in Frameworks */,
 				DA8FB0532E7D898F00C9BD1A /* MobileTimerSupport.framework in Frameworks */,
-				DA5E1012304CBB63003D1D37 /* FirebaseCrashlytics in Frameworks */,
 				3EA625D8CDF343379815DBE6 /* FirebaseAppCheck in Frameworks */,
 				F4C6BD0940E54C6EBC832604 /* FirebaseFirestore in Frameworks */,
 				DA48B01B2E93DF9B0099BF74 /* SQLite in Frameworks */,
-				DA5E100A304CBB63003D1D37 /* FirebaseAnalytics in Frameworks */,
 				DA8FB0512E7D898F00C9BD1A /* MobileTimer.framework in Frameworks */,
 			);
 		};
@@ -675,16 +542,6 @@
 			files = (
 			);
 		};
-		F1CE000000000000000006AA /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			files = (
-			);
-		};
-		F2DE00000000000000000FBB /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			files = (
-			);
-		};
 		A0C100000000000000001004 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			files = (
@@ -693,18 +550,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		A17D00000000000000000002 /* SapphireAndroidWidgets */ = {
-			isa = PBXGroup;
-			children = (
-				A17D00000000000000000003 /* SapphireAndroidWidgets.swift */,
-				A0C100000000000000002002 /* Localizable.xcstrings */,
-				A17D00000000000000000006 /* AndroidWidgetSnapshotStore.swift */,
-				A17D00000000000000000004 /* Info.plist */,
-				A17D00000000000000000005 /* SapphireAndroidWidgets.entitlements */,
-			);
-			path = SapphireAndroidWidgets;
-			sourceTree = "<group>";
-		};
 		C0DE30000000000000000001 /* libimobiledevice */ = {
 			isa = PBXGroup;
 			children = (
@@ -739,28 +584,6 @@
 			path = lib;
 			sourceTree = "<group>";
 		};
-		CAFE100000000000000002AA /* SapphireCameraExtension */ = {
-			isa = PBXGroup;
-			children = (
-				CAFE100000000000000003AA /* main.swift */,
-				CAFE100000000000000004AA /* SapphireCameraProvider.swift */,
-				CAFE10000000000000000AAA /* SapphireCameraIdentifiers.swift */,
-				CAFE100000000000000005AA /* Info.plist */,
-				CAFE100000000000000006AA /* SapphireCameraExtension.entitlements */,
-			);
-			path = SapphireCameraExtension;
-			sourceTree = "<group>";
-		};
-		CAFE200000000000000002BB /* SapphireAudioDriver */ = {
-			isa = PBXGroup;
-			children = (
-				CAFE200000000000000003BB /* SapphireAudioDriver.c */,
-				CAFE200000000000000004BB /* SapphireMicRing.h */,
-				CAFE200000000000000005BB /* Info.plist */,
-			);
-			path = SapphireAudioDriver;
-			sourceTree = "<group>";
-		};
 		DA262AE32EA484A70027CA69 /* Products */ = {
 			isa = PBXGroup;
 			name = Products;
@@ -769,10 +592,7 @@
 		DA46CF6D2DCBCA0000F00EC5 = {
 			isa = PBXGroup;
 			children = (
-				A17D00000000000000000002 /* SapphireAndroidWidgets */,
 				C0DE30000000000000000001 /* libimobiledevice */,
-				F1CE000000000000000007AA /* SapphireFinderSync */,
-				F2DE000000000000000009BB /* SapphireFileProvider */,
 				DA46CF7F2DCBCA0100F00EC5 /* SapphireTests */,
 				A0C100000000000000001003 /* SapphireLocalizationTests */,
 				DA91BDE72E773A9D001E7836 /* SystemSounds */,
@@ -788,8 +608,6 @@
 				DA7C49B62E15D7360049937A /* ObjC */,
 				DA8FB0272E7CB76B00C9BD1A /* PrivateHeaders */,
 				DA789CFA2FAFC26000EB906E /* Volume */,
-				CAFE100000000000000002AA /* SapphireCameraExtension */,
-				CAFE200000000000000002BB /* SapphireAudioDriver */,
 				DA88288E304B06AB00E0ED48 /* Recovered References */,
 			);
 			sourceTree = "<group>";
@@ -797,17 +615,12 @@
 		DA46CF772DCBCA0000F00EC5 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				A17D00000000000000000001 /* SapphireAndroidWidgets.appex */,
-				F1CE000000000000000001AA /* SapphireFinderSync.appex */,
-				F2DE000000000000000001BB /* SapphireFileProvider.appex */,
 				DA46CF762DCBCA0000F00EC5 /* Sapphire.app */,
 				DA46CF872DCBCA0100F00EC5 /* SapphireTests.xctest */,
 				A0C100000000000000001002 /* SapphireLocalizationTests.xctest */,
 				DA7C49802E15CCA50049937A /* libNearbyShare.dylib */,
 				DAA7D9D42E8633B20032748B /* abt */,
 				DA452EAF2EAA57C90070E5C9 /* com.shariq.sapphireHelper */,
-				CAFE100000000000000001AA /* SapphireCameraExtension.systemextension */,
-				CAFE200000000000000001BB /* SapphireAudioDriver.driver */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -888,7 +701,6 @@
 		DA88288E304B06AB00E0ED48 /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
-				CAFE200000000000000014BB /* CoreAudio.framework */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -1032,31 +844,6 @@
 			path = telephony;
 			sourceTree = "<group>";
 		};
-		F1CE000000000000000007AA /* SapphireFinderSync */ = {
-			isa = PBXGroup;
-			children = (
-				F1CE000000000000000002AA /* main.swift */,
-				F1CE000000000000000004AA /* Info.plist */,
-				F1CE000000000000000005AA /* SapphireFinderSync.entitlements */,
-			);
-			path = SapphireFinderSync;
-			sourceTree = "<group>";
-		};
-		F2DE000000000000000009BB /* SapphireFileProvider */ = {
-			isa = PBXGroup;
-			children = (
-				F2DE000000000000000002BB /* FileProviderExtension.swift */,
-				F2DE000000000000000003BB /* FileProviderItem.swift */,
-				F2DE000000000000000004BB /* FileProviderEnumerator.swift */,
-				F2DE000000000000000005BB /* HostConnection.swift */,
-				F2DE000000000000000006BB /* ContinuityFileProviderShared.swift */,
-				F2DE000000000000000019BB /* PhoneDrive.icns */,
-				F2DE000000000000000007BB /* Info.plist */,
-				F2DE000000000000000008BB /* SapphireFileProvider.entitlements */,
-			);
-			path = SapphireFileProvider;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -1068,51 +855,6 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		A17D0000000000000000000E /* SapphireAndroidWidgets */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = A17D00000000000000000013 /* Build configuration list for PBXNativeTarget "SapphireAndroidWidgets" */;
-			buildPhases = (
-				A17D0000000000000000000B /* Sources */,
-				A17D0000000000000000000A /* Frameworks */,
-				A17D0000000000000000000C /* Resources */,
-			);
-			buildRules = (
-			);
-			name = SapphireAndroidWidgets;
-			productName = SapphireAndroidWidgets;
-			productReference = A17D00000000000000000001 /* SapphireAndroidWidgets.appex */;
-			productType = "com.apple.product-type.app-extension";
-		};
-		CAFE10000000000000000EAA /* SapphireCameraExtension */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = CAFE100000000000000011AA /* Build configuration list for PBXNativeTarget "SapphireCameraExtension" */;
-			buildPhases = (
-				CAFE10000000000000000BAA /* Sources */,
-				CAFE10000000000000000CAA /* Frameworks */,
-				CAFE10000000000000000DAA /* Resources */,
-			);
-			buildRules = (
-			);
-			name = SapphireCameraExtension;
-			productName = SapphireCameraExtension;
-			productReference = CAFE100000000000000001AA /* SapphireCameraExtension.systemextension */;
-			productType = "com.apple.product-type.system-extension";
-		};
-		CAFE20000000000000000BBB /* SapphireAudioDriver */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = CAFE20000000000000000EBB /* Build configuration list for PBXNativeTarget "SapphireAudioDriver" */;
-			buildPhases = (
-				CAFE200000000000000007BB /* Sources */,
-				CAFE200000000000000008BB /* Frameworks */,
-				CAFE200000000000000009BB /* Resources */,
-			);
-			buildRules = (
-			);
-			name = SapphireAudioDriver;
-			productName = SapphireAudioDriver;
-			productReference = CAFE200000000000000001BB /* SapphireAudioDriver.driver */;
-			productType = "com.apple.product-type.bundle";
-		};
 		DA452EAE2EAA57C90070E5C9 /* com.shariq.sapphireHelper */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = DA452EB32EAA57C90070E5C9 /* Build configuration list for PBXNativeTarget "com.shariq.sapphireHelper" */;
@@ -1143,23 +885,13 @@
 				DAF7D8AC2E207C5100AB0820 /* CopyFiles */,
 				DABFA98B2EBFBA35000C5A8B /* Embed Helper LaunchDaemon Plist */,
 				DA262B242EA942750027CA69 /* Embed Helper Executable */,
-				CAFE100000000000000012AA /* Embed System Extensions */,
-				CAFE20000000000000000FBB /* Embed Audio Driver */,
-				F1CE00000000000000003AA /* Embed Finder Extensions */,
-				A17D0000000000000000000D /* Embed Widget Extensions */,
 				DA452EBA2EAA5A010070E5C9 /* Resign Sapphire Helper */,
-				DAC019182E9EA03E00CA587F /* Upload Crashlytics Symbols */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				A17D00000000000000000010 /* PBXTargetDependency */,
-				CAFE100000000000000014AA /* PBXTargetDependency */,
-				CAFE200000000000000011BB /* PBXTargetDependency */,
 				DA452EB92EAA58100070E5C9 /* PBXTargetDependency */,
 				DA7C49B02E15D3800049937A /* PBXTargetDependency */,
-				F1CE00000000000000000CAA /* PBXTargetDependency */,
-				F2DE000000000000000011BB /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				DA183FC92E122AF30056667D /* Sapphire */,
@@ -1170,9 +902,7 @@
 			packageProductDependencies = (
 				F3A600000000000000000002 /* Yams */,
 				DA48B01A2E93DF9B0099BF74 /* SQLite */,
-				DA5E1009304CBB63003D1D37 /* FirebaseAnalytics */,
 				DA5E100F304CBB63003D1D37 /* FirebaseCore */,
-				DA5E1011304CBB63003D1D37 /* FirebaseCrashlytics */,
 				350EC0B0ACC04131989F6CB6 /* FirebaseAppCheck */,
 				FD831867A2F947938E17E286 /* FirebaseFirestore */,
 			);
@@ -1239,36 +969,6 @@
 			productReference = DAA7D9D42E8633B20032748B /* abt */;
 			productType = "com.apple.product-type.tool";
 		};
-		F1CE000000000000000008AA /* SapphireFinderSync */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = F1CE000000000000000009AA /* Build configuration list for PBXNativeTarget "SapphireFinderSync" */;
-			buildPhases = (
-				F1CE00000000000000000AAA /* Sources */,
-				F1CE000000000000000006AA /* Frameworks */,
-				F1CE00000000000000000BAA /* Resources */,
-			);
-			buildRules = (
-			);
-			name = SapphireFinderSync;
-			productName = SapphireFinderSync;
-			productReference = F1CE000000000000000001AA /* SapphireFinderSync.appex */;
-			productType = "com.apple.product-type.app-extension";
-		};
-		F2DE00000000000000000ABB /* SapphireFileProvider */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = F2DE00000000000000000BBB /* Build configuration list for PBXNativeTarget "SapphireFileProvider" */;
-			buildPhases = (
-				F2DE00000000000000000EBB /* Sources */,
-				F2DE00000000000000000FBB /* Frameworks */,
-				F2DE000000000000000010BB /* Resources */,
-			);
-			buildRules = (
-			);
-			name = SapphireFileProvider;
-			productName = SapphireFileProvider;
-			productReference = F2DE000000000000000001BB /* SapphireFileProvider.appex */;
-			productType = "com.apple.product-type.app-extension";
-		};
 		A0C100000000000000001005 /* SapphireLocalizationTests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = A0C10000000000000000100B /* Build configuration list for PBXNativeTarget "SapphireLocalizationTests" */;
@@ -1300,9 +1000,6 @@
 				LastSwiftUpdateCheck = 2600;
 				LastUpgradeCheck = 2650;
 				TargetAttributes = {
-					A17D0000000000000000000E = {
-						CreatedOnToolsVersion = 26.0;
-					};
 					DA452EAE2EAA57C90070E5C9 = {
 						CreatedOnToolsVersion = 26.0.1;
 						LastSwiftMigration = 2600;
@@ -1352,38 +1049,17 @@
 			);
 			projectRoot = "";
 			targets = (
-				A17D0000000000000000000E /* SapphireAndroidWidgets */,
 				DA46CF752DCBCA0000F00EC5 /* Sapphire */,
 				DA46CF862DCBCA0100F00EC5 /* SapphireTests */,
 				A0C100000000000000001005 /* SapphireLocalizationTests */,
 				DA7C497F2E15CCA50049937A /* NearbyShare */,
 				DAA7D9D32E8633B20032748B /* abt */,
 				DA452EAE2EAA57C90070E5C9 /* com.shariq.sapphireHelper */,
-				CAFE10000000000000000EAA /* SapphireCameraExtension */,
-				CAFE20000000000000000BBB /* SapphireAudioDriver */,
-				F1CE000000000000000008AA /* SapphireFinderSync */,
-				F2DE00000000000000000ABB /* SapphireFileProvider */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		A17D0000000000000000000C /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			files = (
-				A0C100000000000000002001 /* Localizable.xcstrings in Resources */,
-			);
-		};
-		CAFE10000000000000000DAA /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			files = (
-			);
-		};
-		CAFE200000000000000009BB /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			files = (
-			);
-		};
 		DA46CF742DCBCA0000F00EC5 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			files = (
@@ -1462,16 +1138,6 @@
 			files = (
 			);
 		};
-		F1CE00000000000000000BAA /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			files = (
-			);
-		};
-		F2DE000000000000000010BB /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			files = (
-			);
-		};
 		A0C100000000000000001006 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			files = (
@@ -1536,54 +1202,9 @@
 				"",
 			);
 		};
-		DAC019182E9EA03E00CA587F /* Upload Crashlytics Symbols */ = {
-			isa = PBXShellScriptBuildPhase;
-			inputPaths = (
-				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}",
-				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${PRODUCT_NAME}",
-				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Info.plist",
-				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/GoogleService-Info.plist",
-				"$(TARGET_BUILD_DIR)/$(EXECUTABLE_PATH)",
-			);
-			name = "Upload Crashlytics Symbols";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/firebase-crashlytics-uploaded.stamp",
-			);
-			shellPath = /bin/sh;
-			shellScript = (
-				"set -e",
-				"if [ \"${SAPPHIRE_LOCAL_BUILD:-NO}\" = \"YES\" ]; then",
-				"  echo \"Local public build: Crashlytics symbol upload disabled\"",
-				"  touch \"${SCRIPT_OUTPUT_FILE_0}\"",
-				"  exit 0",
-				"fi",
-				"\"${BUILD_DIR%/Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\"",
-				"touch \"${SCRIPT_OUTPUT_FILE_0}\"",
-				"",
-			);
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		A17D0000000000000000000B /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			files = (
-				A17D00000000000000000007 /* SapphireAndroidWidgets.swift in Sources */,
-				A17D00000000000000000008 /* AndroidWidgetSnapshotStore.swift in Sources */,
-			);
-		};
-		CAFE10000000000000000BAA /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			files = (
-				CAFE100000000000000007AA /* main.swift in Sources */,
-			);
-		};
-		CAFE200000000000000007BB /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			files = (
-				CAFE200000000000000006BB /* SapphireAudioDriver.c in Sources */,
-			);
-		};
 		DA452EAB2EAA57C90070E5C9 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			files = (
@@ -1626,18 +1247,6 @@
 			files = (
 			);
 		};
-		F1CE00000000000000000AAA /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			files = (
-				F1CE00000000000000001AA /* main.swift in Sources */,
-			);
-		};
-		F2DE00000000000000000EBB /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			files = (
-				F2DE000000000000000013BB /* FileProviderExtension.swift in Sources */,
-			);
-		};
 		A0C100000000000000001007 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			files = (
@@ -1646,21 +1255,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		A17D00000000000000000010 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = A17D0000000000000000000E /* SapphireAndroidWidgets */;
-			targetProxy = A17D0000000000000000000F /* PBXContainerItemProxy */;
-		};
-		CAFE100000000000000014AA /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = CAFE10000000000000000EAA /* SapphireCameraExtension */;
-			targetProxy = CAFE100000000000000015AA /* PBXContainerItemProxy */;
-		};
-		CAFE200000000000000011BB /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = CAFE20000000000000000BBB /* SapphireAudioDriver */;
-			targetProxy = CAFE200000000000000012BB /* PBXContainerItemProxy */;
-		};
 		DA452EB92EAA58100070E5C9 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = DA452EAE2EAA57C90070E5C9 /* com.shariq.sapphireHelper */;
@@ -1676,16 +1270,6 @@
 			target = DA7C497F2E15CCA50049937A /* NearbyShare */;
 			targetProxy = DA7C49AF2E15D3800049937A /* PBXContainerItemProxy */;
 		};
-		F1CE00000000000000000CAA /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = F1CE000000000000000008AA /* SapphireFinderSync */;
-			targetProxy = F1CE00000000000000000DAA /* PBXContainerItemProxy */;
-		};
-		F2DE000000000000000011BB /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = F2DE00000000000000000ABB /* SapphireFileProvider */;
-			targetProxy = F2DE000000000000000012BB /* PBXContainerItemProxy */;
-		};
 		A0C100000000000000001008 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = DA46CF752DCBCA0000F00EC5 /* Sapphire */;
@@ -1694,166 +1278,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		A17D00000000000000000011 /* Debug configuration for PBXNativeTarget "SapphireAndroidWidgets" */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				APPLICATION_EXTENSION_API_ONLY = YES;
-				CODE_SIGN_ENTITLEMENTS = SapphireAndroidWidgets/SapphireAndroidWidgets.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = KVQFWJ7C7S;
-				ENABLE_APP_SANDBOX = YES;
-				ENABLE_HARDENED_RUNTIME = YES;
-				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = SapphireAndroidWidgets/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@executable_path/../../../../Frameworks",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 14.6;
-				MARKETING_VERSION = 3.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.cshariq.sapphire.AndroidWidgets;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				REGISTER_APP_GROUPS = YES;
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
-			};
-			name = Debug;
-		};
-		A17D00000000000000000012 /* Release configuration for PBXNativeTarget "SapphireAndroidWidgets" */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				APPLICATION_EXTENSION_API_ONLY = YES;
-				CODE_SIGN_ENTITLEMENTS = SapphireAndroidWidgets/SapphireAndroidWidgets.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = KVQFWJ7C7S;
-				ENABLE_APP_SANDBOX = YES;
-				ENABLE_HARDENED_RUNTIME = YES;
-				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = SapphireAndroidWidgets/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@executable_path/../../../../Frameworks",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 14.6;
-				MARKETING_VERSION = 3.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.cshariq.sapphire.AndroidWidgets;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				REGISTER_APP_GROUPS = YES;
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-			};
-			name = Release;
-		};
-		CAFE10000000000000000FAA /* Debug configuration for PBXNativeTarget "SapphireCameraExtension" */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = KVQFWJ7C7S;
-				ENABLE_HARDENED_RUNTIME = YES;
-				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = PublicExtensionStubs/Camera/Info.plist;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@executable_path/../../../../Frameworks",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 14.6;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.shariq.sapphire.CameraExtension;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
-			};
-			name = Debug;
-		};
-		CAFE100000000000000010AA /* Release configuration for PBXNativeTarget "SapphireCameraExtension" */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = KVQFWJ7C7S;
-				ENABLE_HARDENED_RUNTIME = YES;
-				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = PublicExtensionStubs/Camera/Info.plist;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@executable_path/../../../../Frameworks",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 14.6;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.shariq.sapphire.CameraExtension;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-			};
-			name = Release;
-		};
-		CAFE20000000000000000CBB /* Debug configuration for PBXNativeTarget "SapphireAudioDriver" */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = KVQFWJ7C7S;
-				ENABLE_HARDENED_RUNTIME = NO;
-				EXECUTABLE_EXTENSION = driver;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = PublicExtensionStubs/AudioDriver/Info.plist;
-				MACOSX_DEPLOYMENT_TARGET = 14.6;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.shariq.sapphire.ContinuityMicDriver;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				WRAPPER_EXTENSION = driver;
-			};
-			name = Debug;
-		};
-		CAFE20000000000000000DBB /* Release configuration for PBXNativeTarget "SapphireAudioDriver" */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = KVQFWJ7C7S;
-				ENABLE_HARDENED_RUNTIME = NO;
-				EXECUTABLE_EXTENSION = driver;
-				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = PublicExtensionStubs/AudioDriver/Info.plist;
-				MACOSX_DEPLOYMENT_TARGET = 14.6;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.shariq.sapphire.ContinuityMicDriver;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				WRAPPER_EXTENSION = driver;
-			};
-			name = Release;
-		};
 		DA452EB42EAA57C90070E5C9 /* Debug configuration for PBXNativeTarget "com.shariq.sapphireHelper" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2161,12 +1585,11 @@
 				INFOPLIST_KEY_NSLocationUsageDescription = "Sapphire needs this to weather";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Blip uses your location for local weather, nearby places, and location-aware tasks.";
 				INFOPLIST_KEY_NSMainStoryboardFile = Main;
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Sapphire uses the microphone for Gemini Live voice conversations.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Sapphire uses the microphone for audio capture.";
 				INFOPLIST_KEY_NSNetworkVolumesUsageDescription = "Sapphire needs this to provide nearby share functionality";
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
 				INFOPLIST_KEY_NSRemindersFullAccessUsageDescription = "Sapphire needs this to show upcoming reminders";
 				INFOPLIST_KEY_NSRemindersUsageDescription = "Needed to show reminders";
-				INFOPLIST_KEY_NSSystemExtensionUsageDescription = "Sapphire needs this extension to create a virtual multi-output audio device.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -2244,12 +1667,11 @@
 				INFOPLIST_KEY_NSLocationUsageDescription = "Sapphire needs this to weather";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Blip uses your location for local weather, nearby places, and location-aware tasks.";
 				INFOPLIST_KEY_NSMainStoryboardFile = Main;
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Sapphire uses the microphone for Gemini Live voice conversations.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Sapphire uses the microphone for audio capture.";
 				INFOPLIST_KEY_NSNetworkVolumesUsageDescription = "Sapphire needs this to provide nearby share functionality";
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
 				INFOPLIST_KEY_NSRemindersFullAccessUsageDescription = "Sapphire needs this to show upcoming reminders";
 				INFOPLIST_KEY_NSRemindersUsageDescription = "Needed to show reminders";
-				INFOPLIST_KEY_NSSystemExtensionUsageDescription = "Sapphire needs this extension to create a virtual multi-output audio device.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -2342,123 +1764,6 @@
 			};
 			name = Release;
 		};
-		F1CE00000000000000000EAA /* Debug configuration for PBXNativeTarget "SapphireFinderSync" */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = KVQFWJ7C7S;
-				ENABLE_HARDENED_RUNTIME = YES;
-				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = PublicExtensionStubs/FinderSync/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@executable_path/../../../../Frameworks",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 14.6;
-				MARKETING_VERSION = 2.9;
-				PRODUCT_BUNDLE_IDENTIFIER = com.cshariq.sapphire.FinderSync;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
-				WRAPPER_EXTENSION = appex;
-			};
-			name = Debug;
-		};
-		F1CE00000000000000000FAA /* Release configuration for PBXNativeTarget "SapphireFinderSync" */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = KVQFWJ7C7S;
-				ENABLE_HARDENED_RUNTIME = YES;
-				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = PublicExtensionStubs/FinderSync/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@executable_path/../../../../Frameworks",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 14.6;
-				MARKETING_VERSION = 2.9;
-				PRODUCT_BUNDLE_IDENTIFIER = com.cshariq.sapphire.FinderSync;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 5.0;
-				WRAPPER_EXTENSION = appex;
-			};
-			name = Release;
-		};
-		F2DE00000000000000000CBB /* Debug configuration for PBXNativeTarget "SapphireFileProvider" */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = KVQFWJ7C7S;
-				ENABLE_HARDENED_RUNTIME = YES;
-				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = PublicExtensionStubs/FileProvider/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@executable_path/../../../../Frameworks",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 14.6;
-				MARKETING_VERSION = 2.9;
-				PRODUCT_BUNDLE_IDENTIFIER = com.cshariq.sapphire.FileProvider;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
-				WRAPPER_EXTENSION = appex;
-			};
-			name = Debug;
-		};
-		F2DE00000000000000000DBB /* Release configuration for PBXNativeTarget "SapphireFileProvider" */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = KVQFWJ7C7S;
-				ENABLE_HARDENED_RUNTIME = YES;
-				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = PublicExtensionStubs/FileProvider/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@executable_path/../../../../Frameworks",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 14.6;
-				MARKETING_VERSION = 2.9;
-				PRODUCT_BUNDLE_IDENTIFIER = com.cshariq.sapphire.FileProvider;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				WRAPPER_EXTENSION = appex;
-			};
-			name = Release;
-		};
 		A0C100000000000000001009 /* Debug configuration for PBXNativeTarget "SapphireLocalizationTests" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2508,30 +1813,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		A17D00000000000000000013 /* Build configuration list for PBXNativeTarget "SapphireAndroidWidgets" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				A17D00000000000000000011 /* Debug configuration for PBXNativeTarget "SapphireAndroidWidgets" */,
-				A17D00000000000000000012 /* Release configuration for PBXNativeTarget "SapphireAndroidWidgets" */,
-			);
-			defaultConfigurationName = Release;
-		};
-		CAFE100000000000000011AA /* Build configuration list for PBXNativeTarget "SapphireCameraExtension" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				CAFE10000000000000000FAA /* Debug configuration for PBXNativeTarget "SapphireCameraExtension" */,
-				CAFE100000000000000010AA /* Release configuration for PBXNativeTarget "SapphireCameraExtension" */,
-			);
-			defaultConfigurationName = Release;
-		};
-		CAFE20000000000000000EBB /* Build configuration list for PBXNativeTarget "SapphireAudioDriver" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				CAFE20000000000000000CBB /* Debug configuration for PBXNativeTarget "SapphireAudioDriver" */,
-				CAFE20000000000000000DBB /* Release configuration for PBXNativeTarget "SapphireAudioDriver" */,
-			);
-			defaultConfigurationName = Release;
-		};
 		DA452EB32EAA57C90070E5C9 /* Build configuration list for PBXNativeTarget "com.shariq.sapphireHelper" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -2577,22 +1858,6 @@
 			buildConfigurations = (
 				DAA7D9D92E8633B20032748B /* Debug configuration for PBXNativeTarget "abt" */,
 				DAA7D9DA2E8633B20032748B /* Release configuration for PBXNativeTarget "abt" */,
-			);
-			defaultConfigurationName = Release;
-		};
-		F1CE000000000000000009AA /* Build configuration list for PBXNativeTarget "SapphireFinderSync" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				F1CE00000000000000000EAA /* Debug configuration for PBXNativeTarget "SapphireFinderSync" */,
-				F1CE00000000000000000FAA /* Release configuration for PBXNativeTarget "SapphireFinderSync" */,
-			);
-			defaultConfigurationName = Release;
-		};
-		F2DE00000000000000000BBB /* Build configuration list for PBXNativeTarget "SapphireFileProvider" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				F2DE00000000000000000CBB /* Debug configuration for PBXNativeTarget "SapphireFileProvider" */,
-				F2DE00000000000000000DBB /* Release configuration for PBXNativeTarget "SapphireFileProvider" */,
 			);
 			defaultConfigurationName = Release;
 		};
@@ -2684,20 +1949,10 @@
 			package = DA48B0192E93DF9B0099BF74 /* XCRemoteSwiftPackageReference "SQLite" */;
 			productName = SQLite;
 		};
-		DA5E1009304CBB63003D1D37 /* FirebaseAnalytics */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = DA5E1008304CBB63003D1D37 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseAnalytics;
-		};
 		DA5E100F304CBB63003D1D37 /* FirebaseCore */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = DA5E1008304CBB63003D1D37 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseCore;
-		};
-		DA5E1011304CBB63003D1D37 /* FirebaseCrashlytics */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = DA5E1008304CBB63003D1D37 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseCrashlytics;
 		};
 		DA7C49A42E15D34D0049937A /* SwiftECC */ = {
 			isa = XCSwiftPackageProductDependency;

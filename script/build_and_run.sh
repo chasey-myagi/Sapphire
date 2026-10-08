@@ -70,7 +70,6 @@ echo "Signed local app: $APP_BUNDLE"
 
 initialize_first_use_preferences() {
   if ! defaults read "$BUNDLE_ID" >/dev/null 2>&1; then
-    defaults write "$BUNDLE_ID" googleAnalyticsEnabled -bool false
     defaults write "$BUNDLE_ID" launchAtLogin -bool false
     defaults write "$BUNDLE_ID" automaticUpdateChecksEnabled -bool false
     defaults write "$BUNDLE_ID" automaticallyDownloadSapphireUpdates -bool false

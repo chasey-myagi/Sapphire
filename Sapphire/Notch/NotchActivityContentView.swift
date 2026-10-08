@@ -147,7 +147,6 @@ struct NotchActivityContentView: View {
     private func buildLeftView(for data: StandardActivityData) -> some View {
         switch data {
         case .music: AlbumArtView()
-        case .intelligenceAgent: IntelligenceAgentActivityView.left()
         case .devActivity(let task, _): DevActivityLiveActivityView.left(for: task)
         case .weather(let data): WeatherActivityView.left(for: data)
         case .calendar: CalendarProximityActivityView.left()
@@ -172,12 +171,7 @@ struct NotchActivityContentView: View {
             case .batteryLow: BluetoothBatteryLowView.left(for: device)
             }
         case .audioSwitch(let event): AudioSwitchActivityView.left(for: event)
-        case .continuity(let snapshot): ContinuityNotchActivityView.left(for: snapshot)
-        case .continuityExternal(let activity): ContinuityExternalActivityView.left(for: activity)
-        case .continuityMedia(let state, let artwork, _): ContinuityMediaActivityView.left(state: state, artwork: artwork)
-        case .geminiLive: GeminiActiveActivityView.left()
         case .sports(let payload, _): SportsLiveActivityView.left(for: payload, preferLogo: settings.settings.sportsPreferLogo)
-        case .finance(let payload): FinanceLiveActivityView.left(for: payload)
         case .microphone:
             MicrophoneLiveActivityView.left { MicrophoneUsageManager.shared.toggleMute() }
         case .nearDrop: NearDropCompactActivityView.left()
@@ -194,7 +188,6 @@ struct NotchActivityContentView: View {
     private func buildRightView(for data: StandardActivityData) -> some View {
         switch data {
         case .music: WaveformView()
-        case .intelligenceAgent(let status, let stepTitle, let current, let total): IntelligenceAgentActivityView.right(status: status, stepTitle: stepTitle, current: current, total: total)
         case .devActivity(let task, let additionalCount): DevActivityLiveActivityView.right(for: task, additionalCount: additionalCount)
         case .weather(let data): WeatherActivityView.right(for: data)
         case .calendar(let event): CalendarProximityActivityView.right(event: event)
@@ -219,14 +212,8 @@ struct NotchActivityContentView: View {
             case .batteryLow: BluetoothBatteryLowView.right(for: device)
             }
         case .audioSwitch(let event): AudioSwitchActivityView.right(for: event)
-        case .continuity(let snapshot): ContinuityNotchActivityView.right(for: snapshot)
-        case .continuityExternal(let activity): ContinuityExternalActivityView.right(for: activity)
-        case .continuityMedia(let state, _, let device): ContinuityMediaActivityView.right(state: state, deviceName: device)
-        case .geminiLive(let payload): GeminiActivityRightView(payload: payload)
         case .sports(let payload, _):
             SportsLiveActivityView.right(for: payload, preferLogo: settings.settings.sportsPreferLogo)
-        case .finance(let payload):
-            FinanceLiveActivityView.right(for: payload)
         case .microphone: MicrophoneLiveActivityView.right { MicrophoneUsageManager.shared.toggleMute() }
         case .nearDrop(let payload): NearDropCompactActivityView.right(payload: payload)
         case .hud(let type): SystemHUDSlimActivityView.right(type: type, settings: SettingsModel.shared)
@@ -281,17 +268,6 @@ private struct MusicKaraokeActivityTicker: View {
     }
 }
 
-private struct GeminiActivityRightView: View {
-    @EnvironmentObject private var geminiLiveManager: GeminiLiveManager
-
-    let payload: GeminiPayload
-
-    var body: some View {
-        GeminiActiveActivityView.right(isMuted: payload.isMicMuted) {
-            geminiLiveManager.toggleMicrophone()
-        }
-    }
-}
 
 private struct TimerActivityLeftView: View {
     @EnvironmentObject private var timerManager: TimerManager

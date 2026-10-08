@@ -170,20 +170,6 @@ struct NotchConfiguration {
     static var buttonSpringAnimationResponse: Double = 0.4
     static var buttonSpringAnimationDampingFraction: Double = 0.6
 
-    // MARK: - Gemini Button Configuration
-    static var geminiButtonBaseSize: CGFloat = 25
-    static var geminiButtonInactiveIconSize: CGFloat = 14
-    static var geminiButtonActiveIconSize: CGFloat = 12
-    static var geminiButtonActiveHorizontalPadding: CGFloat = 10
-    static var geminiButtonTextFontSize: CGFloat = 10
-    static var geminiButtonSpringResponse: Double = 0.5
-    static var geminiButtonSpringDamping: Double = 0.6
-    static var geminiGlowBaseOpacityNormal: Double = 0.4
-    static var geminiGlowBaseOpacityExpanded: Double = 0.7
-    static var geminiGlowAudioMultiplier: Double = 0.3
-    static var geminiGlowBaseRadiusNormal: CGFloat = 12
-    static var geminiGlowBaseRadiusExpanded: CGFloat = 25
-    static var geminiGlowAudioRadiusMultiplier: CGFloat = 15
 
     // MARK: - Animation Transition Timings
     static var contentUpdateDelay: TimeInterval = 0.1
@@ -206,7 +192,7 @@ struct NotchConfiguration {
     // MARK: - Menu Type Detection
     static func isLargeVerticalMenu(_ mode: NotchWidgetMode) -> Bool {
         switch mode {
-        case .musicPlayer, .sportsPlayer, .financePlayer, .notesPlayer, .clipboardPlayer, .nearDrop, .fileShelf, .weatherPlayer, .calendarPlayer, .geminiApiKeysMissing, .agentS, .blipHub, .circleToSearch, .multiAudio, .multiAudioDeviceAdjust, .multiAudioEQ, .multiAudioAppEQ, .multiAudioApp8D, .multiAudioAppSurround:
+        case .musicPlayer, .sportsPlayer, .notesPlayer, .clipboardPlayer, .nearDrop, .fileShelf, .weatherPlayer, .calendarPlayer, .circleToSearch, .multiAudio, .multiAudioDeviceAdjust, .multiAudioEQ, .multiAudioAppEQ, .multiAudioApp8D, .multiAudioAppSurround:
             return true
         default:
             return false

@@ -124,7 +124,7 @@ struct FocusStreakPanelView: View {
 
             passDots
 
-            Text("Free \(snapshot.tierName) users get \(snapshot.passesBaseAllowance) every month. Use one to revive a broken streak.")
+            Text("You get \(snapshot.passesBaseAllowance) every month. Use one to revive a broken streak.")
                 .font(.system(size: 10))
                 .foregroundColor(.white.opacity(0.45))
         }

@@ -14,7 +14,6 @@ enum ActivityType: Int, Equatable, Comparable, CaseIterable {
     case persistentWeather = 3
     case weather = 5
     case music = 10
-    case continuityMedia = 11
     case timer = 20
     case fileShelf = 25
     case desktopChange = 30
@@ -25,15 +24,11 @@ enum ActivityType: Int, Equatable, Comparable, CaseIterable {
     case reminder = 59
     case calendar = 60
     case bluetooth = 65
-    case continuity = 67
-    case continuityExternal = 68
     case audioSwitch = 70
     case fileProgress = 75
     case parcel = 78
     case notification = 80
-    case continuityNotification = 81
     case otp = 82
-    case geminiLive = 85
     case microphone = 86
     case nearbyShare = 90
     case eyeBreak = 95
@@ -41,10 +36,8 @@ enum ActivityType: Int, Equatable, Comparable, CaseIterable {
     case systemHUD = 100
     case unlocked = 105
     case lockScreen = 110
-    case intelligenceAgent = 120
     case devActivity = 121
     case sports = 125
-    case finance = 130
 
     static func < (lhs: ActivityType, rhs: ActivityType) -> Bool {
         return lhs.rawValue < rhs.rawValue
@@ -67,7 +60,6 @@ enum ActivityType: Int, Equatable, Comparable, CaseIterable {
         case .microphone: self = .microphone
         case .devActivity: self = .devActivity
         case .sports: self = .sports
-        case .finance: self = .finance
         }
     }
 
@@ -88,7 +80,6 @@ enum ActivityType: Int, Equatable, Comparable, CaseIterable {
         case .devActivity: return .devActivity
         case .stats, .persistentStats: return .stats
         case .sports: return .sports
-        case .finance: return .finance
         default: return nil
         }
     }

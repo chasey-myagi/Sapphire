@@ -8,13 +8,11 @@ import Foundation
 
 enum ReleaseChannelPolicy {
     static var runningBuildChannel: ReleaseChannel {
-        BetaEntitlementRuntime.isBetaBuild ? .beta : .stable
+        let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? ""
+        return version.lowercased().contains("beta") ? .beta : .stable
     }
 
     static func preferredChannel(from settings: Settings) -> ReleaseChannel {
-        guard SubscriptionAccess.hasAccess(to: .betaSoftwareUpdates) else {
-            return .stable
-        }
         return settings.releaseChannel
     }
 
@@ -22,15 +20,8 @@ enum ReleaseChannelPolicy {
         preferredChannel(from: settings)
     }
 
-    static func canChangePreferredChannel() -> Bool {
-        true
-    }
-
     static func shouldOfferStableDowngrade(for settings: Settings) -> Bool {
         runningBuildChannel == .beta && preferredChannel(from: settings) == .stable
     }
 
-    static func reconcileStoredPreference(_ settings: inout Settings) {
-        _ = settings
-    }
 }

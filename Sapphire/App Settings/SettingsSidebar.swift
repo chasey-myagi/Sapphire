@@ -15,11 +15,11 @@ struct SettingsSidebarGroup: Identifiable {
 
 extension SettingsSection {
     static let sidebarGroups: [SettingsSidebarGroup] = [
-        .init(id: "general", title: String(localized: "General"), sections: [.general, .keyboardShortcuts, .bluetoothUnlock, .intelligence, .neardrop, .continuity]),
+        .init(id: "general", title: String(localized: "General"), sections: [.general, .keyboardShortcuts, .bluetoothUnlock, .neardrop]),
         .init(id: "notch", title: String(localized: "Notch"), sections: [.appearance, .widgets, .liveActivities, .lockScreen, .notifications, .hud]),
-        .init(id: "widgetsAndContent", title: String(localized: "Widgets & Content"), sections: [.music, .weather, .calendar, .sports, .finance, .battery, .audio, .bluetooth, .shortcuts, .fileShelf, .notes, .clipboard, .mirror, .caffeine]),
+        .init(id: "widgetsAndContent", title: String(localized: "Widgets & Content"), sections: [.music, .weather, .calendar, .sports, .battery, .audio, .bluetooth, .shortcuts, .fileShelf, .notes, .clipboard, .mirror, .caffeine]),
         .init(id: "systemAndUtilities", title: String(localized: "System & Utilities"), sections: [.systemEnhance, .snapZones, .dockLayouts, .mediaOptimizer, .mouse, .monitoring, .devActivity, .emoji, .archives, .apps, .storage]),
-        .init(id: "focusAndSecurity", title: String(localized: "Focus & Security"), sections: [.eyeBreak, .focusSession, .appLock]),
+        .init(id: "focusAndSecurity", title: String(localized: "Focus & Security"), sections: [.eyeBreak, .focusSession]),
         .init(id: "about", title: "", sections: [.about])
     ]
 
@@ -39,26 +39,14 @@ extension SettingsSection {
 
 struct SettingsSidebarView: View {
     @Binding var selectedSection: SettingsSection?
-    @Binding var showAccountPane: Bool
     let onQuit: () -> Void
-    @ObservedObject private var subscriptionManager = SubscriptionManager.shared
     @State private var searchText = ""
 
     private var filteredGroups: [SettingsSidebarGroup] {
         SettingsSection.sidebarGroups(matching: searchText)
     }
 
-    private var lockedSections: Set<SettingsSection> {
-        Set(SettingsSection.sidebarGroups
-            .flatMap(\.sections)
-            .filter { section in
-                section.requiredPremiumFeature
-                    .map { !subscriptionManager.hasAccess(to: $0) } ?? false
-            })
-    }
-
     var body: some View {
-        let lockedSections = lockedSections
         let filteredGroups = filteredGroups
 
         VStack(alignment: .leading, spacing: 0) {
@@ -73,34 +61,17 @@ struct SettingsSidebarView: View {
             .padding(.horizontal, 12)
             .padding(.bottom, 12)
 
-            // MARK: 2. Apple ID Style Account Sidebar Card (Below Search Bar)
-            SidebarAccountCardView(
-                subscriptionManager: subscriptionManager,
-                isSelected: showAccountPane
-            ) {
-                withAnimation(.easeInOut(duration: 0.15)) {
-                    showAccountPane = true
-                    selectedSection = nil
-                }
-            }
-
             // MARK: 3. Settings Sections list
             List(selection: Binding(
                 get: { selectedSection },
                 set: { value in
                     selectedSection = value
-                    if value != nil {
-                        showAccountPane = false
-                    }
                 }
             )) {
                 ForEach(filteredGroups) { group in
                     Section {
                         ForEach(group.sections) { section in
-                            SidebarRowView(
-                                section: section,
-                                isPremiumLocked: lockedSections.contains(section)
-                            )
+                            SidebarRowView(section: section)
                             .tag(section)
                         }
                     } header: {
@@ -117,7 +88,6 @@ struct SettingsSidebarView: View {
                    let section = SettingsSection(rawValue: sectionName) {
                     withAnimation(.easeInOut(duration: 0.15)) {
                         self.selectedSection = section
-                        self.showAccountPane = false
                     }
                 }
             }
@@ -153,64 +123,6 @@ struct SettingsSidebarView: View {
     }
 }
 
-// MARK: - Sidebar Profile Card
-struct SidebarAccountCardView: View {
-    @ObservedObject var subscriptionManager: SubscriptionManager
-    var isSelected: Bool
-    var action: () -> Void
-
-    var body: some View {
-        Button(action: action) {
-            HStack(spacing: 12) {
-                Group {
-                    if subscriptionManager.isSignedIn {
-                        ZStack {
-                            Circle()
-                                .fill(LinearGradient(
-                                    colors: subscriptionManager.tierGradientColors,
-                                    startPoint: .topLeading,
-                                    endPoint: .bottomTrailing
-                                ))
-                            Text(verbatim: subscriptionManager.userInitials)
-                                .font(.system(size: 14, weight: .bold))
-                                .foregroundColor(.white.opacity(0.9))
-                        }
-                    } else {
-                        Image(systemName: "person.crop.circle")
-                            .font(.system(size: 30, weight: .regular))
-                            .foregroundStyle(.secondary)
-                    }
-                }
-                .frame(width: 38, height: 38)
-
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(verbatim: subscriptionManager.userDisplayName)
-                        .font(.system(size: 13, weight: .semibold))
-                        .foregroundColor(.white)
-                        .lineLimit(1)
-                    Text(verbatim: subscriptionManager.tierLabel)
-                        .font(.system(size: 11))
-                        .foregroundColor(.white.opacity(0.5))
-                }
-
-                Spacer()
-
-                Image(systemName: "chevron.right")
-                    .font(.system(size: 10, weight: .bold))
-                    .foregroundColor(.white.opacity(0.3))
-            }
-            .padding(.horizontal, 12)
-            .padding(.vertical, 10)
-            .background(isSelected ? Color.white.opacity(0.06) : Color.clear)
-            .contentShape(Rectangle())
-        }
-        .buttonStyle(.plain)
-        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-        .padding(.horizontal, 12)
-        .padding(.bottom, 10)
-    }
-}
-
 struct TrafficLightButtonStyle: ButtonStyle {
     let color: Color; let isHovering: Bool
     func makeBody(configuration: Configuration) -> some View {
@@ -220,18 +132,13 @@ struct TrafficLightButtonStyle: ButtonStyle {
 
 fileprivate struct SidebarRowView: View {
     let section: SettingsSection
-    let isPremiumLocked: Bool
 
     var body: some View {
         HStack(spacing: 12) {
             Image(systemName: section.systemImage).font(.system(size: 11, weight: .bold)).foregroundStyle(.white).frame(width: 22, height: 22).background(LinearGradient(colors: section.iconGradientColors, startPoint: .topLeading, endPoint: .bottomTrailing).opacity(0.8)).clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
             Text(verbatim: section.label).font(.system(size: 13, weight: .medium)).foregroundStyle(.white)
             Spacer()
-            if isPremiumLocked {
-                Image(systemName: "lock.fill")
-                    .font(.system(size: 10, weight: .semibold))
-                    .foregroundStyle(.secondary)
-            }
+
         }.padding(.vertical, 5)
     }
 }
