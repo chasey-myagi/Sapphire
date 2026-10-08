@@ -64,6 +64,7 @@ class AuthenticationManager: NSObject, ObservableObject, BLEDelegate {
     private let settings = SettingsModel.shared
     private var cancellables = Set<AnyCancellable>()
 
+    private var pendingScanIncludeUnnamed: Bool?
     private var isBluetoothAuthenticating = false
     private var isFaceIDAuthenticating = false
     private var isUnlockInProgress = false
@@ -356,7 +357,8 @@ class AuthenticationManager: NSObject, ObservableObject, BLEDelegate {
     // MARK: - Bluetooth Auth Control
 
     func startBluetoothAuthentication() {
-        guard !isBluetoothAuthenticating, isEnabled, isPasswordSet,
+        guard CBManager.authorization == .allowedAlways,
+              !isBluetoothAuthenticating, isEnabled, isPasswordSet,
               let deviceID = selectedDeviceID, let uuid = UUID(uuidString: deviceID) else { return }
 
         isBluetoothAuthenticating = true
@@ -365,7 +367,12 @@ class AuthenticationManager: NSObject, ObservableObject, BLEDelegate {
     }
 
     func startScan(includeUnnamed: Bool) {
-        guard ble.centralMgr.state == .poweredOn else { setStatusThrottled(String(localized: "Bluetooth is off")); return }
+        guard CBManager.authorization == .allowedAlways else {
+            pendingScanIncludeUnnamed = includeUnnamed
+            PermissionsManager.shared.requestPermission(.bluetooth)
+            return
+        }
+        pendingScanIncludeUnnamed = nil
         ble.thresholdRSSI = settings.settings.bluetoothUnlockMinScanRSSI
         scannedDevices.removeAll()
         ble.devices.removeAll()
@@ -380,6 +387,7 @@ class AuthenticationManager: NSObject, ObservableObject, BLEDelegate {
     }
 
     func stopScan() {
+        pendingScanIncludeUnnamed = nil
         isScanning = false
         setStatusThrottled(isEnabled ? String(localized: "authentication.monitoring", defaultValue: "Monitoring") : String(localized: "Idle"))
         ble.stopScanning()
@@ -435,6 +443,20 @@ class AuthenticationManager: NSObject, ObservableObject, BLEDelegate {
             .assign(to: \.selectedDeviceID, on: self)
             .store(in: &cancellables)
         $isEnabled.combineLatest($selectedDeviceID).sink { [weak self] (enabled, deviceID) in self?.updateMonitoringConfig(enabled: enabled, deviceID: deviceID) }.store(in: &cancellables)
+
+        PermissionsManager.shared.$bluetoothStatus
+            .removeDuplicates()
+            .sink { [weak self] permission in
+                guard let self else { return }
+                self.updateMonitoringConfig(enabled: self.isEnabled, deviceID: self.selectedDeviceID)
+                if permission == .granted, let includeUnnamed = self.pendingScanIncludeUnnamed {
+                    self.startScan(includeUnnamed: includeUnnamed)
+                } else if permission != .granted {
+                    self.pendingScanIncludeUnnamed = nil
+                    if self.isScanning { self.stopScan() }
+                }
+            }
+            .store(in: &cancellables)
     }
 
     private func setupSettingsObserver() {
@@ -518,7 +540,7 @@ class AuthenticationManager: NSObject, ObservableObject, BLEDelegate {
     func bluetoothPowerWarn() { setStatusThrottled(String(localized: "Bluetooth is off!")) }
 
     func updatePresence(presence: Bool, reason: String) {
-        if isEnabled && isBluetoothAuthenticating {
+        if CBManager.authorization == .allowedAlways, isEnabled, isBluetoothAuthenticating {
             if presence {
                 if !wasPreviouslyPresent, !isUnlockInProgress { handleUnlock() }
             } else {
@@ -531,7 +553,8 @@ class AuthenticationManager: NSObject, ObservableObject, BLEDelegate {
     // MARK: - Utilities
 
     private func updateMonitoringConfig(enabled: Bool, deviceID: String?) {
-        if enabled, self.isPasswordSet, let id = deviceID, let uuid = UUID(uuidString: id) {
+        if CBManager.authorization == .allowedAlways,
+           enabled, self.isPasswordSet, let id = deviceID, let uuid = UUID(uuidString: id) {
             if isBluetoothAuthenticating && ble.monitoredUUID == uuid { return }
             isBluetoothAuthenticating = true
             ble.startMonitor(uuid: uuid)

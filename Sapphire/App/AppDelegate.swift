@@ -11,7 +11,6 @@ import Combine
 import UserNotifications
 import NearbyShare
 import ApplicationServices
-import IOBluetooth
 import ServiceManagement
 import Network
 import os.log
@@ -99,6 +98,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
     private var lyricsWindow: NSWindow?
     private var isMainAppRunning = false
     private var backgroundInitializationTask: Task<Void, Never>?
+    private var bluetoothPermissionObservation: AnyCancellable?
     private var sessionObserversInstalled = false
     private var networkPathSatisfied: Bool?
     private var pendingAllocatorRelief: DispatchWorkItem?
@@ -423,6 +423,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         backgroundInitializationTask = nil
         liveActivityStartTask?.cancel()
         liveActivityStartTask = nil
+        bluetoothPermissionObservation?.cancel()
+        bluetoothPermissionObservation = nil
+        bluetoothManager.stopMonitoring()
         liveActivityManager.stop()
         DevActivityMonitor.shared.stop()
         LiveWallpaperManager.shared.shutdown()
@@ -498,6 +501,16 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         HelperManager.shared.installIfNeeded()
 
         createNotchWindow()
+        bluetoothPermissionObservation = PermissionsManager.shared.$bluetoothStatus
+            .removeDuplicates()
+            .sink { [weak self] status in
+                guard let self, self.isMainAppRunning else { return }
+                if status == .granted {
+                    self.bluetoothManager.startMonitoring()
+                } else {
+                    self.bluetoothManager.stopMonitoring()
+                }
+            }
         _ = circleToSearchManager
         _ = systemEnhanceWindowRegistry
         systemEnhanceDockPreviewController.start()
@@ -613,9 +626,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
             await MainActor.run { self.initializeCoreManagers() }
             try? await Task.sleep(for: .seconds(2))
             guard !Task.isCancelled else { return }
-            await MainActor.run {
-                _ = IOBluetoothDevice.pairedDevices()
-            }
             _ = await self.batteryManager.getBatteryTemperature()
         }
     }
@@ -994,7 +1004,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         backgroundInitializationTask = nil
         liveActivityStartTask?.cancel()
         liveActivityStartTask = nil
+        bluetoothPermissionObservation?.cancel()
+        bluetoothPermissionObservation = nil
         if isMainAppRunning {
+            bluetoothManager.stopMonitoring()
             liveActivityManager.stop()
             DevActivityMonitor.shared.stop()
         }

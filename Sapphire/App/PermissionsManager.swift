@@ -163,6 +163,7 @@ class PermissionsManager: NSObject, ObservableObject, @MainActor CLLocationManag
                 self?.checkScreenRecordingStatus()
                 self?.checkAutomationStatus()
                 self?.refreshNotificationsStatus()
+                self?.updateBluetoothStatus(for: CBManager.authorization)
             }
             .store(in: &cancellables)
 
@@ -316,7 +317,7 @@ class PermissionsManager: NSObject, ObservableObject, @MainActor CLLocationManag
             }
 
         case .bluetooth:
-            if CBManager.authorization == .denied {
+            if CBManager.authorization == .denied || CBManager.authorization == .restricted {
                 SystemPreferencesPane.bluetooth.open()
             } else {
                 bluetoothManager.scanForPeripherals(withServices: nil, options: nil)

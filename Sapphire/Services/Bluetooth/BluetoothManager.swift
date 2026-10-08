@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import IOBluetooth
+import CoreBluetooth
 import AppKit
 
 struct BluetoothDeviceState: Hashable {
@@ -27,31 +28,88 @@ class BluetoothManager: NSObject, ObservableObject {
     @Published var lastEvent: BluetoothDeviceState?
 
     var isBluetoothPoweredOn: Bool {
-        IOBluetoothHostController.default()?.powerState == kBluetoothHCIPowerStateON
+        guard isMonitoring, authorization() == .allowedAlways else { return false }
+        return readPowerState()
     }
 
     private var connectionNotification: IOBluetoothUserNotification?
     private var disconnectionNotifications: [String: IOBluetoothUserNotification] = [:]
     private var recentlyConnectedDebounceSet: Set<String> = []
 
-    private let magicBattery = MagicBattery.shared
-    private let batteryReader = BluetoothBatteryReader.shared
+    private var batteryReader: BluetoothBatteryReader { .shared }
+    private let readPowerState: () -> Bool
+    private let authorization: () -> CBManagerAuthorization
+    private let beginObservation: ((BluetoothManager) -> (() -> Void)?)?
+    private var endObservation: (() -> Void)?
 
     private var cancellables = Set<AnyCancellable>()
     private var isProximityScanActive = false
+    private var monitoringGeneration = 0
+    private var initialBatteryRefresh: Task<Void, Never>?
 
-    override init() {
+    init(
+        authorization: @escaping () -> CBManagerAuthorization = { CBManager.authorization },
+        beginObservation: ((BluetoothManager) -> (() -> Void)?)? = nil,
+        readPowerState: @escaping () -> Bool = { IOBluetoothHostController.default()?.powerState == kBluetoothHCIPowerStateON }
+    ) {
+        self.readPowerState = readPowerState
+        self.authorization = authorization
+        self.beginObservation = beginObservation
         super.init()
+    }
+
+    private(set) var isMonitoring = false
+
+    func startMonitoring() {
+        guard authorization() == .allowedAlways else {
+            stopMonitoring()
+            return
+        }
+        guard !isMonitoring else { return }
+        monitoringGeneration += 1
+        isMonitoring = true
+        if let beginObservation {
+            endObservation = beginObservation(self)
+        } else {
+            endObservation = installObservation()
+        }
+    }
+
+    func stopMonitoring() {
+        isMonitoring = false
+        monitoringGeneration += 1
+        isProximityScanActive = false
+        endObservation?()
+        endObservation = nil
+        connectionNotification?.unregister()
+        connectionNotification = nil
+        disconnectionNotifications.values.forEach { $0.unregister() }
+        disconnectionNotifications.removeAll()
+        cancellables.removeAll()
+        NotificationCenter.default.removeObserver(self)
+        recentlyConnectedDebounceSet.removeAll()
+        lastEvent = nil
+    }
+
+    private func installObservation() -> (() -> Void)? {
         ud.register(defaults: ["readBTDevice": true, "readBTHID": true, "readIDevice": true, "updateInterval": 1])
 
+        let generation = monitoringGeneration
         SPBluetoothDataModel.shared.refeshData { [weak self] _ in
             Task { @MainActor [weak self] in
-                self?.checkForInitiallyConnectedDevices()
+                guard let self, self.isCurrentObservation(generation) else { return }
+                self.checkForInitiallyConnectedDevices()
             }
         }
 
-        Task {
-            await batteryReader.refreshAllBatteries()
+        if initialBatteryRefresh == nil {
+            initialBatteryRefresh = Task { [weak self] in
+                guard let self else { return }
+                defer { self.initialBatteryRefresh = nil }
+                guard self.isMonitoring, self.authorization() == .allowedAlways else { return }
+                // The shared reader owns its batch; retain it until completion to avoid overlapping restarts.
+                await self.batteryReader.refreshAllBatteries()
+            }
         }
 
         self.connectionNotification = IOBluetoothDevice.register(
@@ -69,26 +127,45 @@ class BluetoothManager: NSObject, ObservableObject {
         AuthenticationManager.shared.$isScanning
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isScanning in
-                self?.isProximityScanActive = isScanning
+                guard let self, self.isCurrentObservation(generation) else { return }
+                self.isProximityScanActive = isScanning
             }
             .store(in: &cancellables)
+        return nil
+    }
+
+    private func isCurrentObservation(_ generation: Int) -> Bool {
+        isMonitoring && monitoringGeneration == generation && authorization() == .allowedAlways
+    }
+
+    func makeEventDelivery() -> @MainActor (BluetoothDeviceState?) -> Void {
+        let generation = monitoringGeneration
+        return { [weak self] event in
+            guard let self, self.isCurrentObservation(generation) else { return }
+            self.lastEvent = event
+        }
     }
 
     deinit {
+        endObservation?()
+
         connectionNotification?.unregister()
         disconnectionNotifications.values.forEach { $0.unregister() }
         NotificationCenter.default.removeObserver(self)
     }
 
     @objc private func handleAirPodsUpdate(_ notification: Notification) {
+        let generation = monitoringGeneration
         Task { @MainActor [weak self] in
-            self?.handleAirPodsUpdateOnMain(notification)
+            guard let self, self.isCurrentObservation(generation) else { return }
+            self.handleAirPodsUpdateOnMain(notification)
         }
     }
 
     @MainActor
     private func handleAirPodsUpdateOnMain(_ notification: Notification) {
-        guard !isProximityScanActive else { return }
+        let deliver = makeEventDelivery()
+        guard isCurrentObservation(monitoringGeneration), !isProximityScanActive else { return }
 
         guard let userInfo = notification.userInfo,
               let bleName = userInfo["name"] as? String,
@@ -115,17 +192,23 @@ class BluetoothManager: NSObject, ObservableObject {
             batteryLevel: level,
             isContinuityDevice: isContinuityDevice(name: classicDevice.name ?? bleName)
         )
-        self.lastEvent = deviceState
+        deliver(deviceState)
     }
 
     @objc private func deviceConnected(_ notification: IOBluetoothUserNotification, device: IOBluetoothDevice) {
+        guard notification === connectionNotification else { return }
+        let generation = monitoringGeneration
         Task { @MainActor [weak self] in
-            self?.handleDeviceConnected(device: device)
+            guard let self, self.isCurrentObservation(generation) else { return }
+            self.handleDeviceConnected(device: device)
         }
     }
 
     @MainActor
     private func handleDeviceConnected(device: IOBluetoothDevice) {
+        let deliver = makeEventDelivery()
+        let generation = monitoringGeneration
+        guard isCurrentObservation(generation) else { return }
         guard !isProximityScanActive else {
             registerForDisconnect(device: device)
             return
@@ -136,7 +219,8 @@ class BluetoothManager: NSObject, ObservableObject {
         if recentlyConnectedDebounceSet.contains(address) { return }
         recentlyConnectedDebounceSet.insert(address)
         DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) { [weak self] in
-            self?.recentlyConnectedDebounceSet.remove(address)
+            guard let self, self.isCurrentObservation(generation) else { return }
+            self.recentlyConnectedDebounceSet.remove(address)
         }
 
         if SettingsModel.shared.settings.bluetoothNotifySound {
@@ -163,17 +247,18 @@ class BluetoothManager: NSObject, ObservableObject {
                 eventType: .connected, batteryLevel: nil,
                 isContinuityDevice: isContinuityDevice(name: name)
             )
-            self.lastEvent = deviceState
+            deliver(deviceState)
 
         case .hasBattery:
             Task {
-                let batteryLevel = await findBatteryLevel(for: device)
+                let batteryLevel = await findBatteryLevel(for: device, generation: generation)
+                guard isCurrentObservation(generation) else { return }
                 let deviceState = BluetoothDeviceState(
                     id: address, name: name, iconName: iconName,
                     eventType: .connected, batteryLevel: batteryLevel,
                     isContinuityDevice: isContinuityDevice(name: name)
                 )
-                self.lastEvent = deviceState
+                deliver(deviceState)
             }
 
         case .unknown:
@@ -182,10 +267,11 @@ class BluetoothManager: NSObject, ObservableObject {
                 eventType: .connected, batteryLevel: nil,
                 isContinuityDevice: isContinuityDevice(name: name)
             )
-            self.lastEvent = immediateState
+            deliver(immediateState)
 
             Task {
-                let batteryLevel = await findBatteryLevel(for: device)
+                let batteryLevel = await findBatteryLevel(for: device, generation: generation)
+                guard isCurrentObservation(generation) else { return }
 
                 IconMapper.learnDeviceBatteryStatus(address: address, hasBattery: batteryLevel != nil)
 
@@ -195,7 +281,7 @@ class BluetoothManager: NSObject, ObservableObject {
                         eventType: .connected, batteryLevel: level,
                         isContinuityDevice: isContinuityDevice(name: name)
                     )
-                    self.lastEvent = updatedState
+                    deliver(updatedState)
                 }
             }
         }
@@ -203,8 +289,8 @@ class BluetoothManager: NSObject, ObservableObject {
         registerForDisconnect(device: device)
     }
 
-    private func findBatteryLevel(for device: IOBluetoothDevice) async -> Int? {
-        guard let name = device.name else { return nil }
+    private func findBatteryLevel(for device: IOBluetoothDevice, generation: Int) async -> Int? {
+        guard isCurrentObservation(generation), let name = device.name else { return nil }
 
         if device.isMultiBatteryDevice {
             let l = device.batteryPercentLeft
@@ -231,6 +317,7 @@ class BluetoothManager: NSObject, ObservableObject {
             }
         }
 
+        guard isCurrentObservation(generation) else { return nil }
         MagicBattery.shared.getIOBTBattery()
         if let batteryDevice = AirBatteryModel.getByName(name), batteryDevice.batteryLevel > 0 && batteryDevice.batteryLevel <= 100 {
             print("[BluetoothManager] Found battery level for [\(name)]: \(batteryDevice.batteryLevel)%")
@@ -238,6 +325,7 @@ class BluetoothManager: NSObject, ObservableObject {
         }
 
         let sysProfileBatteries = await BluetoothBatteryReader.getSystemProfileBatteries()
+        guard isCurrentObservation(generation) else { return nil }
         if let match = sysProfileBatteries.first(where: { $0.name == name }), match.level > 0, match.level <= 100 {
             print("[BluetoothManager] System profile battery for [\(name)]: \(match.level)%")
             return match.level
@@ -252,7 +340,7 @@ class BluetoothManager: NSObject, ObservableObject {
     }
 
     private func registerForDisconnect(device: IOBluetoothDevice) {
-        guard let address = device.addressString else { return }
+        guard isCurrentObservation(monitoringGeneration), let address = device.addressString else { return }
         if self.disconnectionNotifications[address] == nil {
             self.disconnectionNotifications[address] = device.register(
                 forDisconnectNotification: self,
@@ -262,13 +350,19 @@ class BluetoothManager: NSObject, ObservableObject {
     }
 
     @objc private func deviceDisconnected(_ notification: IOBluetoothUserNotification, device: IOBluetoothDevice) {
+        guard isCurrentObservation(monitoringGeneration), let address = device.addressString,
+              disconnectionNotifications[address] === notification else { return }
+        let generation = monitoringGeneration
         Task { @MainActor [weak self] in
-            self?.handleDeviceDisconnected(device: device)
+            guard let self, self.isCurrentObservation(generation) else { return }
+            self.handleDeviceDisconnected(device: device)
         }
     }
 
     @MainActor
     private func handleDeviceDisconnected(device: IOBluetoothDevice) {
+        let deliver = makeEventDelivery()
+        guard isCurrentObservation(monitoringGeneration) else { return }
         guard !isProximityScanActive else {
             if let address = device.addressString, let notificationToRemove = disconnectionNotifications.removeValue(forKey: address) {
                 notificationToRemove.unregister()
@@ -292,7 +386,7 @@ class BluetoothManager: NSObject, ObservableObject {
             id: address, name: name, iconName: iconName,
             eventType: .disconnected, isContinuityDevice: isContinuityDevice(name: name)
         )
-        self.lastEvent = deviceState
+        deliver(deviceState)
 
         if let notificationToRemove = disconnectionNotifications.removeValue(forKey: address) {
             notificationToRemove.unregister()
@@ -300,7 +394,8 @@ class BluetoothManager: NSObject, ObservableObject {
     }
 
     private func checkForInitiallyConnectedDevices() {
-        guard let pairedDevices = IOBluetoothDevice.pairedDevices() as? [IOBluetoothDevice] else { return }
+        guard isCurrentObservation(monitoringGeneration),
+              let pairedDevices = IOBluetoothDevice.pairedDevices() as? [IOBluetoothDevice] else { return }
         for device in pairedDevices where device.isConnected() {
             handleDeviceConnected(device: device)
         }
