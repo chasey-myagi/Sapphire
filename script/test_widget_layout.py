@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Compile production policy and weather card for focused macOS layout checks."""
 import subprocess
+import sys
 import tempfile
 from pathlib import Path
 
@@ -15,5 +16,5 @@ with tempfile.TemporaryDirectory(prefix="sapphire-widget-layout-") as directory:
     probe.write_text("\n".join(source.read_text() for source in sources))
     binary = Path(directory) / "probe"
     subprocess.run(["xcrun", "swiftc", "-parse-as-library", str(probe), "-o", str(binary)], check=True)
-    result = subprocess.run([str(binary)])
+    result = subprocess.run([str(binary), *sys.argv[1:]])
     raise SystemExit(result.returncode)

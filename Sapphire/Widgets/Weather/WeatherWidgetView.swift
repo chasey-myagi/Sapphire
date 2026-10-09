@@ -16,6 +16,7 @@ struct WeatherWidgetView: View {
             HStack(alignment: .center, spacing: 10) {
                 primaryInfo.layoutPriority(1)
                 secondaryInfo
+                    .fixedSize(horizontal: true, vertical: false)
             }
             .padding(.horizontal, 10)
         }
@@ -47,6 +48,7 @@ struct WeatherWidgetView: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text(viewModel.temperature)
                     .font(.system(size: 42, weight: .bold, design: .rounded))
+                    .lineLimit(1)
                     .minimumScaleFactor(0.5)
                     .id(viewModel.temperature)
                     .transition(.opacity)

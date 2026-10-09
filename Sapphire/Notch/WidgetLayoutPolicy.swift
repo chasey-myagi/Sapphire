@@ -59,7 +59,7 @@ enum WidgetLayoutPolicy {
     static func estimatedWidth(for widget: WidgetType) -> CGFloat {
         switch widget {
         case .music: return 300
-        case .weather: return 210
+        case .weather: return 260
         case .calendar: return 240
         case .shortcuts: return 110
         case .sports: return 190

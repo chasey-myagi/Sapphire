@@ -45,7 +45,7 @@ extension EnvironmentValues {
         let ordered: [WidgetType] = [.music, .weather, .calendar, .focusSession, .battery]
         let budget: CGFloat = 1512 * 0.72 - 140 * (1512 / 1728)
         // Actual card contracts, independently of the estimator under test.
-        let widths: [WidgetType: CGFloat] = [.music: 300, .weather: 210, .calendar: 240, .focusSession: 200, .battery: 210]
+        let widths: [WidgetType: CGFloat] = [.music: 300, .weather: 260, .calendar: 240, .focusSession: 200, .battery: 210]
         for dividers in [false, true] {
             let selected = WidgetLayoutPolicy.fittingWidgets(from: ordered, availableWidth: budget, showDividers: dividers)
             let renderedWidth = selected.reduce(CGFloat(0)) { $0 + widths[$1]! }
@@ -80,8 +80,30 @@ extension EnvironmentValues {
             let host = NSHostingView(rootView: WeatherWidgetView())
             let size = host.fittingSize
             print("weather messageLength=\(message.count) fittingWidth=\(size.width)")
-            check(size.width <= 210.5, "weather text expands card: \(size.width) > 210")
+            check(size.width <= 260.5, "weather text expands card: \(size.width) > 260")
             check(size.height >= 90, "weather card lost minimum height")
+        }
+        if CommandLine.arguments.count > 1 {
+            let directory = URL(fileURLWithPath: CommandLine.arguments[1], isDirectory: true)
+            try! FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+            for (name, wind, temperature) in [("beijing-8", "8公里/时", "21°"), ("beijing-128", "128公里/时", "21°"), ("beijing-negative", "128公里/时", "-21°")] {
+                let model = WeatherViewModel.shared
+                model.iconName = "cloud.fill"
+                model.temperature = temperature
+                model.locationName = "北京市"
+                model.conditionDescription = "阴"
+                model.windInfo = wind
+                model.precipChance = "0%"
+                model.humidity = "59%"
+                let host = NSHostingView(rootView: WeatherWidgetView().background(Color.black))
+                host.frame = CGRect(x: 0, y: 0, width: 260, height: 100)
+                host.layoutSubtreeIfNeeded()
+                RunLoop.main.run(until: Date(timeIntervalSinceNow: 0.1))
+                let image = host.bitmapImageRepForCachingDisplay(in: host.bounds)!
+                host.cacheDisplay(in: host.bounds, to: image)
+                try! image.representation(using: .png, properties: [:])!.write(to: directory.appendingPathComponent(name + ".png"))
+                print("rendered \(name) wind=\(wind) width=\(host.fittingSize.width)")
+            }
         }
         if failures.isEmpty { print("PASS: real widget selection and hosted weather width") }
         else { failures.forEach { print("FAIL: \($0)") }; exit(1) }

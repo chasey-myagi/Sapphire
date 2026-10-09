@@ -1558,7 +1558,7 @@ struct GeneralSettingsView: View {
                     )
                     Spacer()
                     AppLanguagePicker(showsDescription: false)
-                        .frame(width: 200)
+                        .frame(width: 200, alignment: .trailing)
                 }
                 .padding()
                 .frame(maxWidth: .infinity, alignment: .leading)

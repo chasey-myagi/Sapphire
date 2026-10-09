@@ -49,7 +49,7 @@ final class MusicWidgetVisibilityTests: XCTestCase {
     func testLayoutKeepsLookingForSmallerWidgetsAfterOneDoesNotFit() {
         let widgets = WidgetLayoutPolicy.fittingWidgets(
             from: [.weather, .calendar, .shortcuts],
-            availableWidth: 350,
+            availableWidth: 400,
             showDividers: false
         )
 
@@ -60,7 +60,7 @@ final class MusicWidgetVisibilityTests: XCTestCase {
         XCTAssertTrue(WidgetLayoutPolicy.canFit(
             .shortcuts,
             in: [.weather, .calendar],
-            availableWidth: 350,
+            availableWidth: 400,
             showDividers: false
         ))
     }
