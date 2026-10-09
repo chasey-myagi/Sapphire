@@ -4,6 +4,58 @@ import XCTest
 final class FileProgressIntegrationTests: XCTestCase {
     @MainActor
     func testFileTaskChangesDriveActivityAndStopDetachesObserver() async throws {
+        try await withFileProgressFixture { manager, fileDrop in
+            var task = AirDropTask(fileName: "integration-only.txt", progress: 0.1)
+            fileDrop.tasks = [.airDrop(task)]
+            try await self.remainIdle(manager, scenario: "disabled file progress ignores tasks")
+            fileDrop.tasks = []
+            try await self.enableFileProgressAndSettle(manager)
+
+            fileDrop.tasks = [.airDrop(task)]
+            try await self.observe("FILE_PROGRESS_TASK_DID_NOT_APPEAR: new task enters file progress") {
+                manager.currentActivity == .fileProgress && self.airDrop(in: manager.activityContent) == task
+            }
+
+            task.progress = 0.8
+            fileDrop.tasks = [.airDrop(task)]
+            try await self.observe("same task updates displayed progress") {
+                manager.currentActivity == .fileProgress && self.airDrop(in: manager.activityContent) == task
+            }
+
+            manager.stop()
+            task.progress = 0.2
+            fileDrop.tasks = [.airDrop(task)]
+            // Longer than the real throttle, evaluator gate and dismissal grace.
+            // Any subscription left alive would introduce the task again.
+            try await self.remainIdle(manager, scenario: "stopped manager ignores tasks")
+        }
+    }
+
+    // Reproduces the retained baseline completion-dismissal defect. The scoped
+    // subscription CI job selects the method above; this separate case keeps the
+    // real expected behavior and failing assertion available for defect work.
+    @MainActor
+    func testCompletedFileTaskDismissesActivity() async throws {
+        try await withFileProgressFixture { manager, fileDrop in
+            try await self.enableFileProgressAndSettle(manager)
+            var task = AirDropTask(fileName: "completion-reproduction.txt", progress: 0.1)
+            fileDrop.tasks = [.airDrop(task)]
+            try await self.observe("FILE_PROGRESS_TASK_DID_NOT_APPEAR: completion precondition") {
+                manager.currentActivity == .fileProgress && self.airDrop(in: manager.activityContent) == task
+            }
+
+            task.isComplete = true
+            fileDrop.tasks = [.airDrop(task)]
+            try await self.observe("completed task releases file progress") {
+                manager.currentActivity == .none && manager.activityContent == .none
+            }
+        }
+    }
+
+    @MainActor
+    private func withFileProgressFixture(
+        _ body: (LiveActivityManager, FileDropManager) async throws -> Void
+    ) async throws {
         let environment = ProcessInfo.processInfo.environment
         guard environment["SAPPHIRE_FILE_PROGRESS_INTEGRATION"] == "1",
               environment["GITHUB_ACTIONS"] == "true" else {
@@ -11,7 +63,7 @@ final class FileProgressIntegrationTests: XCTestCase {
         }
 
         // Seed storage before any shared service reads settings. The dedicated job
-        // runs only this test; its runner account and service data are disposable.
+        // selects an integration case; its account and service data are disposable.
         var settings = Settings()
         settings.liveActivityOrder = [.fileProgress]
         settings.fileProgressLiveActivityEnabled = false
@@ -51,6 +103,8 @@ final class FileProgressIntegrationTests: XCTestCase {
             try SettingsPersistence.encoder.encode(settings),
             forKey: SettingsPersistence.payloadKey
         )
+        // Reset an already loaded model when both cases run in one test process.
+        SettingsModel.shared.settings = settings
 
         let delegate = AppDelegate()
         let manager = delegate.liveActivityManager
@@ -69,42 +123,17 @@ final class FileProgressIntegrationTests: XCTestCase {
         XCTAssertEqual(manager.currentActivity, .none)
         XCTAssertEqual(manager.activityContent, .none)
         XCTAssertTrue(fileDrop.tasks.isEmpty)
+        try await body(manager, fileDrop)
+    }
 
-        var task = AirDropTask(fileName: "integration-only.txt", progress: 0.1)
-        fileDrop.tasks = [.airDrop(task)]
-        try await remainIdle(manager, scenario: "disabled file progress ignores tasks")
-        fileDrop.tasks = []
+    @MainActor
+    private func enableFileProgressAndSettle(_ manager: LiveActivityManager) async throws {
         SettingsModel.shared.settings.fileProgressLiveActivityEnabled = true
         // The settings publisher also reevaluates activities. Drain it with no
         // task present so it cannot stand in for the task-change subscription.
         try await Task.sleep(for: .seconds(3))
         XCTAssertEqual(manager.currentActivity, .none)
         XCTAssertEqual(manager.activityContent, .none)
-
-        fileDrop.tasks = [.airDrop(task)]
-        try await observe("FILE_PROGRESS_TASK_DID_NOT_APPEAR: new task enters file progress") {
-            manager.currentActivity == .fileProgress && self.airDrop(in: manager.activityContent) == task
-        }
-
-        task.progress = 0.8
-        fileDrop.tasks = [.airDrop(task)]
-        try await observe("same task updates displayed progress") {
-            manager.currentActivity == .fileProgress && self.airDrop(in: manager.activityContent) == task
-        }
-
-        task.isComplete = true
-        fileDrop.tasks = [.airDrop(task)]
-        try await observe("completed task releases file progress") {
-            manager.currentActivity == .none && manager.activityContent == .none
-        }
-
-        manager.stop()
-        task.isComplete = false
-        task.progress = 0.2
-        fileDrop.tasks = [.airDrop(task)]
-        // Longer than the real throttle, evaluator gate and dismissal grace.
-        // Any subscription left alive would introduce the task again.
-        try await remainIdle(manager, scenario: "stopped manager ignores tasks")
     }
 
     @MainActor
