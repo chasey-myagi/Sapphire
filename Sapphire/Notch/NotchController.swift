@@ -183,7 +183,6 @@ struct NotchController: View {
         liveActivityManager.effectiveActivity(onDisplayID: notchDisplayID)
     }
     private var isFullViewActivity: Bool { liveActivityManager.isFullViewActivity }
-    private var isGeminiActive: Bool { liveActivityManager.currentActivity == .geminiLive || liveActivityManager.currentActivity == .intelligenceAgent }
 
     private var isDisplayingMusicLiveActivity: Bool {
         let isMusic = (liveActivityManager.currentActivity == .music)
@@ -388,7 +387,7 @@ struct NotchController: View {
     }
 
     private var surfaceShadowOpacity: Double {
-        guard !isGeminiActive, !isManuallyHidden else { return 0 }
+        guard !isManuallyHidden else { return 0 }
         return shadowOpacity
     }
 
@@ -452,7 +451,6 @@ struct NotchController: View {
             config: config,
             shape: activeShape,
             notchState: notchState,
-            isGeminiActive: isGeminiActive,
             isManuallyHidden: isManuallyHidden,
             surfaceShadowOpacity: surfaceShadowOpacity,
             radialEndRadius: appearance.backgroundStyle == .radial ? animatedWidth / 2 : 0
@@ -567,7 +565,6 @@ struct NotchController: View {
 
     private func applyNotchNotificationHandlers<V: View>(to view: V) -> some View {
         view
-            .background(GeminiPickerBridge())
             .onReceive(Self.notchNotifications) { notification in
                 switch notification.name {
                 case .sapphireOpenMusicQueue:
@@ -814,11 +811,6 @@ struct NotchController: View {
                     collapseTask?.cancel()
                     isCollapseTimerActive = false
                 }
-            },
-            onOpenBlipHub: openBlipHub,
-            onOpenAgentS: {
-                openBlipHub()
-                navigationStack.append(.agentS)
             }
         )
     }
@@ -934,14 +926,10 @@ struct NotchController: View {
             }
             if activityType == .music, settings.settings.musicOpenOnClick { initiateWidgetView(.musicPlayer); return }
             if activityType == .weather, settings.settings.weatherOpenOnClick { initiateWidgetView(.weatherPlayer); return }
-            if activityType == .sports, settings.settings.sportsOpenOnClick, PremiumGate.hasAccess(.sportsWidget) { initiateWidgetView(.sportsPlayer); return }
-            if activityType == .finance, settings.settings.financeOpenOnClick, PremiumGate.hasAccess(.financeWidget) { initiateWidgetView(.financePlayer); return }
+            if activityType == .sports, settings.settings.sportsOpenOnClick { initiateWidgetView(.sportsPlayer); return }
             if activityType == .calendar, settings.settings.calendarOpenOnClick { initiateWidgetView(.calendarPlayer); return }
             if activityType == .fileShelf, settings.settings.clickToOpenFileShelf { initiateWidgetView(.fileShelf); return }
             if activityType == .timer, settings.settings.clickToShowTimerView { initiateWidgetView(.timerDetailView); return }
-            if activityType == .continuity { initiateWidgetView(.continuityDetail); return }
-            if activityType == .continuityExternal { initiateWidgetView(.continuityActivityDetail); return }
-            if activityType == .intelligenceAgent { initiateWidgetView(.agentS); return }
             if activityType == .updateAvailable { initiateWidgetView(.updateAvailable); return }
         }
 
@@ -1428,9 +1416,6 @@ struct NotchController: View {
             case .airdrop:
                 SharingManager.shared.share(items: result.copiedURLs, via: .sendViaAirDrop)
                 navigationStack = []
-            case .device(let peerID):
-                ContinuityManager.shared.sendFiles(result.copiedURLs, toPeerID: peerID)
-                navigationStack = []
             case nil:
                 if result.wasDraggedFromShelf {
                     navigationStack = []
@@ -1869,23 +1854,9 @@ struct NotchController: View {
         notchState = .clickExpanded
     }
 
-    private func openBlipHub() {
-        measuredClickContentSize = .zero
-        navigationStack = [.blipHub]
-        notchState = .clickExpanded
-        (NSApp.delegate as? AppDelegate)?.makeNotchWindowFocusable()
-    }
-
     private func openCircleToSearch(object: String?) {
         measuredClickContentSize = .zero
-        switch object {
-        case "askBlip":
-            navigationStack = [.agentS]
-        case "askBlipMissingKey":
-            navigationStack = [.geminiApiKeysMissing]
-        default:
-            navigationStack = [.circleToSearch]
-        }
+        navigationStack = [.circleToSearch]
         notchState = .clickExpanded
         (NSApp.delegate as? AppDelegate)?.makeNotchWindowFocusable()
     }
@@ -2222,16 +2193,14 @@ struct NotchController: View {
         case .calendarPlayer: return .calendarPlayer
         case .timerDetailView: return .timerDetailView
         case .sportsPlayer: return .sportsPlayer
-        case .financePlayer: return .financePlayer
-        case .shopifyOrders: return nil
         case .notesPlayer: return .notesPlayer
         case .clipboardPlayer: return .clipboardPlayer
         case .mirrorPlayer: return nil
-        case .musicApiKeysMissing, .geminiApiKeysMissing, .musicLoginPrompt, .musicLyrics,
+        case .musicApiKeysMissing, .musicLoginPrompt, .musicLyrics,
                 .musicPlaylistDetail, .musicArtistDetail, .musicAlbumDetail, .snapZones, .fileShelfLanding, .fileActionPreview,
                 .multiAudioDeviceAdjust, .multiAudioAppEQ, .multiAudioApp8D, .multiAudioAppSurround, .multiAudioEQ, .dragActivated,
-                .agentS, .blipHub, .circleToSearch, .updateAvailable, .focusSessionDetailView, .batteryDetailView,
-                .storageDetailView, .continuityDetail, .continuityActivityDetail:
+                .circleToSearch, .updateAvailable, .focusSessionDetailView, .batteryDetailView,
+                .storageDetailView:
             return nil
         }
     }

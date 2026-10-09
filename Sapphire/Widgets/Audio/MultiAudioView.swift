@@ -241,20 +241,12 @@ fileprivate struct AppControlCard: View {
 
             SmallIconButton(icon: isMuted ? "speaker.slash.fill" : "speaker.wave.2.fill", active: isMuted) { onMute(isMuted) }
             SmallIconButton(icon: "slider.vertical.3", active: false) { navigationStack.append(.multiAudioAppEQ(bundleID: app.bundleID, appName: app.name)) }
-            SmallIconButton(icon: "rotate.3d", active: isEightDAudioEnabled) {
-                guard SubscriptionAccess.hasAccess(to: .audio8D) else {
-                    _ = FeatureGate.shared.require(.audio8D, message: premiumDefaultMessage(for: .audio8D))
-                    return
-                }
-                navigationStack.append(.multiAudioApp8D(bundleID: app.bundleID, appName: app.name))
-            }
-            SmallIconButton(icon: "hifispeaker.2.fill", active: isSurroundAudioEnabled) {
-                guard SubscriptionAccess.hasAccess(to: .surroundSound) else {
-                    _ = FeatureGate.shared.require(.surroundSound, message: premiumDefaultMessage(for: .surroundSound))
-                    return
-                }
-                navigationStack.append(.multiAudioAppSurround(bundleID: app.bundleID, appName: app.name))
-            }
+            SmallIconButton(icon: "rotate.3d", active: isEightDAudioEnabled) { }
+                .disabled(true)
+                .help("8D Audio controls are not included in this build.")
+            SmallIconButton(icon: "hifispeaker.2.fill", active: isSurroundAudioEnabled) { }
+                .disabled(true)
+                .help("Surround Audio controls are not included in this build.")
             SmallIconButton(icon: "arrow.counterclockwise", active: false, destructive: true) { onReset() }
         }
         .padding(.vertical, 15).padding(.horizontal, 12)

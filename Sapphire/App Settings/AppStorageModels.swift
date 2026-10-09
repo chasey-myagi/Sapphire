@@ -3236,7 +3236,6 @@ private struct StoragePresentedScan {
     func refreshIfNeeded() { load(currentURL, force: false) }
 
     func refreshFromCache() {
-        guard SubscriptionAccess.hasAccess(to: .basicStorageFeatures) else { return }
         let target = currentURL.standardizedFileURL
         scanGeneration &+= 1
         let generation = scanGeneration
@@ -3459,7 +3458,6 @@ private struct StoragePresentedScan {
     }
 
     private func load(_ url: URL, force: Bool) {
-        guard SubscriptionAccess.hasAccess(to: .basicStorageFeatures) else { return }
         let target = url.standardizedFileURL
         let changedDirectory = target != currentURL.standardizedFileURL
         scanGeneration &+= 1

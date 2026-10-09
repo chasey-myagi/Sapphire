@@ -8,9 +8,8 @@ Sapphire uses Apple's String Catalogs. The source language is English; Simplifie
 | --- | --- | --- |
 | Sapphire | `Sapphire/Localizable.xcstrings` | App UI, menus, app-owned status messages and errors |
 | Sapphire | `Sapphire/App/InfoPlist.xcstrings` | macOS permission-purpose descriptions |
-| SapphireAndroidWidgets | `SapphireAndroidWidgets/Localizable.xcstrings` | Widget configuration, discovery and empty states |
 
-The main app uses a filesystem-synchronized Xcode group. The Widget target has explicit resource membership in `project.pbxproj`. A resource in the app does not automatically become a resource in its extension. NearbyShare is a linked library in this public build; its app UI reads the main bundle's table.
+The main app uses a filesystem-synchronized Xcode group. NearbyShare is a linked library in this public build; its app UI reads the main bundle's table.
 
 One integrator edits each catalog while module contributors supply reviewed keys and translations. Run Xcode extraction after changes to find new strings and preserve translator comments. A compiler-extracted key is an inventory entry, not proof that a screen has been tested.
 
@@ -39,7 +38,7 @@ One integrator edits each catalog while module contributors supply reviewed keys
 | HUD | 提示浮层 |
 | Helper | 辅助服务（macOS 登录项中的注册名 Sapphire Helper 保留） |
 
-Product and service names such as Spotify, Apple Music, Gemini and Shopify retain their names. Public-build placeholders must continue to say that unavailable functionality is not included; translated text does not imply that a private implementation exists.
+Product and service names such as Spotify and Apple Music retain their names. Public-build placeholders must continue to say that unavailable functionality is not included; translated text does not imply that a private implementation exists.
 
 ## Verification
 

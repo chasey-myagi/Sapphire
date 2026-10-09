@@ -1,12 +1,12 @@
 //
-//  SportsFinanceContentProvider.swift
+//  SportsContentProvider.swift
 //  Sapphire
 //
 //  Created by Shariq Charolia on 2026-08-30
 
 import Foundation
 
-enum SportsFinanceContentProvider {
+enum SportsContentProvider {
     static func makeSportsPayload(from live: LiveSportsEvent) -> SportsPayload {
         SportsPayload(
             league: live.leagueRoute.displayName,

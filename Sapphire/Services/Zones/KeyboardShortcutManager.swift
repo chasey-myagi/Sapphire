@@ -71,9 +71,6 @@ class KeyboardShortcutManager {
             }
             .store(in: &cancellables)
 
-        PremiumGate.accessChanges
-            .sink { [weak self] in self?.installTap() }
-            .store(in: &cancellables)
     }
 
     private func registerTrustAwareness() {
@@ -97,11 +94,9 @@ class KeyboardShortcutManager {
         let planesWithShortcuts = settings.planes.filter {
             $0.shortcut != nil && settings.isEnabled(ShortcutIdentifier.plane($0.id))
         }
-        let snapZoneShortcuts = PremiumGate.hasAccess(.snapZonesKeyboardShortcuts)
-            ? settings.snapZoneShortcuts.filter {
+        let snapZoneShortcuts = settings.snapZoneShortcuts.filter {
                 settings.isEnabled(ShortcutIdentifier.snapZone(layoutID: $0.layoutID, zoneID: $0.zoneID))
             }
-            : []
 
         cacheLock.withLock {
             registeredShortcuts.removeAll()

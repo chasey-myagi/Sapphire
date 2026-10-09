@@ -17,7 +17,6 @@ ROOT = Path(__file__).resolve().parent.parent
 CATALOGS = {
     "app": ROOT / "Sapphire/Localizable.xcstrings",
     "permissions": ROOT / "Sapphire/App/InfoPlist.xcstrings",
-    "widget": ROOT / "SapphireAndroidWidgets/Localizable.xcstrings",
 }
 # Swift extraction uses object, integer and floating-point printf arguments.
 # A space after % is deliberately not a flag: ordinary labels include “100% charge”.
@@ -131,7 +130,7 @@ def validate_built_app(app):
             subprocess.run(["xcrun", "xcstringstool", "compile", str(catalog),
                             "--output-directory", str(expected)],
                            capture_output=True, text=True, check=True)
-            bundle = app / "Contents/PlugIns/SapphireAndroidWidgets.appex" if name == "widget" else app
+            bundle = app
             result[name] = compare_compiled_tables(expected, bundle / "Contents/Resources", catalog.stem)
     return result
 
@@ -139,8 +138,7 @@ def validate_built_app(app):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--app-stringsdata", type=Path, action="append", help="Fresh app or linked-library Objects-normal directory; repeat for each target")
-    parser.add_argument("--widget-stringsdata", type=Path, action="append", help="Fresh Widget Objects-normal directory from a successful build")
-    parser.add_argument("--app", type=Path, help="Read-only built Sapphire.app; compare main, InfoPlist and embedded Widget resources (macOS)")
+    parser.add_argument("--app", type=Path, help="Read-only built Sapphire.app; compare main and InfoPlist resources (macOS)")
     args = parser.parse_args()
     report = {"passed": True, "catalogs": {}, "errors": [], "scope": "catalog integrity and supplied compiler inventories; not UI coverage"}
     built_errors = {}
@@ -156,7 +154,7 @@ def main():
         errors += built_errors.get(name, [])
         values = data.get("strings", {})
         details = {"path": str(path.relative_to(ROOT)), "entries": len(values), "preserved": sum(entry.get("shouldTranslate") is False for entry in values.values())}
-        directories = args.app_stringsdata if name == "app" else args.widget_stringsdata if name == "widget" else None
+        directories = args.app_stringsdata if name == "app" else None
         if directories:
             try:
                 keys = set().union(*(compiler_keys(directory) for directory in directories))

@@ -245,7 +245,6 @@ final class ClipboardManager: ObservableObject {
     private var persistWorkItem: DispatchWorkItem?
     private var runtimeStateCancellable: AnyCancellable?
     private nonisolated let persistQueue = DispatchQueue(label: "com.sapphire.clipboard.persist", qos: .utility)
-    private let continuityRemoteMarker = NSPasteboard.PasteboardType("com.sapphire.continuity.remote")
 
     private var maxItems: Int? {
         let settings = SettingsModel.shared.settings
@@ -347,53 +346,6 @@ final class ClipboardManager: ObservableObject {
         lastChangeCount = pasteboard.changeCount
     }
 
-    // MARK: - Continuity (remote clipboard)
-
-    func applyRemoteClipboard(text: String, from deviceName: String) {
-        let pasteboard = NSPasteboard.general
-        beginIgnoringExternalPasteboardChanges()
-        pasteboard.clearContents()
-        pasteboard.setString(text, forType: .string)
-        pasteboard.setData(Data("text".utf8), forType: continuityRemoteMarker)
-        let ownChangeCount = pasteboard.changeCount
-        endIgnoringExternalPasteboardChanges(ownChangeCount: ownChangeCount)
-        lastChangeCount = ownChangeCount
-        prependText(text)
-        NotificationCenter.default.post(name: .continuityClipboardReceived,
-                                        object: nil, userInfo: ["device": deviceName, "isImage": false])
-    }
-
-    func applyRemoteClipboard(image: NSImage, pngData: Data, from deviceName: String) {
-        let pasteboard = NSPasteboard.general
-        beginIgnoringExternalPasteboardChanges()
-        pasteboard.clearContents()
-        pasteboard.writeObjects([image])
-        pasteboard.setData(pngData, forType: .png)
-        pasteboard.setData(Data("image".utf8), forType: continuityRemoteMarker)
-        let ownChangeCount = pasteboard.changeCount
-        endIgnoringExternalPasteboardChanges(ownChangeCount: ownChangeCount)
-        lastChangeCount = ownChangeCount
-        let w = Int(image.size.width.rounded()), h = Int(image.size.height.rounded())
-        prependImage(pngData: pngData, preview: (w > 0 && h > 0) ? String(localized: "Image \(w)×\(h)") : String(localized: "Image"))
-        NotificationCenter.default.post(name: .continuityClipboardReceived,
-                                        object: nil, userInfo: ["device": deviceName, "isImage": true])
-    }
-
-    func applyRemoteClipboard(files urls: [URL], from deviceName: String) {
-        guard !urls.isEmpty else { return }
-        let pasteboard = NSPasteboard.general
-        beginIgnoringExternalPasteboardChanges()
-        pasteboard.clearContents()
-        pasteboard.writeObjects(urls.map { $0 as NSURL })
-        pasteboard.setData(Data("file".utf8), forType: continuityRemoteMarker)
-        let ownChangeCount = pasteboard.changeCount
-        endIgnoringExternalPasteboardChanges(ownChangeCount: ownChangeCount)
-        lastChangeCount = ownChangeCount
-        for url in urls { prependFile(url: url) }
-        NotificationCenter.default.post(name: .continuityClipboardReceived,
-                                        object: nil, userInfo: ["device": deviceName, "isImage": false])
-    }
-
     @discardableResult
     func copyItem(_ item: ClipboardItem) -> Bool {
         let pasteboard = NSPasteboard.general
@@ -457,7 +409,6 @@ final class ClipboardManager: ObservableObject {
         guard pasteboard.changeCount != lastChangeCount else { return }
         guard ignoredExternalPasteboardChanges == 0 else { return }
         lastChangeCount = pasteboard.changeCount
-        if pasteboard.data(forType: continuityRemoteMarker) != nil { return }
 
         let types = pasteboard.types ?? []
         let settings = SettingsModel.shared.settings

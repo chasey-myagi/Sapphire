@@ -88,10 +88,6 @@
 			</array>
 		</dict>
 	</array>
-	<key>FIREBASE_ANALYTICS_COLLECTION_ENABLED</key>
-	<false/>
-	<key>FirebaseCrashlyticsCollectionEnabled</key>
-	<false/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsLocalNetworking</key>
@@ -100,21 +96,13 @@
 	<key>NSAudioCaptureUsageDescription</key>
 	<string>Sapphire listens to your music app's audio on this Mac to time lyrics word by word. The audio never leaves your Mac.</string>
 	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>Sapphire uses Bluetooth to discover and connect to your paired Android device for Continuity (clipboard, notifications, media, hotspot).</string>
-	<key>NSBonjourServices</key>
-	<array>
-		<string>_sapphirecont._tcp</string>
-	</array>
+	<string>Sapphire uses Bluetooth for device connection notifications, battery status, and proximity-based unlock.</string>
 	<key>NSHighResolutionCapable</key>
 	<true/>
 	<key>NSLocalNetworkUsageDescription</key>
-	<string>Sapphire uses the local network to move files, images and screen content between your Mac and your paired Android device.</string>
+	<string>Sapphire uses the local network for Nearby Share transfers and music device connections.</string>
 	<key>NSScreenCaptureUsageDescription</key>
-	<string>Needed for gemini live activity</string>
-	<key>NSSystemExtensionPointIdentifier</key>
-	<string>com.apple.developer.driverkit.transport.audio</string>
-	<key>SapphireSubscriptionAPIKey</key>
-	<string>$(SAPPHIRE_SUBSCRIPTION_API_KEY)</string>
+	<string>Sapphire uses screen recording for per-app audio capture and live window previews.</string>
 	<key>UTExportedTypeDeclarations</key>
 	<array>
 		<dict>

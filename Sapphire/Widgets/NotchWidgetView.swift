@@ -185,16 +185,10 @@ struct NotchWidgetView: View {
             NotchDefaultWidgetsView(calendarViewModel: calendarViewModel)
         case .musicApiKeysMissing:
             ApiKeysMissingView(navigationStack: navigationStack)
-        case .geminiApiKeysMissing:
-            GeminiApiKeysMissingView(navigationStack: navigationStack)
         case .musicPlayer:
             MusicPlayerView(navigationStack: navigationStack)
         case .sportsPlayer:
             SportsPlayerView(navigationStack: navigationStack)
-        case .financePlayer:
-            FinancePlayerView(navigationStack: navigationStack)
-        case .shopifyOrders:
-            ShopifyOrdersView()
         case .notesPlayer:
             NotesPlayerView(navigationStack: navigationStack)
         case .clipboardPlayer:
@@ -254,10 +248,6 @@ struct NotchWidgetView: View {
         case .dragActivated:
             Color.clear
                 .frame(width: 300, height: 200)
-        case .agentS:
-            IntelligenceNotchView(navigationStack: navigationStack)
-        case .blipHub:
-            BlipHubView(navigationStack: navigationStack)
         case .circleToSearch:
             CircleToSearchResultsView(navigationStack: navigationStack)
         case .updateAvailable:
@@ -268,10 +258,6 @@ struct NotchWidgetView: View {
             BatteryDetailView()
         case .storageDetailView:
             StorageDetailView()
-        case .continuityDetail:
-            ContinuityNotchDetailView(navigationStack: navigationStack)
-        case .continuityActivityDetail:
-            ContinuityExternalActivityDetailView(bridge: ContinuityManager.shared.liveActivityBridge)
         }
     }
 
@@ -294,47 +280,11 @@ private struct NotchDefaultWidgetsView: View {
     }
 
     private var enabledAndOrderedWidgets: [WidgetType] {
-        let enabled = settings.settings.widgetOrder.filter { widgetType in
-            guard !widgetType.isPremiumLocked else { return false }
-            switch widgetType {
-            case .music:
-                return MusicWidgetVisibilityPolicy.shouldShow(
-                    isEnabled: settings.settings.musicWidgetEnabled,
-                    hideWhenNotPlaying: settings.settings.hideMusicWidgetWhenNotPlaying,
-                    isPlaying: musicVisibility.isPlaying,
-                    hidePausedSpotifyWhenIdle: settings.settings.hideMusicWidgetWhenSpotifyPausedAndIdle,
-                    isSpotifyPausedWithNoOtherPlayback: musicVisibility.isSpotifyPausedWithNoOtherPlayback
-                )
-            case .weather:
-                return settings.settings.weatherWidgetEnabled
-            case .sports:
-                return settings.settings.sportsWidgetEnabled
-            case .finance:
-                return settings.settings.financeWidgetEnabled
-            case .shopify:
-                return settings.settings.shopifyWidgetEnabled
-            case .calendar:
-                return settings.settings.calendarWidgetEnabled
-            case .battery:
-                return settings.settings.batteryWidgetEnabled
-            case .timer:
-                return settings.settings.timerWidgetEnabled
-            case .shortcuts:
-                return settings.settings.shortcutsWidgetEnabled
-            case .notes:
-                return settings.settings.notesWidgetEnabled
-            case .clipboard:
-                return settings.settings.clipboardWidgetEnabled
-            case .mirror:
-                return settings.settings.mirrorWidgetEnabled
-            case .storage:
-                return settings.settings.storageWidgetEnabled
-            case .agent:
-                return false
-            case .focusSession:
-                return settings.settings.focusSessionWidgetEnabled
-            }
-        }
+        let enabled = WidgetLayoutPolicy.enabledWidgets(
+            settings: settings.settings,
+            isMusicPlaying: musicVisibility.isPlaying,
+            isSpotifyPausedWithNoOtherPlayback: musicVisibility.isSpotifyPausedWithNoOtherPlayback
+        )
 
         return WidgetLayoutPolicy.fittingWidgets(
             from: enabled,
@@ -399,25 +349,13 @@ private struct NotchDefaultWidgetsView: View {
         case .sports:
             SportsWidgetView()
                 .onTapGesture {
-                    if settings.settings.sportsOpenOnClick, SubscriptionManager.shared.hasAccess(to: .sportsWidget) {
+                    if settings.settings.sportsOpenOnClick {
                         Task {
                             try? await Task.sleep(for: .seconds(NotchConfiguration.primaryWidgetSwitchDelay))
                             navigationStack.wrappedValue.append(NotchWidgetMode.sportsPlayer)
                         }
                     }
                 }
-        case .finance:
-            FinanceWidgetView()
-                .onTapGesture {
-                    if settings.settings.financeOpenOnClick {
-                        Task {
-                            try? await Task.sleep(for: .seconds(NotchConfiguration.primaryWidgetSwitchDelay))
-                            navigationStack.wrappedValue.append(NotchWidgetMode.financePlayer)
-                        }
-                    }
-                }
-        case .shopify:
-            ShopifyOrdersWidgetView()
         case .calendar:
             CalendarWidgetView(viewModel: calendarViewModel)
                 .onTapGesture {
@@ -471,8 +409,6 @@ private struct NotchDefaultWidgetsView: View {
                         }
                     }
                 }
-        case .agent:
-            EmptyView()
         }
     }
 }

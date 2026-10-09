@@ -151,8 +151,7 @@ final class FocusBlocker {
     }
 
     func requestProductiveWebsiteAccess(domain: String) -> Bool {
-        guard SubscriptionAccess.hasAccess(to: .focusProductiveAccess),
-              isBlocking,
+        guard isBlocking,
               webBlockedDomains.contains(FocusWebsiteBlocker.normalize([domain]).first ?? "") else {
             return false
         }

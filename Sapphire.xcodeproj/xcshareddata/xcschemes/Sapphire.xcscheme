@@ -79,10 +79,6 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "FIRAnalyticsVerboseLoggingEnabled"
-            isEnabled = "YES">
-         </CommandLineArgument>
-         <CommandLineArgument
             argument = "-forceOnboarding YES"
             isEnabled = "NO">
          </CommandLineArgument>

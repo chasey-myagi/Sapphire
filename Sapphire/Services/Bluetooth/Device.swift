@@ -104,7 +104,20 @@ protocol BLEDelegate {
 
 // MARK: - BLE Class (with Probing Logic)
 class BLE: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
-    lazy var centralMgr: CBCentralManager = CBCentralManager(delegate: self, queue: nil)
+    private let authorization: () -> CBManagerAuthorization
+
+    init(authorization: @escaping () -> CBManagerAuthorization = { CBManager.authorization }) {
+        self.authorization = authorization
+        super.init()
+    }
+
+    private(set) var initializedCentralManager: CBCentralManager?
+    var centralMgr: CBCentralManager {
+        if let initializedCentralManager { return initializedCentralManager }
+        let manager = CBCentralManager(delegate: self, queue: nil)
+        initializedCentralManager = manager
+        return manager
+    }
     var devices : [UUID : Device] = [:]
     var delegate: BLEDelegate?
     var monitoredUUID: UUID?
@@ -134,12 +147,15 @@ class BLE: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
     // MARK: - Scanning Control
 
     private func scanForPeripherals(withDuplicates: Bool) {
-        guard centralMgr.state == .poweredOn, !centralMgr.isScanning else { return }
+        guard authorization() == .allowedAlways,
+              monitoredUUID != nil || isScanningContinuously,
+              centralMgr.state == .poweredOn, !centralMgr.isScanning else { return }
         let options = [CBCentralManagerScanOptionAllowDuplicatesKey: withDuplicates]
         centralMgr.scanForPeripherals(withServices: nil, options: options)
     }
 
     func startScanning(includeUnnamed: Bool) {
+        guard authorization() == .allowedAlways else { return }
         self.isScanningContinuously = true
         self.includeUnnamedDevices = includeUnnamed
         self.peripheralsBeingProbed.removeAll()
@@ -149,9 +165,17 @@ class BLE: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
 
     @MainActor func stopScanning() {
         self.isScanningContinuously = false
+        if let central = initializedCentralManager {
+            for id in peripheralsBeingProbed {
+                if let peripheral = devices[id]?.peripheral {
+                    central.cancelPeripheralConnection(peripheral)
+                }
+            }
+        }
+        peripheralsBeingProbed.removeAll()
 
         if activeModeTimer == nil {
-            centralMgr.stopScan()
+            initializedCentralManager?.stopScan()
         }
     }
 
@@ -201,6 +225,7 @@ class BLE: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
     }
 
     @MainActor func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
+        guard authorization() == .allowedAlways else { return }
         if let serviceUUIDs = advertisementData[CBAdvertisementDataServiceUUIDsKey] as? [CBUUID], serviceUUIDs.contains(ExposureNotification) {
             return
         }
@@ -235,10 +260,16 @@ class BLE: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
     }
 
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
+        guard authorization() == .allowedAlways,
+              peripheral.identifier == monitoredUUID || peripheralsBeingProbed.contains(peripheral.identifier) else { return }
         peripheral.delegate = self
 
         if peripheral.identifier == monitoredUUID {
-            Task { @MainActor in self.delegate?.monitoredPeripheralState = .connected }
+            Task { @MainActor [weak self] in
+                guard let self, self.authorization() == .allowedAlways,
+                      self.monitoredUUID == peripheral.identifier, peripheral.state == .connected else { return }
+                self.delegate?.monitoredPeripheralState = .connected
+            }
             connectionTimer?.invalidate(); connectionTimer = nil
             if !passiveMode {
                 startActiveMode(peripheral: peripheral)
@@ -258,7 +289,11 @@ class BLE: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
 
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         if peripheral.identifier == monitoredUUID {
-            Task { @MainActor in self.delegate?.monitoredPeripheralState = .disconnected }
+            Task { @MainActor [weak self] in
+                guard let self, self.authorization() == .allowedAlways,
+                      self.monitoredUUID == peripheral.identifier, peripheral.state == .disconnected else { return }
+                self.delegate?.monitoredPeripheralState = .disconnected
+            }
             activeModeTimer?.invalidate(); activeModeTimer = nil
             lastReadAt = 0
             if !passiveMode {
@@ -278,6 +313,8 @@ class BLE: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
     // MARK: - CBPeripheralDelegate (For Probing and Monitoring)
 
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
+        guard authorization() == .allowedAlways,
+              peripheral.identifier == monitoredUUID || peripheralsBeingProbed.contains(peripheral.identifier) else { return }
         guard let services = peripheral.services else {
             if peripheralsBeingProbed.contains(peripheral.identifier) {
                 centralMgr.cancelPeripheralConnection(peripheral)
@@ -298,6 +335,8 @@ class BLE: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
     }
 
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
+        guard authorization() == .allowedAlways,
+              peripheral.identifier == monitoredUUID || peripheralsBeingProbed.contains(peripheral.identifier) else { return }
         guard let chars = service.characteristics else {
             if peripheralsBeingProbed.contains(peripheral.identifier) {
                 centralMgr.cancelPeripheralConnection(peripheral)
@@ -319,6 +358,8 @@ class BLE: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
     }
 
     @MainActor func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
+        guard authorization() == .allowedAlways,
+              peripheral.identifier == monitoredUUID || peripheralsBeingProbed.contains(peripheral.identifier) else { return }
         guard let value = characteristic.value, let device = devices[peripheral.identifier] else { return }
         let str = String(data: value, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines)
 
@@ -342,7 +383,8 @@ class BLE: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
     }
 
     @MainActor func peripheral(_ peripheral: CBPeripheral, didReadRSSI RSSI: NSNumber, error: Error?) {
-        guard peripheral.identifier == monitoredUUID, error == nil else { return }
+        guard authorization() == .allowedAlways,
+              peripheral.identifier == monitoredUUID, error == nil else { return }
         lastReadAt = Date().timeIntervalSince1970
         let rssi = RSSI.intValue > 0 ? 0 : RSSI.intValue
 
@@ -357,6 +399,7 @@ class BLE: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
     // MARK: - Monitoring Logic
 
     func startMonitor(uuid: UUID) {
+        guard authorization() == .allowedAlways else { return }
         if let p = monitoredPeripheral, p.identifier != uuid {
             centralMgr.cancelPeripheralConnection(p)
         }
@@ -386,7 +429,7 @@ class BLE: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
     func stopMonitor() {
         if let p = monitoredPeripheral, p.identifier == monitoredUUID {
             if p.state == .connected || p.state == .connecting {
-                centralMgr.cancelPeripheralConnection(p)
+                initializedCentralManager?.cancelPeripheralConnection(p)
             }
         }
         monitoredUUID = nil
@@ -394,9 +437,10 @@ class BLE: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
         proximityTimer?.invalidate(); proximityTimer = nil
         signalTimer?.invalidate(); signalTimer = nil
         activeModeTimer?.invalidate(); activeModeTimer = nil
+        connectionTimer?.invalidate(); connectionTimer = nil
 
-        if !isScanningContinuously && centralMgr.isScanning {
-            centralMgr.stopScan()
+        if !isScanningContinuously, let central = initializedCentralManager, central.isScanning {
+            central.stopScan()
         }
         print("[BLE] Monitoring has been stopped.")
     }
@@ -407,16 +451,17 @@ class BLE: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
             activeModeTimer?.invalidate()
             activeModeTimer = nil
             if let p = monitoredPeripheral {
-                centralMgr.cancelPeripheralConnection(p)
+                initializedCentralManager?.cancelPeripheralConnection(p)
             }
-            if monitoredPeripheral?.state != .connected {
+            if (monitoredUUID != nil || isScanningContinuously), monitoredPeripheral?.state != .connected {
                 scanForPeripherals(withDuplicates: false)
             }
         }
     }
 
     func connectMonitoredPeripheral() {
-        guard let p = monitoredPeripheral else {
+        guard authorization() == .allowedAlways,
+              let p = monitoredPeripheral, p.identifier == monitoredUUID else {
             print("[BLE] Cannot connect: monitoredPeripheral is nil. A scan should be in progress.")
             return
         }
@@ -426,7 +471,11 @@ class BLE: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
             return
         }
 
-        Task { @MainActor in self.delegate?.monitoredPeripheralState = .connecting }
+        Task { @MainActor [weak self] in
+            guard let self, self.authorization() == .allowedAlways,
+                  self.monitoredUUID == p.identifier, p.state == .connecting else { return }
+            self.delegate?.monitoredPeripheralState = .connecting
+        }
         print("[BLE] Attempting to connect to peripheral: \(p.identifier)")
         centralMgr.connect(p, options: nil)
 
@@ -493,11 +542,13 @@ class BLE: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
     }
 
     private func startActiveMode(peripheral: CBPeripheral) {
-        guard activeModeTimer == nil, !passiveMode else { return }
+        guard authorization() == .allowedAlways,
+              peripheral.identifier == monitoredUUID, activeModeTimer == nil, !passiveMode else { return }
         if centralMgr.isScanning { centralMgr.stopScan() }
 
         activeModeTimer = Timer(timeInterval: 1, repeats: true, block: { [weak self] _ in
-            guard let self = self else { return }
+            guard let self, self.authorization() == .allowedAlways,
+                  self.monitoredUUID == peripheral.identifier else { return }
 
             if Date().timeIntervalSince1970 > self.lastReadAt + 10 && self.lastReadAt != 0 {
                 self.centralMgr.cancelPeripheralConnection(peripheral)

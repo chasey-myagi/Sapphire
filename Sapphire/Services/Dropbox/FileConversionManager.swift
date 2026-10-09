@@ -29,7 +29,6 @@ class FileConversionManager {
             return []
         }
 
-        let hasAdvancedConversion = SubscriptionManager.shared.isFeatureEnabled(.advancedFileConversion)
         var formats: [ConversionFormat] = []
 
         if type.conforms(to: .image) {
@@ -42,7 +41,7 @@ class FileConversionManager {
             ])
         }
 
-        if type.conforms(to: .movie), hasAdvancedConversion {
+        if type.conforms(to: .movie) {
             formats.append(contentsOf: [
                 .init(id: "mov", displayName: "MOV", iconName: "video.fill", targetUTType: .quickTimeMovie),
                 .init(id: "mp4", displayName: "MP4", iconName: "video.fill", targetUTType: .mpeg4Movie)
@@ -50,16 +49,14 @@ class FileConversionManager {
         }
 
         if type.conforms(to: .compositeContent) || type.conforms(to: .text) {
-            if hasAdvancedConversion {
-                formats.append(contentsOf: [
-                    .init(id: "pdf", displayName: "PDF", iconName: "doc.richtext.fill", targetUTType: .pdf),
-                    .init(id: "rtf", displayName: "RTF", iconName: "doc.richtext", targetUTType: .rtf)
-                ])
-            }
+            formats.append(contentsOf: [
+                .init(id: "pdf", displayName: "PDF", iconName: "doc.richtext.fill", targetUTType: .pdf),
+                .init(id: "rtf", displayName: "RTF", iconName: "doc.richtext", targetUTType: .rtf)
+            ])
             formats.append(.init(id: "txt", displayName: "TXT", iconName: "doc.text", targetUTType: .plainText))
         }
 
-        if type.conforms(to: .audio), hasAdvancedConversion {
+        if type.conforms(to: .audio) {
             formats.append(contentsOf: [
                 .init(id: "m4a", displayName: "M4A", iconName: "music.note", targetUTType: .mpeg4Audio)
             ])
@@ -77,15 +74,7 @@ class FileConversionManager {
             let finalBaseName = sourceURL.deletingPathExtension().lastPathComponent.components(separatedBy: "_").last ?? "ConvertedFile"
 
             do {
-                if format.targetUTType.conforms(to: .image) {
-                    try await self.convertImage(from: sourceURL, to: tempURL, as: format.targetUTType)
-                } else if format.targetUTType.conforms(to: .movie) {
-                    try await self.convertVideo(taskID: taskID, from: sourceURL, to: tempURL)
-                } else if format.targetUTType.conforms(to: .audio) {
-                    try await self.convertAudio(taskID: taskID, from: sourceURL, to: tempURL)
-                } else if format.targetUTType == .pdf || format.targetUTType.conforms(to: .text) {
-                    try await self.convertTextDocument(from: sourceURL, to: tempURL, as: format.targetUTType)
-                }
+                try await self.convert(from: sourceURL, to: tempURL, as: format.targetUTType, taskID: taskID)
 
                 await MainActor.run {
                     self.progressPublisher.send((taskID, 1.0))
@@ -95,6 +84,21 @@ class FileConversionManager {
                 print("[FileConversionManager] Conversion failed: \(error)")
                 try? FileManager.default.removeItem(at: tempURL)
             }
+        }
+    }
+
+    /// Converts into a caller-owned destination without publishing or opening it.
+    func convert(from sourceURL: URL, to destinationURL: URL, as type: UTType, taskID: UUID = UUID()) async throws {
+        if type.conforms(to: .image) {
+            try convertImage(from: sourceURL, to: destinationURL, as: type)
+        } else if type.conforms(to: .movie) {
+            try await self.convertVideo(taskID: taskID, from: sourceURL, to: destinationURL, as: type)
+        } else if type == .mpeg4Audio {
+            try await self.convertAudio(taskID: taskID, from: sourceURL, to: destinationURL)
+        } else if type == .pdf || type.conforms(to: .text) {
+            try convertTextDocument(from: sourceURL, to: destinationURL, as: type)
+        } else {
+            throw NSError(domain: "FileConversionError", code: 7, userInfo: [NSLocalizedDescriptionKey: String(localized: "Unsupported conversion format.")])
         }
     }
 
@@ -135,14 +139,24 @@ class FileConversionManager {
         }
     }
 
-    private func convertVideo(taskID: UUID, from sourceURL: URL, to destinationURL: URL) async throws {
+    private func convertVideo(taskID: UUID, from sourceURL: URL, to destinationURL: URL, as type: UTType) async throws {
         let asset = AVAsset(url: sourceURL)
         guard let exportSession = AVAssetExportSession(asset: asset, presetName: AVAssetExportPresetPassthrough) else {
             throw NSError(domain: "FileConversionError", code: 3, userInfo: [NSLocalizedDescriptionKey: String(localized: "Could not create AVAssetExportSession for video.")])
         }
 
+        let outputFileType: AVFileType
+        switch type {
+        case .quickTimeMovie: outputFileType = .mov
+        case .mpeg4Movie: outputFileType = .mp4
+        default:
+            throw NSError(domain: "FileConversionError", code: 8, userInfo: [NSLocalizedDescriptionKey: String(localized: "Unsupported video format.")])
+        }
+        guard exportSession.supportedFileTypes.contains(outputFileType) else {
+            throw NSError(domain: "FileConversionError", code: 8, userInfo: [NSLocalizedDescriptionKey: String(localized: "Unsupported video format.")])
+        }
         exportSession.outputURL = destinationURL
-        exportSession.outputFileType = AVFileType(destinationURL.pathExtension)
+        exportSession.outputFileType = outputFileType
 
         try await monitorExportProgress(for: exportSession, taskID: taskID)
     }
@@ -153,6 +167,9 @@ class FileConversionManager {
             throw NSError(domain: "FileConversionError", code: 4, userInfo: [NSLocalizedDescriptionKey: String(localized: "Could not create AVAssetExportSession for audio.")])
         }
 
+        guard exportSession.supportedFileTypes.contains(.m4a) else {
+            throw NSError(domain: "FileConversionError", code: 4, userInfo: [NSLocalizedDescriptionKey: String(localized: "Could not create AVAssetExportSession for audio.")])
+        }
         exportSession.outputURL = destinationURL
         exportSession.outputFileType = .m4a
 
@@ -166,16 +183,26 @@ class FileConversionManager {
         switch type {
         case .pdf:
             let pdfData = NSMutableData()
+            var pageBounds = CGRect(x: 0, y: 0, width: 595, height: 842)
             guard let consumer = CGDataConsumer(data: pdfData),
-                  let context = CGContext(consumer: consumer, mediaBox: nil, nil) else {
+                  let context = CGContext(consumer: consumer, mediaBox: &pageBounds, nil) else {
                 throw NSError(domain: "FileConversionError", code: 5, userInfo: [NSLocalizedDescriptionKey: String(localized: "Could not create PDF context.")])
             }
             let frameSetter = CTFramesetterCreateWithAttributedString(attributedString)
-            let path = CGPath(rect: CGRect(x: 0, y: 0, width: 595, height: 842), transform: nil)
-            let frame = CTFramesetterCreateFrame(frameSetter, CFRangeMake(0, attributedString.length), path, nil)
-            context.beginPDFPage(nil)
-            CTFrameDraw(frame, context)
-            context.endPDFPage()
+            let path = CGPath(rect: pageBounds.insetBy(dx: 36, dy: 36), transform: nil)
+            var offset = 0
+            repeat {
+                let frame = CTFramesetterCreateFrame(frameSetter, CFRangeMake(offset, 0), path, nil)
+                let visibleRange = CTFrameGetVisibleStringRange(frame)
+                guard visibleRange.length > 0 || attributedString.length == 0 else {
+                    context.closePDF()
+                    throw NSError(domain: "FileConversionError", code: 5, userInfo: [NSLocalizedDescriptionKey: String(localized: "Could not lay out PDF text.")])
+                }
+                context.beginPDFPage(nil)
+                CTFrameDraw(frame, context)
+                context.endPDFPage()
+                offset += visibleRange.length
+            } while offset < attributedString.length
             context.closePDF()
             data = pdfData as Data
 
@@ -210,6 +237,9 @@ class FileConversionManager {
 
         if let error = session.error {
             throw error
+        }
+        guard session.status == .completed else {
+            throw NSError(domain: "FileConversionError", code: 9, userInfo: [NSLocalizedDescriptionKey: String(localized: "File export did not complete.")])
         }
     }
 }

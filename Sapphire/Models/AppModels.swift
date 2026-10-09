@@ -26,8 +26,6 @@ enum NotchWidgetMode: Hashable {
     case weatherPlayer
     case calendarPlayer
     case sportsPlayer
-    case financePlayer
-    case shopifyOrders
     case notesPlayer
     case clipboardPlayer
     case mirrorPlayer
@@ -51,16 +49,11 @@ enum NotchWidgetMode: Hashable {
     case multiAudioApp8D(bundleID: String, appName: String)
     case multiAudioAppSurround(bundleID: String, appName: String)
     case musicApiKeysMissing
-    case geminiApiKeysMissing
     case musicLoginPrompt
     case timerDetailView
     case focusSessionDetailView
     case batteryDetailView
     case storageDetailView
-    case continuityDetail
-    case continuityActivityDetail
-    case agentS
-    case blipHub
     case circleToSearch
     case updateAvailable
     func hash(into hasher: inout Hasher) {
@@ -79,10 +72,6 @@ enum NotchWidgetMode: Hashable {
             hasher.combine(5)
         case .sportsPlayer:
             hasher.combine(23)
-        case .financePlayer:
-            hasher.combine(24)
-        case .shopifyOrders:
-            hasher.combine(33)
         case .notesPlayer:
             hasher.combine(25)
         case .clipboardPlayer:
@@ -124,8 +113,6 @@ enum NotchWidgetMode: Hashable {
             hasher.combine(device)
         case .musicApiKeysMissing:
             hasher.combine(17)
-        case .geminiApiKeysMissing:
-            hasher.combine(18)
         case .musicLoginPrompt:
             hasher.combine(19)
         case .timerDetailView:
@@ -136,10 +123,6 @@ enum NotchWidgetMode: Hashable {
             hasher.combine(34)
         case .storageDetailView:
             hasher.combine(39)
-        case .continuityDetail:
-            hasher.combine(37)
-        case .continuityActivityDetail:
-            hasher.combine(38)
         case .multiAudioAppEQ:
             hasher.combine(21)
         case .multiAudioApp8D(let bundleID, let appName):
@@ -150,10 +133,6 @@ enum NotchWidgetMode: Hashable {
             hasher.combine(36)
             hasher.combine(bundleID)
             hasher.combine(appName)
-        case .agentS:
-            hasher.combine(22)
-        case .blipHub:
-            hasher.combine(23)
         case .circleToSearch:
             hasher.combine(28)
         case .updateAvailable:
@@ -275,7 +254,6 @@ public struct StatsPayload: Equatable, Hashable {
 
 enum StandardActivityData: Equatable {
     case music(bottom: MusicBottomContentType)
-    case intelligenceAgent(status: String, stepTitle: String, current: Int, total: Int)
     case devActivity(task: DevTask, additionalCount: Int)
     case weather(data: ProcessedWeatherData)
     case calendar(event: EKEvent)
@@ -287,11 +265,7 @@ enum StandardActivityData: Equatable {
     case fileShelf(count: Int)
     case fileProgress(task: FileTask)
     case bluetooth(device: BluetoothDeviceState)
-    case continuity(snapshot: ContinuityConnectivitySnapshot)
-    case continuityExternal(activity: ContinuityLiveExternalActivity)
-    case continuityMedia(state: ContinuityMediaState, artwork: NSImage?, deviceName: String)
     case audioSwitch(event: AudioSwitchEvent)
-    case geminiLive(payload: GeminiPayload)
     case microphone(payload: MicrophonePayload)
     case nearDrop(payload: NearDropPayload)
     case hud(type: HUDType)
@@ -301,7 +275,6 @@ enum StandardActivityData: Equatable {
     case updateAvailable(version: String)
     case stats(payload: StatsPayload)
     case sports(payload: SportsPayload, bottom: SportsBottomContentType = .none)
-    case finance(payload: FinancePayload)
 
     static func == (lhs: StandardActivityData, rhs: StandardActivityData) -> Bool {
         switch (lhs, rhs) {
@@ -318,11 +291,7 @@ enum StandardActivityData: Equatable {
         case let (.fileShelf(a), .fileShelf(b)): return a == b
         case let (.fileProgress(a), .fileProgress(b)): return a == b
         case let (.bluetooth(a), .bluetooth(b)): return a == b
-        case let (.continuity(a), .continuity(b)): return a == b
-        case let (.continuityExternal(a), .continuityExternal(b)): return a == b
-        case let (.continuityMedia(s1, a1, d1), .continuityMedia(s2, a2, d2)): return s1 == s2 && a1 === a2 && d1 == d2
         case let (.audioSwitch(a), .audioSwitch(b)): return a == b
-        case let (.geminiLive(a), .geminiLive(b)): return a == b
         case let (.microphone(a), .microphone(b)): return a == b
         case let (.nearDrop(a), .nearDrop(b)): return a == b
         case let (.hud(a), .hud(b)): return a == b
@@ -331,9 +300,6 @@ enum StandardActivityData: Equatable {
         case let (.updateAvailable(a), .updateAvailable(b)): return a == b
         case let (.stats(a), .stats(b)): return a == b
         case let (.sports(a, bottomA), .sports(b, bottomB)): return a == b && bottomA == bottomB
-        case let (.finance(a), .finance(b)): return a == b
-        case let (.intelligenceAgent(s1, t1, c1, tot1), .intelligenceAgent(s2, t2, c2, tot2)):
-            return s1 == s2 && t1 == t2 && c1 == c2 && tot1 == tot2
         case let (.devActivity(t1, c1), .devActivity(t2, c2)): return t1 == t2 && c1 == c2
         default: return false
         }
@@ -348,10 +314,6 @@ struct NearDropPayload: Identifiable, Hashable {
     func hash(into hasher: inout Hasher) { hasher.combine(id); hasher.combine(state); hasher.combine(progress) }
 }
 
-enum GeminiLiveState: Equatable, Hashable { case active }
-struct GeminiPayload: Identifiable, Hashable {
-    let id = UUID(); var state: GeminiLiveState = .active; var isMicMuted: Bool = true
-}
 
 struct RestrictedAppPayload: Identifiable, Hashable {
     let id = UUID()
@@ -606,24 +568,6 @@ struct SportsComment: Identifiable, Equatable {
     let period: String?
 }
 
-struct FinancePayload: Equatable, Hashable {
-    let symbol: String
-    let price: String
-    let change: String
-    let changePercent: String
-    let isPositive: Bool
-    let name: String
-    let isAfterHours: Bool
-    let closingPrice: String?
-
-    var unitPrice: Double {
-        Double(price.replacingOccurrences(of: "$", with: "")) ?? 0
-    }
-
-    var changeValue: Double {
-        Double(change.replacingOccurrences(of: "+", with: "")) ?? 0
-    }
-}
 
 struct PortfolioPositionStats: Equatable {
     let invested: String?

@@ -565,23 +565,6 @@
         }
       }
     },
-    "%@ requires Sapphire %@": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ requires Sapphire %@"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ 需要 Sapphire %@"
-          }
-        }
-      }
-    },
     "%@ scan complete": {
       "comment": "Settings dynamic interpolated presentation; key and placeholder types verified against module-build-01 compiler output.",
       "localizations": {
@@ -2422,23 +2405,6 @@
         }
       }
     },
-    "Account management": {
-      "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Account management"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "账户管理"
-          }
-        }
-      }
-    },
     "Acoustic": {
       "comment": "Native local UI wording in AudioModels.swift",
       "localizations": {
@@ -3800,23 +3766,6 @@
         }
       }
     },
-    "All widgets and automations": {
-      "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "All widgets and automations"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "全部小组件和自动化功能"
-          }
-        }
-      }
-    },
     "All-Day": {
       "comment": "Native local UI wording in CalendarDetailView.swift, CalendarWidgetView.swift",
       "localizations": {
@@ -4174,19 +4123,19 @@
         }
       }
     },
-    "Android Continuity": {
-      "comment": "SettingsSection.label",
+    "Analytics and Crash Reports": {
+      "comment": "Onboarding privacy information for the build without analytics or crash uploads.",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Android Continuity"
+            "value": "Analytics and Crash Reports"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "安卓互联"
+            "value": "使用分析与崩溃报告"
           }
         }
       }
@@ -4255,23 +4204,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "动画预设"
-          }
-        }
-      }
-    },
-    "Anonymous data is processed by google for analytics. This data is always aggregated and cannot be used to identify you.": {
-      "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Anonymous data is processed by google for analytics. This data is always aggregated and cannot be used to identify you."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "匿名数据由 Google 处理并用于分析。这些数据始终以汇总形式呈现，无法用于识别你的身份。"
           }
         }
       }
@@ -4408,23 +4340,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "应用限制"
-          }
-        }
-      }
-    },
-    "App Lock": {
-      "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "App Lock"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "应用锁"
           }
         }
       }
@@ -6538,40 +6453,6 @@
         }
       }
     },
-    "Beta access requires a Plus subscription or higher.": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Beta access requires a Plus subscription or higher."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "访问测试版需要 Plus 或更高级别的订阅。"
-          }
-        }
-      }
-    },
-    "Beta validation is not included in this build.": {
-      "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Beta validation is not included in this build."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "此构建版本未包含测试版验证。"
-          }
-        }
-      }
-    },
     "Bind To": {
       "comment": "Settings interface",
       "localizations": {
@@ -6619,39 +6500,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "无法获取 Blender 版本信息"
-          }
-        }
-      }
-    },
-    "Blip": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Blip"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Blip"
-          }
-        }
-      }
-    },
-    "Blip unavailable in this build": {
-      "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Blip unavailable in this build"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "此构建版本不支持 Blip"
           }
         }
       }
@@ -7604,23 +7452,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "CPU 使用率已在 %lld%% 左右持续约一分钟。"
-          }
-        }
-      }
-    },
-    "CURRENT": {
-      "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "CURRENT"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "当前套餐"
           }
         }
       }
@@ -10244,40 +10075,6 @@
         }
       }
     },
-    "Connect Shopify in the Shopify section of Settings to view recent orders.": {
-      "comment": "Native local UI wording in ShopifyOrdersView.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Connect Shopify in the Shopify section of Settings to view recent orders."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "在设置的 Shopify 页面连接商店，即可查看近期订单。"
-          }
-        }
-      }
-    },
-    "Connect a Shopify custom app with read_orders access. The Admin API token is stored in the macOS Keychain.": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Connect a Shopify custom app with read_orders access. The Admin API token is stored in the macOS Keychain."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "连接具有 read_orders 权限的 Shopify 自定义应用。Admin API 令牌存储在 macOS 钥匙串中。"
-          }
-        }
-      }
-    },
     "Connected": {
       "comment": "Settings dynamic presentation at literal source; reconcile with final compiler extraction.",
       "localizations": {
@@ -10975,23 +10772,6 @@
         }
       }
     },
-    "Core notch experience": {
-      "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Core notch experience"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "核心刘海区域体验"
-          }
-        }
-      }
-    },
     "Corner Radii": {
       "comment": "Settings interface",
       "localizations": {
@@ -11296,23 +11076,6 @@
         }
       }
     },
-    "Create it in Shopify Admin → Settings → Apps and sales channels → Develop apps, with read_orders permission.": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Create it in Shopify Admin → Settings → Apps and sales channels → Develop apps, with read_orders permission."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "在 Shopify 管理后台的“设置”→“应用和销售渠道”→“开发应用”中创建，并授予 read_orders 权限。"
-          }
-        }
-      }
-    },
     "Creator": {
       "comment": "Native local UI wording in MusicHubViews.swift",
       "localizations": {
@@ -11432,19 +11195,19 @@
         }
       }
     },
-    "Current plan: %@": {
-      "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
+    "Current language setting": {
+      "comment": "Native app language preference; changing language requires quitting and reopening.",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Current plan: %@"
+            "value": "Current language setting"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "当前套餐：%@"
+            "value": "当前语言设置"
           }
         }
       }
@@ -11989,57 +11752,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "数据时间范围"
-          }
-        }
-      }
-    },
-    "Data Storage & Third Parties": {
-      "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Data Storage & Third Parties"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "数据存储与第三方"
-          }
-        }
-      }
-    },
-    "Data We Collect (Analytics)": {
-      "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Data We Collect (Analytics)"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "我们收集的数据（分析）"
-          }
-        }
-      }
-    },
-    "Data We NEVER Collect": {
-      "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Data We NEVER Collect"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "我们绝不收集的数据"
           }
         }
       }
@@ -15206,23 +14918,6 @@
         }
       }
     },
-    "Enables File Shelf, Intelligence file access, and deeper system integrations.": {
-      "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Enables File Shelf, Intelligence file access, and deeper system integrations."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "用于文件暂存架、智能功能的文件访问，以及更深入的系统集成。"
-          }
-        }
-      }
-    },
     "Enabling face ID will increase the app's ram usage.": {
       "comment": "Settings interface",
       "localizations": {
@@ -15372,23 +15067,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "确保工作区域照明充足，且不会在屏幕上产生眩光。避免在漆黑的房间中仅靠屏幕照明工作。"
-          }
-        }
-      }
-    },
-    "Enter a valid Shopify store domain.": {
-      "comment": "Runtime user-facing string",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Enter a valid Shopify store domain."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "请输入有效的 Shopify 商店域名。"
           }
         }
       }
@@ -15695,23 +15373,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "每天"
-          }
-        }
-      }
-    },
-    "Everything, plus beta builds": {
-      "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Everything, plus beta builds"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "全部功能及测试版本"
           }
         }
       }
@@ -16957,23 +16618,6 @@
         }
       }
     },
-    "Finance": {
-      "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Finance"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "财经"
-          }
-        }
-      }
-    },
     "Find Device by Distance": {
       "comment": "Settings interface",
       "localizations": {
@@ -17484,6 +17128,23 @@
         }
       }
     },
+    "Follow System": {
+      "comment": "Native app language preference; changing language requires quitting and reopening.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Follow System"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "跟随系统"
+          }
+        }
+      }
+    },
     "For OpenBubbles": {
       "comment": "Compiler-extracted static interface text",
       "localizations": {
@@ -17599,23 +17260,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "免费"
-          }
-        }
-      }
-    },
-    "Free %@ users get %lld every month. Use one to revive a broken streak.": {
-      "comment": "Native local UI wording in FocusStreakPanelView.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Free %@ users get %lld every month. Use one to revive a broken streak."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "免费 %@ 用户每月可获得 %lld 张恢复券，用于恢复中断的连续专注记录。"
           }
         }
       }
@@ -17875,23 +17519,6 @@
         }
       }
     },
-    "Gemini API Key Missing": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gemini API Key Missing"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "缺少 Gemini API 密钥"
-          }
-        }
-      }
-    },
     "General": {
       "comment": "Settings interface",
       "localizations": {
@@ -18024,23 +17651,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "手势"
-          }
-        }
-      }
-    },
-    "Get %@": {
-      "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Get %@"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "获取 %@"
           }
         }
       }
@@ -18249,24 +17859,6 @@
           }
         }
       }
-    },
-    "Google Analytics": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Google Analytics"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Google Analytics"
-          }
-        }
-      },
-      "shouldTranslate": false
     },
     "Google Update reported an error": {
       "comment": "Settings dynamic presentation at literal source; reconcile with final compiler extraction.",
@@ -18485,23 +18077,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "访客"
-          }
-        }
-      }
-    },
-    "Guest Mode": {
-      "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Guest Mode"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "访客模式"
           }
         }
       }
@@ -19352,23 +18927,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "闲置时隐藏刘海区域（此显示器）"
-          }
-        }
-      }
-    },
-    "Hide the finance activity outside regular US trading hours.": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hide the finance activity outside regular US trading hours."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "在美股常规交易时段之外隐藏财经实时活动。"
           }
         }
       }
@@ -20308,23 +19866,6 @@
         }
       }
     },
-    "Includes the core Sapphire experience.": {
-      "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Includes the core Sapphire experience."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "包含 Sapphire 的核心体验。"
-          }
-        }
-      }
-    },
     "Incorrect password. Please try again.": {
       "comment": "Runtime user-facing string",
       "localizations": {
@@ -20695,40 +20236,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "操作说明"
-          }
-        }
-      }
-    },
-    "Intelligence features are not included in this build.": {
-      "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Intelligence features are not included in this build."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "此构建版本未包含智能功能。"
-          }
-        }
-      }
-    },
-    "Intelligence unavailable in this build": {
-      "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Intelligence unavailable in this build"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "此构建版本不支持智能功能"
           }
         }
       }
@@ -21379,6 +20886,23 @@
         }
       }
     },
+    "Language": {
+      "comment": "Native app language preference; changing language requires quitting and reopening.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Language"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "语言"
+          }
+        }
+      }
+    },
     "Language Packs": {
       "comment": "Settings dynamic presentation at literal source; reconcile with final compiler extraction.",
       "localizations": {
@@ -21919,23 +21443,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "线条颜色表示状态"
-          }
-        }
-      }
-    },
-    "Link an account anytime in Settings to sync your subscription across devices.": {
-      "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Link an account anytime in Settings to sync your subscription across devices."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "你随时可以在设置中关联账户，在设备之间同步订阅。"
           }
         }
       }
@@ -24507,23 +24014,6 @@
         }
       }
     },
-    "Miss a day without breaking your streak by reporting immunity days at least 3 days in advance (unlimited). If a streak still breaks, spend a streak pass to revive it — everyone gets a few free every month by plan.": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Miss a day without breaking your streak by reporting immunity days at least 3 days in advance (unlimited). If a streak still breaks, spend a streak pass to revive it — everyone gets a few free every month by plan."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "至少提前 3 天申报豁免日（次数不限），当天未完成也不会中断连续记录。如果连续记录仍然中断，可使用连续记录恢复券；各订阅方案每月都会免费提供若干张。"
-          }
-        }
-      }
-    },
     "Missed": {
       "comment": "Native local UI wording in FocusStreakPanelView.swift",
       "localizations": {
@@ -26905,40 +26395,6 @@
         }
       }
     },
-    "No orders": {
-      "comment": "Native local UI wording in ShopifyOrdersWidgetView.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No orders"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "暂无订单"
-          }
-        }
-      }
-    },
-    "No orders found.": {
-      "comment": "Native local UI wording in ShopifyOrdersView.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No orders found."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "未找到订单。"
-          }
-        }
-      }
-    },
     "No paired devices": {
       "comment": "Native local UI wording in FileDragLandingView.swift",
       "localizations": {
@@ -28554,23 +28010,6 @@
         }
       }
     },
-    "Open Account Settings": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Open Account Settings"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "打开账户设置"
-          }
-        }
-      }
-    },
     "Open App": {
       "comment": "Settings dynamic presentation at literal source; reconcile with final compiler extraction.",
       "localizations": {
@@ -29364,23 +28803,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "内边距"
-          }
-        }
-      }
-    },
-    "Pair an Android phone for clipboard, notifications, media, battery, and Instant Hotspot.": {
-      "comment": "SettingsSection.shortDescription",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pair an Android phone for clipboard, notifications, media, battery, and Instant Hotspot."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "配对安卓手机，同步剪贴板、通知、媒体和电量，并使用即时热点。"
           }
         }
       }
@@ -31592,23 +31014,6 @@
         }
       }
     },
-    "Purchases are not included in this build.": {
-      "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Purchases are not included in this build."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "此构建版本未包含购买功能。"
-          }
-        }
-      }
-    },
     "Put the display into real macOS display sleep when the lid drops below the chosen angle, then wake it again when reopened. This will attempt to keep caffinate activated while the display is sleeping.": {
       "comment": "Settings interface",
       "localizations": {
@@ -31859,6 +31264,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "退出 Sapphire"
+          }
+        }
+      }
+    },
+    "Quit and reopen Sapphire to apply language changes.": {
+      "comment": "Native app language preference; changing language requires quitting and reopening.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quit and reopen Sapphire to apply language changes."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "退出并重新打开 Sapphire 后，语言更改才会生效。"
           }
         }
       }
@@ -33410,23 +32832,6 @@
         }
       }
     },
-    "Required for Gemini Live screen sharing, per-app audio capture, live window previews, and the hinge-driven desktop animation.": {
-      "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Required for Gemini Live screen sharing, per-app audio capture, live window previews, and the hinge-driven desktop animation."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "用于 Gemini Live 屏幕共享、按应用采集音频、实时窗口预览，以及由屏幕转轴驱动的桌面动画。"
-          }
-        }
-      }
-    },
     "Requires Approval": {
       "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
       "localizations": {
@@ -34529,23 +33934,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sapphire %@ 已发布"
-          }
-        }
-      }
-    },
-    "Sapphire Blip — Mac agent with memory, skills, tools, and computer use.": {
-      "comment": "SettingsSection.shortDescription",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sapphire Blip — Mac agent with memory, skills, tools, and computer use."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sapphire Blip：具备记忆、技能、工具和电脑操作能力的 Mac 智能体。"
           }
         }
       }
@@ -36062,23 +35450,6 @@
         }
       }
     },
-    "Send anonymous usage events to Google to help improve Sapphire. Disable this to opt out of analytics collection.": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Send anonymous usage events to Google to help improve Sapphire. Disable this to opt out of analytics collection."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "向 Google 发送匿名使用事件，帮助改进 Sapphire。关闭此选项可退出分析数据收集。"
-          }
-        }
-      }
-    },
     "Send to %@": {
       "comment": "Native local UI wording in FileDragLandingView.swift",
       "localizations": {
@@ -36402,23 +35773,6 @@
         }
       }
     },
-    "Set up Shopify": {
-      "comment": "Native local UI wording in ShopifyOrdersWidgetView.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Set up Shopify"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "设置 Shopify"
-          }
-        }
-      }
-    },
     "Set up proximity-based authentication and trusted device behavior.": {
       "comment": "SettingsSection.shortDescription",
       "localizations": {
@@ -36521,23 +35875,6 @@
         }
       }
     },
-    "Share anonymous usage data with Google Analytics to help improve Sapphire. You can change this anytime in Settings > General.": {
-      "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Share anonymous usage data with Google Analytics to help improve Sapphire. You can change this anytime in Settings > General."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "与 Google Analytics 分享匿名使用数据，帮助改进 Sapphire。你可以随时在“设置”→“通用”中更改。"
-          }
-        }
-      }
-    },
     "Share to Devices": {
       "comment": "User-facing Sapphire interface text. Keep product names and interpolated user content unchanged.",
       "localizations": {
@@ -36619,41 +35956,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "文件架为空"
-          }
-        }
-      }
-    },
-    "Shopify": {
-      "comment": "Native local UI wording in ShopifyOrdersWidgetView.swift; intentional nonlinguistic format, symbol or brand retained verbatim",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Shopify"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Shopify"
-          }
-        }
-      },
-      "shouldTranslate": false
-    },
-    "Shopify Orders": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Shopify Orders"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Shopify 订单"
           }
         }
       }
@@ -38286,23 +37588,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "请在下方登录 Spotify。系统会先清除旧会话，防止已撤销的登录自动完成。"
-          }
-        }
-      }
-    },
-    "Signed Out of Sapphire": {
-      "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Signed Out of Sapphire"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "已退出 Sapphire 登录"
           }
         }
       }
@@ -40411,23 +39696,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "无法获取此位置的存储容量。"
-          }
-        }
-      }
-    },
-    "Store domain (example.myshopify.com)": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Store domain (example.myshopify.com)"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "商店域名（example.myshopify.com）"
           }
         }
       }
@@ -43236,19 +42504,19 @@
         }
       }
     },
-    "This feature requires Sapphire %@.": {
-      "comment": "Runtime interpolation or conditional static UI",
+    "This build does not include usage analytics or automatic crash-report uploads.": {
+      "comment": "Onboarding privacy information for the build without analytics or crash uploads.",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "This feature requires Sapphire %@."
+            "value": "This build does not include usage analytics or automatic crash-report uploads."
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "此功能需要 Sapphire %@。"
+            "value": "此版本不包含使用情况分析，也不会自动上传崩溃报告。"
           }
         }
       }
@@ -43861,40 +43129,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "请在 Sapphire 设置中添加 API 凭据，以启用 Spotify 集成。"
-          }
-        }
-      }
-    },
-    "To improve Sapphire, we collect completely anonymous, aggregated usage data. This helps us understand which features are popular, identify bugs, and make the app better for everyone.": {
-      "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "To improve Sapphire, we collect completely anonymous, aggregated usage data. This helps us understand which features are popular, identify bugs, and make the app better for everyone."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "为了改进 Sapphire，我们会收集完全匿名的汇总使用数据。这有助于了解常用功能、发现问题，并为所有用户改进应用。"
-          }
-        }
-      }
-    },
-    "To use Gemini Live, please add your Google AI Studio API key in Sapphire's settings.": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "To use Gemini Live, please add your Google AI Studio API key in Sapphire's settings."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "请在 Sapphire 设置中添加 Google AI Studio API 密钥，以使用 Gemini Live。"
           }
         }
       }
@@ -44715,23 +43949,6 @@
         }
       }
     },
-    "Unable to load Shopify orders. Check the store domain and token.": {
-      "comment": "Runtime user-facing string",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Unable to load Shopify orders. Check the store domain and token."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "无法加载 Shopify 订单，请检查商店域名和令牌。"
-          }
-        }
-      }
-    },
     "Unavailable": {
       "comment": "Settings dynamic presentation at literal source; reconcile with final compiler extraction.",
       "localizations": {
@@ -45051,23 +44268,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "不限历史记录数量"
-          }
-        }
-      }
-    },
-    "Unlimited live activities": {
-      "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Unlimited live activities"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "不限数量的实时活动"
           }
         }
       }
@@ -45663,57 +44863,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "升级"
-          }
-        }
-      }
-    },
-    "Upgrade from Account to unlock this section.": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Upgrade from Account to unlock this section."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "在“账户”中升级，即可解锁此设置页。"
-          }
-        }
-      }
-    },
-    "Upgrade on website instead": {
-      "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Upgrade on website instead"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "改为在网站上升级"
-          }
-        }
-      }
-    },
-    "Upgrade to Basic or higher for beta updates, Gemini Live, and more.": {
-      "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Upgrade to Basic or higher for beta updates, Gemini Live, and more."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "升级至 Basic 或更高套餐，即可获得测试版更新、Gemini Live 等功能。"
           }
         }
       }
@@ -46790,23 +45939,6 @@
         }
       }
     },
-    "We are committed to your privacy. We DO NOT automatically collect, store, or transmit any personal or sensitive information. This includes, but is not limited to:\n• Your name, email, or other personal identifiers\n• Screen contents or keyboard input\n• Application data from other apps": {
-      "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "We are committed to your privacy. We DO NOT automatically collect, store, or transmit any personal or sensitive information. This includes, but is not limited to:\n• Your name, email, or other personal identifiers\n• Screen contents or keyboard input\n• Application data from other apps"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "我们承诺保护你的隐私，不会自动收集、存储或传输任何个人或敏感信息，包括但不限于：\n• 姓名、电子邮箱或其他个人标识\n• 屏幕内容或键盘输入\n• 其他应用的数据"
-          }
-        }
-      }
-    },
     "We believe in transparency. Please review our data handling practices below.": {
       "comment": "User-facing Sapphire interface text. Keep product names and interpolated user content unchanged.",
       "localizations": {
@@ -47041,23 +46173,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "欢迎，%@"
-          }
-        }
-      }
-    },
-    "What This Includes:": {
-      "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "What This Includes:"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "包括以下内容："
           }
         }
       }
@@ -47810,6 +46925,23 @@
         }
       }
     },
+    "You can review Sapphire's macOS permissions in System Settings.": {
+      "comment": "Onboarding privacy information for the build without analytics or crash uploads.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You can review Sapphire's macOS permissions in System Settings."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "你可以在系统设置中查看 Sapphire 的 macOS 权限。"
+          }
+        }
+      }
+    },
     "You finished %lld blocks. Total focus today: %@.": {
       "extractionState": "manual",
       "localizations": {
@@ -48049,23 +47181,6 @@
         }
       }
     },
-    "Your Sapphire Plan": {
-      "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Your Sapphire Plan"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "你的 Sapphire 套餐"
-          }
-        }
-      }
-    },
     "Your scheduled focus session is running for %lld minutes. Stay focused!": {
       "extractionState": "manual",
       "localizations": {
@@ -48097,23 +47212,6 @@
                 }
               }
             }
-          }
-        }
-      }
-    },
-    "Your session has expired. Please sign in again.": {
-      "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Your session has expired. Please sign in again."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "会话已过期，请重新登录。"
           }
         }
       }
@@ -48797,6 +47895,23 @@
         }
       }
     },
+    "macOS Permissions": {
+      "comment": "Onboarding privacy information for the build without analytics or crash uploads.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "macOS Permissions"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "macOS 权限"
+          }
+        }
+      }
+    },
     "macOS lost the helper (status 3). Reset the helper; Sapphire will relaunch if it stays stuck.": {
       "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
       "localizations": {
@@ -49002,7 +48117,7 @@
       }
     },
     "pending": {
-      "comment": "Native local UI wording in ShopifyOrdersWidgetView.swift",
+      "comment": "Shared status vocabulary also used by ShortcutsManager; not Shopify-specific.",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -49156,7 +48271,7 @@
       }
     },
     "unknown": {
-      "comment": "Native local UI wording in ShopifyOrdersView.swift",
+      "comment": "Shared fallback vocabulary used by retained music, audio, and helper services; not Shopify-specific.",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -49376,23 +48491,6 @@
       },
       "shouldTranslate": false
     },
-    "• Feature usage frequency (e.g., how often a widget is used)\n• App version and macOS version\n• Anonymous crash reports": {
-      "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "• Feature usage frequency (e.g., how often a widget is used)\n• App version and macOS version\n• Anonymous crash reports"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "• 功能使用频率（例如使用小组件的频率）\n• 应用版本和 macOS 版本\n• 匿名崩溃报告"
-          }
-        }
-      }
-    },
     "↑ Improving": {
       "comment": "Settings dynamic presentation at literal source; reconcile with final compiler extraction.",
       "localizations": {
@@ -49567,6 +48665,182 @@
         }
       },
       "shouldTranslate": false
+    },
+    "Not included in this build.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not included in this build."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "此构建版本未包含此功能。"
+          }
+        }
+      }
+    },
+    "8D Audio controls are not included in this build.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "8D Audio controls are not included in this build."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "此构建版本未包含 8D 音效控制。"
+          }
+        }
+      }
+    },
+    "Surround Audio controls are not included in this build.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Surround Audio controls are not included in this build."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "此构建版本未包含环绕音效控制。"
+          }
+        }
+      }
+    },
+    "You get %lld every month. Use one to revive a broken streak.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You get %lld every month. Use one to revive a broken streak."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "每月可获得 %lld 次补签机会，用于恢复中断的连续记录。"
+          }
+        }
+      }
+    },
+    "Report immunity days at least 3 days in advance to protect your streak. If a streak breaks, use your monthly streak pass to restore it.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Report immunity days at least 3 days in advance to protect your streak. If a streak breaks, use your monthly streak pass to restore it."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "至少提前 3 天申报豁免日可保护连续记录。如果记录中断，可使用每月一次的补签机会恢复。"
+          }
+        }
+      }
+    },
+    "Unsupported conversion format.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unsupported conversion format."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "不支持此转换格式。"
+          }
+        }
+      }
+    },
+    "Unsupported video format.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unsupported video format."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "不支持此视频格式。"
+          }
+        }
+      }
+    },
+    "File export did not complete.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "File export did not complete."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "文件导出未完成。"
+          }
+        }
+      }
+    },
+    "Enables File Shelf and deeper system integrations.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enables File Shelf and deeper system integrations."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "启用文件暂存架及更深入的系统集成。"
+          }
+        }
+      }
+    },
+    "Required for per-app audio capture, live window previews, and the hinge-driven desktop animation.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Required for per-app audio capture, live window previews, and the hinge-driven desktop animation."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "应用音频采集、实时窗口预览和铰链驱动的桌面动画需要此权限。"
+          }
+        }
+      }
+    },
+    "Could not lay out PDF text.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Could not lay out PDF text."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "无法排版 PDF 文本。"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

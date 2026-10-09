@@ -29,6 +29,41 @@ enum PermissionStatus: String, CaseIterable {
     case granted, denied, notRequested
 }
 
+enum PermissionAction: Equatable {
+    case request
+    case openSettings(SystemPreferencesPane)
+
+    var title: LocalizedStringKey {
+        switch self {
+        case .request: return "Request"
+        case .openSettings: return "Open System Settings"
+        }
+    }
+}
+
+enum PermissionActionPolicy {
+    static func action(for type: PermissionType, status: PermissionStatus) -> PermissionAction? {
+        guard status != .granted else { return nil }
+        switch type {
+        case .fullDiskAccess:
+            return .openSettings(.allFiles)
+        case .notifications:
+            return status == .denied ? .openSettings(.notifications) : .request
+        default:
+            return status == .notRequested ? .request : nil
+        }
+    }
+
+    static func notificationStatus(for authorization: UNAuthorizationStatus) -> PermissionStatus {
+        switch authorization {
+        case .authorized, .provisional: return .granted
+        case .denied: return .denied
+        case .notDetermined: return .notRequested
+        @unknown default: return .notRequested
+        }
+    }
+}
+
 enum PermissionCategory: String, CaseIterable {
     case required = "Required"
     case recommended = "Recommended"
@@ -82,8 +117,8 @@ class PermissionsManager: NSObject, ObservableObject, @MainActor CLLocationManag
 
     public let allPermissions: [PermissionItem] = [
         .init(type: .accessibility, title: String(localized: "Accessibility"), description: String(localized: "Needed for media key presses, window snapping, and HUDs."), iconName: "figure.wave.circle.fill", iconColor: .purple, category: .required),
-        .init(type: .fullDiskAccess, title: String(localized: "Full Disk Access"), description: String(localized: "Enables File Shelf, Intelligence file access, and deeper system integrations."), iconName: "folder.badge.gearshape", iconColor: .gray, category: .recommended),
-        .init(type: .screenRecording, title: String(localized: "Screen Recording"), description: String(localized: "Required for Gemini Live screen sharing, per-app audio capture, live window previews, and the hinge-driven desktop animation."), iconName: "record.circle", iconColor: .orange, category: .recommended),
+        .init(type: .fullDiskAccess, title: String(localized: "Full Disk Access"), description: String(localized: "Enables File Shelf and deeper system integrations."), iconName: "folder.badge.gearshape", iconColor: .gray, category: .recommended),
+        .init(type: .screenRecording, title: String(localized: "Screen Recording"), description: String(localized: "Required for per-app audio capture, live window previews, and the hinge-driven desktop animation."), iconName: "record.circle", iconColor: .orange, category: .recommended),
         .init(type: .localNetwork, title: String(localized: "Local Network"), description: String(localized: "Needed to discover and control supported media players on your network."), iconName: "network", iconColor: .cyan, category: .recommended),
         .init(type: .automation, title: String(localized: "Automation"), description: String(localized: "Needed to control playback and get track info from Spotify and Music."), iconName: "play.display", iconColor: .green, category: .recommended),
         .init(type: .notifications, title: String(localized: "Notifications"), description: String(localized: "Needed to show custom alerts for messages and system events."), iconName: "bell.badge.fill", iconColor: .red, category: .recommended),
@@ -114,9 +149,6 @@ class PermissionsManager: NSObject, ObservableObject, @MainActor CLLocationManag
         types.compactMap { type in allPermissions.first(where: { $0.type == type }) }
     }
 
-    var areIntelligencePermissionsGranted: Bool {
-        arePermissionsGranted(for: SettingsSection.intelligence.requiredPermissions)
-    }
 
     private override init() {
         super.init()
@@ -130,6 +162,8 @@ class PermissionsManager: NSObject, ObservableObject, @MainActor CLLocationManag
                 self?.checkFullDiskAccessStatus()
                 self?.checkScreenRecordingStatus()
                 self?.checkAutomationStatus()
+                self?.refreshNotificationsStatus()
+                self?.updateBluetoothStatus(for: CBManager.authorization)
             }
             .store(in: &cancellables)
 
@@ -178,16 +212,7 @@ class PermissionsManager: NSObject, ObservableObject, @MainActor CLLocationManag
         checkLocalNetworkStatus()
         checkAutomationStatus()
 
-        UNUserNotificationCenter.current().getNotificationSettings { settings in
-            DispatchQueue.main.async {
-                switch settings.authorizationStatus {
-                case .authorized, .provisional: self.notificationsStatus = PermissionStatus.granted
-                case .denied: self.notificationsStatus = PermissionStatus.denied
-                case .notDetermined: self.notificationsStatus = PermissionStatus.notRequested
-                @unknown default: self.notificationsStatus = PermissionStatus.notRequested
-                }
-            }
-        }
+        refreshNotificationsStatus()
 
         updateLocationStatus(for: locationManager?.authorizationStatus ?? .notDetermined)
 
@@ -234,6 +259,24 @@ class PermissionsManager: NSObject, ObservableObject, @MainActor CLLocationManag
         }
     }
 
+    func refreshNotificationsStatus() {
+        UNUserNotificationCenter.current().getNotificationSettings { [weak self] settings in
+            let status = PermissionActionPolicy.notificationStatus(for: settings.authorizationStatus)
+            DispatchQueue.main.async { self?.notificationsStatus = status }
+        }
+    }
+
+    func performPermissionAction(_ type: PermissionType) {
+        switch PermissionActionPolicy.action(for: type, status: status(for: type)) {
+        case .request:
+            requestPermission(type)
+        case .openSettings(let pane):
+            pane.open()
+        case nil:
+            break
+        }
+    }
+
     func requestPermission(_ type: PermissionType) {
         switch type {
         case .accessibility:
@@ -255,7 +298,7 @@ class PermissionsManager: NSObject, ObservableObject, @MainActor CLLocationManag
 
         case .notifications:
             UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { _, _ in
-                DispatchQueue.main.async { self.checkAllPermissions() }
+                DispatchQueue.main.async { self.refreshNotificationsStatus() }
             }
 
         case .location:
@@ -274,7 +317,7 @@ class PermissionsManager: NSObject, ObservableObject, @MainActor CLLocationManag
             }
 
         case .bluetooth:
-            if CBManager.authorization == .denied {
+            if CBManager.authorization == .denied || CBManager.authorization == .restricted {
                 SystemPreferencesPane.bluetooth.open()
             } else {
                 bluetoothManager.scanForPeripherals(withServices: nil, options: nil)

@@ -114,21 +114,7 @@ struct ReorderHandle: View {
     }
 }
 
-struct PremiumLockBadge: View {
-    var body: some View {
-        Image(systemName: "lock.fill")
-            .font(.system(size: 12, weight: .semibold))
-            .foregroundStyle(.secondary)
-    }
-}
-
 extension Binding where Value == Bool {
-    func lockedOff(when isLocked: Bool) -> Binding<Bool> {
-        Binding(
-            get: { isLocked ? false : wrappedValue },
-            set: { wrappedValue = isLocked ? false : $0 }
-        )
-    }
 
     var negated: Binding<Bool> {
         Binding(get: { !wrappedValue }, set: { wrappedValue = !$0 })
@@ -197,7 +183,6 @@ struct IconToggleRow: View {
 struct WidgetRowView: View {
     let widgetType: WidgetType
     let enabledWidgetCount: Int
-    let isPremiumLocked: Bool
     @EnvironmentObject var settings: SettingsEditingSession
 
     private var availableBarWidth: CGFloat {
@@ -226,8 +211,6 @@ struct WidgetRowView: View {
         case .shortcuts: return $settings.settings.shortcutsWidgetEnabled
         case .music: return $settings.settings.musicWidgetEnabled
         case .sports: return $settings.settings.sportsWidgetEnabled
-        case .finance: return $settings.settings.financeWidgetEnabled
-        case .shopify: return $settings.settings.shopifyWidgetEnabled
         case .notes: return $settings.settings.notesWidgetEnabled
         case .clipboard: return $settings.settings.clipboardWidgetEnabled
         case .mirror: return $settings.settings.mirrorWidgetEnabled
@@ -235,23 +218,24 @@ struct WidgetRowView: View {
         case .timer: return $settings.settings.timerWidgetEnabled
         case .focusSession: return $settings.settings.focusSessionWidgetEnabled
         case .storage: return $settings.settings.storageWidgetEnabled
-        case .agent: return .constant(false)
         }
     }
 
     private var isEnabledBinding: Binding<Bool> {
-        baseEnabledBinding.lockedOff(when: isPremiumLocked)
+        baseEnabledBinding
     }
 
     var body: some View {
-        if widgetType == .agent {
-            EmptyView()
-        } else {
             HStack {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(verbatim: widgetType.displayName)
                         .font(.system(size: 14, weight: .medium))
                         .foregroundStyle(.white)
+                    if widgetType == .sports || widgetType == .storage {
+                        Text("Not included in this build.")
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                    }
                     if isAtCapacity {
                         Text("Not enough notch space on this display.")
                             .font(.caption2)
@@ -262,22 +246,16 @@ struct WidgetRowView: View {
                 Spacer()
 
                 SettingsSwitch(isOn: isEnabledBinding)
-                    .disabled(isPremiumLocked || (isEnabledBinding.wrappedValue && enabledWidgetCount <= 1) || isAtCapacity)
-
-                if isPremiumLocked {
-                    PremiumLockBadge()
-                }
+                    .disabled(widgetType == .sports || widgetType == .storage || (isEnabledBinding.wrappedValue && enabledWidgetCount <= 1) || isAtCapacity)
 
                 ReorderHandle()
             }
             .padding(EdgeInsets(top: 18, leading: 20, bottom: 18, trailing: 20))
-        }
     }
 }
 
 struct LiveActivityRowView: View {
     let activityType: LiveActivityType
-    let isPremiumLocked: Bool
     @EnvironmentObject var settings: SettingsEditingSession
 
     private var baseEnabledBinding: Binding<Bool> {
@@ -296,7 +274,6 @@ struct LiveActivityRowView: View {
         case .microphone: return $settings.settings.microphoneLiveActivityEnabled
         case .devActivity: return $settings.settings.devActivityEnabled
         case .stats: return $settings.settings.statsLiveActivityEnabled
-        case .finance: return $settings.settings.financeLiveActivityEnabled
         case .sports: return $settings.settings.sportsLiveActivityEnabled
         }
     }
@@ -304,14 +281,19 @@ struct LiveActivityRowView: View {
     var body: some View {
         VStack(spacing: 0) {
             HStack {
-                Text(verbatim: activityType.displayName)
-                    .font(.system(size: 14, weight: .medium))
-                Spacer()
-                SettingsSwitch(isOn: baseEnabledBinding.lockedOff(when: isPremiumLocked))
-                    .disabled(isPremiumLocked)
-                if isPremiumLocked {
-                    PremiumLockBadge()
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(verbatim: activityType.displayName)
+                        .font(.system(size: 14, weight: .medium))
+                    if activityType == .sports {
+                        Text("Not included in this build.")
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                    }
                 }
+                Spacer()
+                SettingsSwitch(isOn: baseEnabledBinding)
+                    .disabled(activityType == .sports)
+
                 ReorderHandle()
             }
             .padding(EdgeInsets(top: 18, leading: 20, bottom: showsExpandedOptions ? 10 : 18, trailing: 20))
@@ -325,7 +307,7 @@ struct LiveActivityRowView: View {
     }
 
     private var showsExpandedOptions: Bool {
-        !isPremiumLocked && baseEnabledBinding.wrappedValue && (activityType == .sports || activityType == .finance)
+        baseEnabledBinding.wrappedValue && (activityType == .sports)
     }
 
     @ViewBuilder
@@ -336,12 +318,6 @@ struct LiveActivityRowView: View {
                 "Only when live",
                 detail: "Hide the sports activity when no favorite team has a live game.",
                 isOn: $settings.settings.sportsLiveActivityWhenLiveOnly
-            )
-        case .finance:
-            optionToggle(
-                "Only during market hours",
-                detail: "Hide the finance activity outside regular US trading hours.",
-                isOn: $settings.settings.financeLiveActivityActiveHoursOnly
             )
         default:
             EmptyView()

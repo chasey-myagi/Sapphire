@@ -11,7 +11,6 @@ import Combine
 import UserNotifications
 import NearbyShare
 import ApplicationServices
-import IOBluetooth
 import ServiceManagement
 import Network
 import os.log
@@ -97,10 +96,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
     private var onboardingWindow: NSWindow?
     private var settingsWindow: NSWindow?
     private var lyricsWindow: NSWindow?
-    private var betaBlockerWindow: NSWindow?
     private var isMainAppRunning = false
-    private var subscriptionValidationTimer: Timer?
     private var backgroundInitializationTask: Task<Void, Never>?
+    private var bluetoothPermissionObservation: AnyCancellable?
     private var sessionObserversInstalled = false
     private var networkPathSatisfied: Bool?
     private var pendingAllocatorRelief: DispatchWorkItem?
@@ -119,7 +117,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
     lazy var batteryManager = BatteryManager.shared
     lazy var batteryEstimator: BatteryEstimator = BatteryEstimator(batteryMonitor: batteryMonitor)
     lazy var bluetoothManager: BluetoothManager = BluetoothManager()
-    lazy var continuityManager: ContinuityManager = .shared
     lazy var audioDeviceManager: AudioDeviceManager = AudioDeviceManager()
     lazy var multiAudioManager: MultiAudioManager = .shared
     lazy var eyeBreakManager: EyeBreakManager = .shared
@@ -128,10 +125,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
     lazy var focusSessionShortcutMonitor: FocusSessionShortcutMonitor = .shared
     lazy var ocrScreenshotMonitor: OCRScreenshotMonitor = .shared
     lazy var focusScheduleManager: FocusScheduleManager = .shared
-    lazy var appLockManager: AppLockManager = .shared
     lazy var weatherActivityViewModel: WeatherActivityViewModel = WeatherActivityViewModel()
-    lazy var contentPickerHelper: ContentPickerHelper = ContentPickerHelper()
-    lazy var geminiLiveManager: GeminiLiveManager = GeminiLiveManager()
     lazy var settingsModel: SettingsModel = .shared
     lazy var activeAppMonitor: ActiveAppMonitor = .shared
     lazy var powerStateController: PowerStateController = .shared
@@ -142,7 +136,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
     lazy var batteryDataLogger: BatteryDataLogger = .shared
     lazy var fileShelfManager: FileShelfManager = .shared
     lazy var authManager: AuthenticationManager = .shared
-    lazy var intelligenceViewModel: IntelligenceNotchViewModel = IntelligenceNotchViewModel()
     lazy var circleToSearchManager: CircleToSearchManager = .shared
     lazy var systemEnhanceWindowRegistry = SystemEnhanceWindowRegistry.shared
     lazy var systemEnhanceDockPreviewController = SystemEnhanceDockPreviewController.shared
@@ -211,12 +204,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         eyeBreakManager: eyeBreakManager,
         timerManager: timerManager,
         weatherActivityViewModel: weatherActivityViewModel,
-        geminiLiveManager: geminiLiveManager,
         settingsModel: settingsModel,
         activeAppMonitor: activeAppMonitor,
         batteryEstimator: batteryEstimator,
-        batteryStatusManager: BatteryStatusManager.shared,
-        intelligenceVM: intelligenceViewModel
+        batteryStatusManager: BatteryStatusManager.shared
     )
 
     // MARK: - Lifecycle
@@ -250,7 +241,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
             name: .sapphireHelperConnectionLost,
             object: nil
         )
-        SapphireAnalytics.bootstrap()
         SapphireBrowserIntegration.shared.start()
 
         NearbyConnectionManager.shared.deviceDisplayName = settingsModel.settings.neardropDeviceDisplayName
@@ -261,12 +251,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
             print("[PerfMon] CPU performance monitor enabled. Report logs every 60s.")
         }
 
-        Task {
-            await SubscriptionManager.shared.bootstrap()
-            await MainActor.run {
-                self.routeAfterLaunch()
-            }
-        }
+        routeAfterLaunch()
     }
 
     @discardableResult
@@ -276,29 +261,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
             return false
         }
 
-        if BetaEntitlementRuntime.isBetaBuild, !hasConfirmedBetaAccess {
-            showBetaBlocker()
-            return false
-        }
-
         startMainApp()
         return true
     }
 
-    private var hasConfirmedBetaAccess: Bool {
-        guard BetaEntitlementRuntime.isBetaBuild else { return true }
-        let validator = BetaEntitlementRuntime.makeValidator()
-        return validator.validateBetaEntitlement() && SubscriptionManager.shared.hasBetaSoftwareAccess
-    }
-
     private func observeSettings() {
-        settingsModel.$settings
-            .map(\.googleAnalyticsEnabled)
-            .dropFirst()
-            .removeDuplicates()
-            .sink { _ in SapphireAnalytics.applyCollectionPreference() }
-            .store(in: &cancellables)
-
         settingsModel.$settings
             .map(\.neardropDeviceDisplayName)
             .dropFirst()
@@ -390,38 +357,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
             }
             .store(in: &cancellables)
 
-        observeSubscriptionForBetaGate()
-    }
-
-    private func observeSubscriptionForBetaGate() {
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(handleSubscriptionEntitlementsDidChange(_:)),
-            name: .subscriptionEntitlementsDidChange,
-            object: nil
-        )
-    }
-
-    @objc private func handleSubscriptionEntitlementsDidChange(_ notification: Notification) {
-        guard BetaEntitlementRuntime.isBetaBuild, isMainAppRunning else { return }
-
-        let previousTier = notification.userInfo?["previousTier"] as? String
-        let newTier = notification.userInfo?["newTier"] as? String
-        let lostBetaAccess = notification.userInfo?["lostBetaAccess"] as? Bool ?? false
-
-        guard previousTier != newTier || lostBetaAccess || !SubscriptionManager.shared.hasBetaSoftwareAccess else { return }
-        presentBetaBlockerStoppingMainApp()
-    }
-
-    private func presentBetaBlockerStoppingMainApp() {
-        stopMainApp()
-        showBetaBlocker()
     }
 
     private func stopMainApp() {
         guard isMainAppRunning else { return }
 
-        AppSystemTeardown.restoreManagedSystemState(reason: "beta-access-revoked")
+        AppSystemTeardown.restoreManagedSystemState(reason: "main-app-stopped")
         NearbyConnectionManager.shared.becomeInvisible()
 
         isMainAppRunning = false
@@ -478,12 +419,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         menuBarReadoutsManager.removeStatusItem()
         systemAlertsManager.stopMonitoring()
 
-        subscriptionValidationTimer?.invalidate()
-        subscriptionValidationTimer = nil
         backgroundInitializationTask?.cancel()
         backgroundInitializationTask = nil
         liveActivityStartTask?.cancel()
         liveActivityStartTask = nil
+        bluetoothPermissionObservation?.cancel()
+        bluetoothPermissionObservation = nil
+        bluetoothManager.stopMonitoring()
         liveActivityManager.stop()
         DevActivityMonitor.shared.stop()
         LiveWallpaperManager.shared.shutdown()
@@ -491,21 +433,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         NotificationCenter.default.removeObserver(
             self,
             name: NSApplication.didChangeScreenParametersNotification,
-            object: nil
-        )
-        NotificationCenter.default.removeObserver(
-            self,
-            name: .subscriptionPaywallRequested,
-            object: nil
-        )
-        NotificationCenter.default.removeObserver(
-            self,
-            name: .subscriptionSessionRevoked,
-            object: nil
-        )
-        NotificationCenter.default.removeObserver(
-            self,
-            name: .sapphireOpenAccountPane,
             object: nil
         )
 
@@ -516,7 +443,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
     // MARK: - Onboarding
 
     func showOnboardingWindow() {
-        SapphireAnalytics.logEvent("onboarding_started")
 
         if onboardingWindow == nil {
             let visibleFrame = UtilityWindowMetrics.visibleFrame()
@@ -557,7 +483,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
 
     func onboardingDidComplete() {
         UserDefaults.standard.set(true, forKey: "hasCompletedOnboarding")
-        SapphireAnalytics.logEvent("onboarding_completed")
         onboardingWindow?.orderOut(nil)
         onboardingWindow = nil
         if routeAfterLaunch() {
@@ -565,64 +490,27 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         }
     }
 
-    private func showBetaBlocker() {
-        betaBlockerWindow?.orderOut(nil)
-        betaBlockerWindow = nil
-
-        let window = KeyableWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 520, height: 660),
-            styleMask: [.borderless],
-            backing: .buffered, defer: false
-        )
-        window.center()
-        window.isMovableByWindowBackground = true
-        window.isOpaque = false
-        window.backgroundColor = .clear
-        window.hasShadow = true
-        let hostingView = FocusableHostingView(
-            rootView: BetaBlockerView(onValidationComplete: { [weak self] in
-                Task { @MainActor in
-                    self?.dismissBetaBlockerAndContinue()
-                }
-            })
-                .environmentObject(settingsModel)
-        )
-        hostingView.wantsLayer = true
-        hostingView.layer?.backgroundColor = NSColor.clear.cgColor
-        hostingView.layer?.cornerRadius = 28
-        hostingView.layer?.masksToBounds = true
-        window.contentView = hostingView
-        betaBlockerWindow = window
-        UtilityWindowPresenter.present(window)
-    }
-
-    private func dismissBetaBlockerAndContinue() {
-        betaBlockerWindow?.orderOut(nil)
-        betaBlockerWindow = nil
-
-        Task {
-            await SubscriptionManager.shared.bootstrap()
-            await MainActor.run { self.routeAfterLaunch() }
-        }
-    }
-
     func startMainApp() {
         guard !isMainAppRunning else { return }
 
-        if BetaEntitlementRuntime.isBetaBuild, !hasConfirmedBetaAccess {
-            showBetaBlocker()
-            return
-        }
-
         isMainAppRunning = true
 
-        SapphireAnalytics.logEvent("main_app_started")
 
         transitionToAgentApp()
 
         HelperManager.shared.installIfNeeded()
 
         createNotchWindow()
+        bluetoothPermissionObservation = PermissionsManager.shared.$bluetoothStatus
+            .removeDuplicates()
+            .sink { [weak self] status in
+                guard let self, self.isMainAppRunning else { return }
+                if status == .granted {
+                    self.bluetoothManager.startMonitoring()
+                } else {
+                    self.bluetoothManager.stopMonitoring()
+                }
+            }
         _ = circleToSearchManager
         _ = systemEnhanceWindowRegistry
         systemEnhanceDockPreviewController.start()
@@ -635,13 +523,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         systemEnhanceHingeAnimation.start()
         DockLayoutsManager.shared.start()
         DockLayoutsManager.shared.startDockBehaviorSync()
-        if settingsModel.isPremiumActive(.sportsWidget, \.sportsWidgetEnabled) {
+        #if SAPPHIRE_FULL_BUILD
+        if settingsModel.settings.sportsWidgetEnabled {
             SportsAPIService.shared.bootstrapIfNeeded()
         }
-        settingsModel.premiumChanges(.sportsWidget, \.sportsWidgetEnabled)
+        settingsModel.changes(of: { $0.sportsWidgetEnabled })
             .filter { $0 }
             .sink { _ in SportsAPIService.shared.bootstrapIfNeeded() }
             .store(in: &cancellables)
+        #endif
         MediaOptimizerManager.shared.start()
         FileOperationProgressRouter.shared.start()
         _ = ocrScreenshotMonitor
@@ -667,7 +557,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         _ = plainTextPasteManager
         _ = focusSessionShortcutMonitor
         _ = focusScheduleManager
-        _ = appLockManager
         _ = lidAngleAutomationManager
         setupStatusBarItem()
         initializeBackgroundServices()
@@ -683,13 +572,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         NSAppleEventManager.shared().setEventHandler(self, andSelector: #selector(handleGetURL), forEventClass: AEEventClass(kInternetEventClass), andEventID: AEEventID(kAEGetURL))
         setupSessionObservers()
         NotificationCenter.default.addObserver(self, selector: #selector(screenParametersChanged), name: NSApplication.didChangeScreenParametersNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(handleSubscriptionPaywallRequest(_:)), name: .subscriptionPaywallRequested, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(handleSubscriptionSessionRevoked(_:)), name: .subscriptionSessionRevoked, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(handleAccountPaneOpened), name: .sapphireOpenAccountPane, object: nil)
         UNUserNotificationCenter.current().delegate = self
         NearbyConnectionManager.shared.mainAppDelegate = self
         startNearbyShareIfNeeded()
-        continuityManager.startIfEnabled()
         UpdateChecker.shared.startPeriodicChecks(interval: 5 * 60 * 60)
         InstalledAppUpdatesChecker.shared.applySettings(
             installedAppUpdatesEnabled: settingsModel.settings.installedAppUpdatesEnabled,
@@ -700,7 +585,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         }
 
         scheduleHelperHealthCheck()
-        scheduleSubscriptionValidationTimer()
     }
 
     private func requestScreenRecordingForSystemEnhanceIfNeeded() {
@@ -712,16 +596,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         guard PermissionsManager.shared.screenRecordingStatus == .notRequested else { return }
         guard !UserDefaults.standard.bool(forKey: "screenRecordingRequested") else { return }
         PermissionsManager.shared.requestPermission(.screenRecording)
-    }
-
-    private func scheduleSubscriptionValidationTimer() {
-        subscriptionValidationTimer?.invalidate()
-        subscriptionValidationTimer = Timer.scheduledCoalescing(withTimeInterval: 5 * 60 * 60, repeats: true) { _ in
-            Task { @MainActor in
-                print("[AppDelegate] Periodic subscription validation (5-hour interval).")
-                await SubscriptionManager.shared.validateSubscriptionStatus()
-            }
-        }
     }
 
     private func scheduleHelperHealthCheck() {
@@ -752,9 +626,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
             await MainActor.run { self.initializeCoreManagers() }
             try? await Task.sleep(for: .seconds(2))
             guard !Task.isCancelled else { return }
-            await MainActor.run {
-                _ = IOBluetoothDevice.pairedDevices()
-            }
             _ = await self.batteryManager.getBatteryTemperature()
         }
     }
@@ -812,9 +683,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
                 guard self.isMainAppRunning, isSatisfied, wasSatisfied == false else { return }
                 print("[AppDelegate] Network connection became available.")
                 self.musicManager.spotifyPrivateAPI.checkAndReconnectIfNeeded()
-                Task {
-                    await SubscriptionManager.shared.validateSubscriptionStatus()
-                }
             }
         }
         networkMonitor?.start(queue: DispatchQueue(label: "NetworkMonitor", qos: .utility))
@@ -831,9 +699,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         let reconnectDelay: TimeInterval = AuthenticationManager.shared.isFaceIDSessionActive ? 4.0 : 1.0
         DispatchQueue.main.asyncAfter(deadline: .now() + reconnectDelay) { [weak self] in
             self?.musicManager.spotifyPrivateAPI.checkAndReconnectIfNeeded()
-        }
-        Task {
-            await SubscriptionManager.shared.validateSubscriptionStatus()
         }
         AuthenticationManager.shared.handleSystemDidWake()
     }
@@ -900,29 +765,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
 
         DispatchQueue.main.async {
             HelperAlertPresenter.showHelperConnectionLost()
-        }
-    }
-
-    @objc private func handleSubscriptionSessionRevoked(_ notification: Notification) {
-        let reasonRaw = notification.userInfo?["reason"] as? String ?? SubscriptionRevocationReason.sessionExpired.rawValue
-        let reason = SubscriptionRevocationReason(rawValue: reasonRaw) ?? .sessionExpired
-
-        if BetaEntitlementRuntime.isBetaBuild {
-            presentBetaBlockerStoppingMainApp()
-            return
-        }
-
-        DispatchQueue.main.async {
-            HelperAlertPresenter.presentModal(
-                messageText: String(localized: "Signed Out of Sapphire"),
-                informativeText: reason.alertMessage,
-                alertStyle: .warning,
-                buttonTitles: [String(localized: "Open Account Settings"), String(localized: "OK")]
-            ) { buttonIndex in
-                if buttonIndex == 0 {
-                    NotificationCenter.default.post(name: .sapphireOpenAccountPane, object: nil)
-                }
-            }
         }
     }
 
@@ -1141,7 +983,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         mouseControlManager.restoreSystemSettings()
         settingsModel.flushPendingSave()
         NearbyConnectionManager.shared.becomeInvisible()
-        continuityManager.stop()
         BatteryManager.shared.stopSleepBatteryLogging()
         cleanupNotchWindow()
 
@@ -1163,7 +1004,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         backgroundInitializationTask = nil
         liveActivityStartTask?.cancel()
         liveActivityStartTask = nil
+        bluetoothPermissionObservation?.cancel()
+        bluetoothPermissionObservation = nil
         if isMainAppRunning {
+            bluetoothManager.stopMonitoring()
             liveActivityManager.stop()
             DevActivityMonitor.shared.stop()
         }
@@ -1216,10 +1060,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
             let url = URL(string: urlString),
             url.scheme == "sapphire"
         else { return }
-        if url.host == "android-widgets" {
-            continuityManager.openWidgets()
-            return
-        }
         musicManager.spotifyOfficialAPI.handleRedirect(url: url)
         musicManager.tidalAPI.handleRedirect(url: url)
     }
@@ -1452,14 +1292,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
                 .environmentObject(eyeBreakManager)
                 .environmentObject(timerManager)
                 .environmentObject(focusSessionManager)
-                .environmentObject(contentPickerHelper)
-                .environmentObject(geminiLiveManager)
                 .environmentObject(settingsModel)
                 .environmentObject(activeAppMonitor)
                 .environmentObject(batteryEstimator)
                 .environmentObject(DragStateManager.shared)
                 .environmentObject(calendarService)
-                .environmentObject(intelligenceViewModel)
         )
         hosting.frame = NSRect(origin: .zero, size: rect.size)
         hosting.autoresizingMask = [.width, .height]
@@ -1696,7 +1533,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
     }
 
     private func restoreAgentActivationIfNeeded() {
-        let hasUserWindow = [settingsWindow, lyricsWindow, onboardingWindow, betaBlockerWindow]
+        let hasUserWindow = [settingsWindow, lyricsWindow, onboardingWindow]
             .compactMap { $0 }
             .contains { $0.isVisible }
         guard !hasUserWindow else { return }
@@ -1707,18 +1544,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
 
     private var screenParametersDebounceTimer: Timer?
     private var notchScreenRefreshRetryWorkItem: DispatchWorkItem?
-
-    @objc func handleAccountPaneOpened() {
-        print("[AppDelegate] Account pane opened — refreshing subscription status.")
-        Task {
-            await SubscriptionManager.shared.validateSubscriptionStatus()
-        }
-    }
-
-    @objc func handleSubscriptionPaywallRequest(_ notification: Notification) {
-        openSettingsWindow()
-        NotificationCenter.default.post(name: .sapphireOpenAccountPane, object: nil)
-    }
 
     @objc func screenParametersChanged(notification: Notification) {
         screenParametersDebounceTimer?.invalidate()
@@ -1844,29 +1669,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
             }
         }
 
-        let info = response.notification.request.content.userInfo
-        if info["continuityHandoff"] as? Bool == true {
-            if response.actionIdentifier == UNNotificationDefaultActionIdentifier
-                || response.actionIdentifier == ContinuityHandoffBridge.openActionID {
-                continuityManager.handoffBridge.handleBannerTap()
-            }
-            completionHandler()
-            return
-        }
 
-        if let peerID = info["continuityPeerID"] as? String, let key = info["continuityKey"] as? String {
-            switch response.actionIdentifier {
-            case UNNotificationDismissActionIdentifier:
-                continuityManager.dismissNotificationOnPhone(peerID: peerID, key: key)
-            case UNNotificationDefaultActionIdentifier:
-                break
-            default:
-                let replyText = (response as? UNTextInputNotificationResponse)?.userText
-                continuityManager.invokeNotificationAction(
-                    peerID: peerID, key: key,
-                    actionId: response.actionIdentifier, replyText: replyText)
-            }
-        }
         completionHandler()
     }
 }

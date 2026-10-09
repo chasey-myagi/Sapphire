@@ -49,3 +49,18 @@ jobs:
           name: localization-built-resource-results
           path: ${{ runner.temp }}/SapphireLocalization/LocalizationResults
           if-no-files-found: warn
+
+  file-progress-integration:
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify real file progress updates and detect a missing subscription
+        run: python3 script/test_file_progress_integration.py
+      - name: Preserve integration and mutation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: file-progress-integration-results
+          path: ${{ runner.temp }}/SapphireFileProgressResults
+          if-no-files-found: warn
