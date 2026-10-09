@@ -16,15 +16,18 @@ struct WeatherWidgetView: View {
             HStack(alignment: .center, spacing: 10) {
                 primaryInfo.layoutPriority(1)
                 secondaryInfo
+                    .fixedSize(horizontal: true, vertical: false)
             }
             .padding(.horizontal, 10)
         }
         .padding(.top, 0)
-        .frame(minWidth: 200, minHeight: 90)
+        .frame(width: WidgetLayoutPolicy.estimatedWidth(for: .weather))
+        .frame(minHeight: 90)
         .fixedSize()
         .foregroundColor(.white)
         .preferredColorScheme(.dark)
         .contentShape(Rectangle())
+        .help(viewModel.conditionDescription)
         .onTapGesture {
             withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
                 navigationStack.wrappedValue.append(.weatherPlayer)
@@ -45,6 +48,7 @@ struct WeatherWidgetView: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text(viewModel.temperature)
                     .font(.system(size: 42, weight: .bold, design: .rounded))
+                    .lineLimit(1)
                     .minimumScaleFactor(0.5)
                     .id(viewModel.temperature)
                     .transition(.opacity)
