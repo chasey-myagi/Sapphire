@@ -14884,19 +14884,19 @@
         }
       }
     },
-    "Enable, disable, and reorder the widgets that appear in the notch. Space is limited by your display width.": {
+    "Enable, disable, and reorder the widgets that appear in the notch. Scroll horizontally to reach more widgets.": {
       "comment": "Settings interface",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Enable, disable, and reorder the widgets that appear in the notch. Space is limited by your display width."
+            "value": "Enable, disable, and reorder the widgets that appear in the notch. Scroll horizontally to reach more widgets."
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "启用、停用或重新排列刘海区域中的小组件。可用空间受显示器宽度限制。"
+            "value": "启用、停用或重新排列刘海区域中的小组件。横向滚动可查看更多小组件。"
           }
         }
       }
