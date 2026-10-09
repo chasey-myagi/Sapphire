@@ -1551,9 +1551,18 @@ struct GeneralSettingsView: View {
                     .font(.largeTitle.bold())
                     .padding(.bottom)
 
-                AppLanguagePicker()
-                    .padding()
-                    .modifier(SettingsContainerModifier())
+                HStack {
+                    SettingsRowLabel(
+                        title: "Language",
+                        description: "Quit and reopen Sapphire to apply language changes."
+                    )
+                    Spacer()
+                    AppLanguagePicker(showsDescription: false)
+                        .frame(width: 200)
+                }
+                .padding()
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .modifier(SettingsContainerModifier())
 
                 VStack(alignment: .leading, spacing: 0) {
                     SettingsSectionHeader(title: "Behavior")

@@ -53,34 +53,46 @@ struct AppLanguagePreferenceStore {
 struct AppLanguagePicker: View {
     private let store: AppLanguagePreferenceStore
     @State private var selection: AppLanguagePreference
+    private let showsDescription: Bool
 
-    init(store: AppLanguagePreferenceStore = .currentApp) {
+    init(store: AppLanguagePreferenceStore = .currentApp, showsDescription: Bool = true) {
         self.store = store
+        self.showsDescription = showsDescription
         _selection = State(initialValue: store.selection)
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Picker("Language", selection: Binding(
-                get: { selection },
-                set: { preference in
-                    store.select(preference)
-                    selection = store.selection
+        Group {
+            if showsDescription {
+                VStack(alignment: .leading, spacing: 8) {
+                    languagePicker
+                    Text("Quit and reopen Sapphire to apply language changes.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
-            )) {
-                ForEach(AppLanguagePreference.allCases.filter { $0 != .existingOverride || selection == .existingOverride }) { preference in
-                    Text(verbatim: preference.title).tag(preference)
-                }
+            } else {
+                languagePicker.labelsHidden()
             }
-            .pickerStyle(.menu)
-            Text("Quit and reopen Sapphire to apply language changes.")
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                .fixedSize(horizontal: false, vertical: true)
         }
         .onAppear { selection = store.selection }
         .onReceive(NotificationCenter.default.publisher(for: UserDefaults.didChangeNotification).receive(on: DispatchQueue.main)) { _ in
             selection = store.selection
         }
+    }
+
+    private var languagePicker: some View {
+        Picker("Language", selection: Binding(
+            get: { selection },
+            set: { preference in
+                store.select(preference)
+                selection = store.selection
+            }
+        )) {
+            ForEach(AppLanguagePreference.allCases.filter { $0 != .existingOverride || selection == .existingOverride }) { preference in
+                Text(verbatim: preference.title).tag(preference)
+            }
+        }
+        .pickerStyle(.menu)
     }
 }

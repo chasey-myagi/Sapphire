@@ -58,9 +58,9 @@ enum WidgetLayoutPolicy {
 
     static func estimatedWidth(for widget: WidgetType) -> CGFloat {
         switch widget {
-        case .music: return 280
+        case .music: return 300
         case .weather: return 210
-        case .calendar: return 180
+        case .calendar: return 240
         case .shortcuts: return 110
         case .sports: return 190
         case .notes: return 176
@@ -68,13 +68,13 @@ enum WidgetLayoutPolicy {
         case .mirror: return 140
         case .battery: return 210
         case .timer: return 150
-        case .focusSession: return 190
+        case .focusSession: return 200
         case .storage: return 210
         }
     }
 
     static func capacityWidth(for widget: WidgetType) -> CGFloat {
-        widget == .music ? 0 : estimatedWidth(for: widget)
+        estimatedWidth(for: widget)
     }
 
     static func availableBarWidth(for screen: NSScreen? = nil) -> CGFloat {
@@ -90,7 +90,8 @@ enum WidgetLayoutPolicy {
         if widgets.count > 1 {
             total += interWidgetSpacing * CGFloat(widgets.count - 1)
             if showDividers {
-                total += dividerWidth * CGFloat(widgets.count - 1)
+                // Each divider is a separate HStack child, with spacing on both sides.
+                total += (interWidgetSpacing + dividerWidth) * CGFloat(widgets.count - 1)
             }
         }
         return total
@@ -116,7 +117,7 @@ enum WidgetLayoutPolicy {
             if result.isEmpty {
                 spacing = 0
             } else {
-                spacing = interWidgetSpacing + (showDividers ? dividerWidth : 0)
+                spacing = interWidgetSpacing + (showDividers ? interWidgetSpacing + dividerWidth : 0)
             }
 
             if result.isEmpty || used + spacing + width <= availableWidth {
