@@ -2788,14 +2788,18 @@ struct WidgetsSettingsView: View {
                 VStack(alignment: .leading, spacing: 0) {
                     Text("Appearance").font(.headline).padding([.top, .horizontal])
                     ToggleRow(title: "Show Dividers Between Widgets", description: "Display a subtle line separating each widget.", isOn: $settings.settings.showDividersBetweenWidgets)
-
+                    ToggleRow(
+                        title: "Ignore Widget Space Limit",
+                        description: "Allow any widget to be enabled even when Sapphire estimates there is not enough notch space.",
+                        isOn: $settings.settings.bypassWidgetSpaceLimit
+                    )
                 }
                 .modifier(SettingsContainerModifier())
 
 
                 VStack(alignment: .leading, spacing: 10) {
                     Text("Widget Visibility & Order").font(.headline).padding([.horizontal, .top])
-                    Text("Enable, disable, and reorder the widgets that appear in the notch. Scroll horizontally to reach more widgets.")
+                    Text("Enable, disable, and reorder the widgets that appear in the notch. Space is limited by your display width.")
                         .font(.caption).foregroundColor(.secondary).padding(.horizontal).padding(.bottom, 5)
                     ReorderableVStack(items: $settings.settings.widgetOrder) { widget in
                             WidgetRowView(
@@ -9227,6 +9231,16 @@ struct CalendarSettingsView: View {
         settings.settings.calendarWidgetEnabled && settings.settings.enabledWidgetTypes.count <= 1
     }
 
+    private var isAtCapacity: Bool {
+        !settings.settings.calendarWidgetEnabled && !WidgetLayoutPolicy.canFit(
+            .calendar,
+            in: settings.settings.enabledWidgetTypes,
+            availableWidth: WidgetLayoutPolicy.availableBarWidth(),
+            showDividers: settings.settings.showDividersBetweenWidgets,
+            bypassSpaceLimit: settings.settings.bypassWidgetSpaceLimit
+        )
+    }
+
     var body: some View {
         ScrollView {
             LazyVStack(alignment: .leading, spacing: 20) {
@@ -9237,10 +9251,12 @@ struct CalendarSettingsView: View {
                 VStack(alignment: .leading, spacing: 0) {
                     ToggleRow(
                         title: "Enable Calendar Widget",
-                        description: "Show the calendar widget in the notch widget strip.",
+                        description: isAtCapacity
+                            ? "Not enough notch space on this display."
+                            : "Show the calendar widget in the notch widget strip.",
                         isOn: $settings.settings.calendarWidgetEnabled
                     )
-                    .disabled(isLastEnabledWidget)
+                    .disabled(isLastEnabledWidget || isAtCapacity)
 
                     Divider().padding(.leading, 20)
 

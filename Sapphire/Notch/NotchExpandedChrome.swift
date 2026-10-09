@@ -7,65 +7,17 @@
 import SwiftUI
 import AppKit
 
-enum NotchToolbarMetrics {
-    static let gearWidth: CGFloat = 32
-    static let gearSpacing: CGFloat = 8
-    static let minimumWingWidth: CGFloat = 80
-}
-
-struct NotchToolbarLayout<Gear: View, Left: View, Right: View>: View {
-    let width: CGFloat
-    let height: CGFloat
-    let horizontalPadding: CGFloat
-    let cutoutWidth: CGFloat
-    @Binding var isScrollHovered: Bool
-    let gear: Gear
-    let left: Left
-    let right: Right
-    @State private var isLeftHovered = false
-    @State private var isRightHovered = false
-
-    var body: some View {
-        let padding = min(horizontalPadding, max(0, (width - cutoutWidth) / 2 - NotchToolbarMetrics.minimumWingWidth))
-        let wingWidth = max(1, (width - cutoutWidth - 2 * padding) / 2)
-        HStack(spacing: 0) {
-            HStack(spacing: NotchToolbarMetrics.gearSpacing) {
-                gear.frame(width: NotchToolbarMetrics.gearWidth)
-                ScrollView(.horizontal) { left }
-                    .frame(width: max(1, wingWidth - NotchToolbarMetrics.gearWidth - NotchToolbarMetrics.gearSpacing))
-                    .onHover { isLeftHovered = $0 }
-            }
-            .frame(width: wingWidth)
-            Color.clear.frame(width: cutoutWidth)
-            ScrollView(.horizontal) { right }
-                .frame(width: wingWidth)
-                .onHover { isRightHovered = $0 }
-        }
-        .padding(.horizontal, padding)
-        .frame(width: width, height: height)
-        .onChange(of: isLeftHovered || isRightHovered) { _, hovered in
-            isScrollHovered = hovered
-        }
-        .onDisappear {
-            isLeftHovered = false
-            isRightHovered = false
-            isScrollHovered = false
-        }
-    }
-}
-
 struct NotchExpandedChrome: View {
     let config: ResolvedNotchConfiguration
     let mode: NotchWidgetMode
     let notchState: NotchController.NotchState
     let animatedWidth: CGFloat
     let showRightHUDOverlay: Bool
-    let cutoutWidth: CGFloat
-    @Binding var isScrollHovered: Bool
     @Binding var navigationStack: [NotchWidgetMode]
     @Binding var isPinned: Bool
     @Binding var iconsLeftWidth: CGFloat
     @Binding var iconsRightWidth: CGFloat
+    let iconsIntrinsicWidth: CGFloat
     let onPin: (Bool) -> Void
 
     @EnvironmentObject private var settings: SettingsModel
@@ -79,7 +31,6 @@ struct NotchExpandedChrome: View {
                 navigationHeader
             }
         }
-
     }
 
     private var currentViewTitle: String? {
@@ -149,22 +100,19 @@ struct NotchExpandedChrome: View {
 
     @ViewBuilder
     private var defaultModeIcons: some View {
-        NotchToolbarLayout(
-            width: animatedWidth,
-            height: config.initialSize.height,
-            horizontalPadding: config.defaultModeIconsHorizontalPadding,
-            cutoutWidth: cutoutWidth,
-            isScrollHovered: $isScrollHovered,
-            gear: notchButton(for: .settings),
-            left: HStack(spacing: 0) {
-                ForEach(leftNotchButtons.filter { $0 != .settings }) { buttonType in
+        HStack {
+            HStack(spacing: 0) {
+                ForEach(leftNotchButtons) { buttonType in
                     notchButton(for: buttonType)
                 }
             }
             .fixedSize(horizontal: true, vertical: false)
-            .measureIdealWidth(into: $iconsLeftWidth),
-            right: HStack(spacing: 0) {
-                ForEach(rightNotchButtons.filter { $0 != .settings }) { buttonType in
+            .measureIdealWidth(into: $iconsLeftWidth)
+
+            Spacer()
+
+            HStack(spacing: 0) {
+                ForEach(rightNotchButtons) { buttonType in
                     notchButton(for: buttonType)
                 }
             }
@@ -172,7 +120,10 @@ struct NotchExpandedChrome: View {
             .animation(.easeInOut(duration: 0.12), value: showRightHUDOverlay)
             .fixedSize(horizontal: true, vertical: false)
             .measureIdealWidth(into: $iconsRightWidth)
-        )
+        }
+        .padding(.horizontal, config.defaultModeIconsHorizontalPadding)
+        .frame(height: config.initialSize.height)
+        .frame(width: max(animatedWidth, iconsIntrinsicWidth))
     }
 
     @ViewBuilder

@@ -453,6 +453,21 @@ class LiveActivityManager: ObservableObject {
             .store(in: &cancellables)
 
 
+        FileDropManager.shared.$tasks
+            .removeDuplicates()
+            .throttle(
+                for: .milliseconds(100),
+                scheduler: RunLoop.main,
+                latest: true
+            )
+            .sink { [weak self] _ in
+                guard let self else { return }
+                if self.currentActivity == .fileProgress || self.currentActivity == ActivityType.none {
+                    self.evaluateAndDisplayActivity()
+                }
+            }
+            .store(in: &cancellables)
+
         FileShelfManager.shared.$files
             .dropFirst()
             .receive(on: DispatchQueue.main)

@@ -46,19 +46,52 @@ final class MusicWidgetVisibilityTests: XCTestCase {
         ))
     }
 
-    func testEnabledWidgetsRemainInOrderWhenStripOverflows() {
-        var settings = Settings()
-        settings.widgetOrder = [.weather, .calendar, .shortcuts, .music]
-        settings.weatherWidgetEnabled = true
-        settings.calendarWidgetEnabled = true
-        settings.shortcutsWidgetEnabled = true
-        settings.musicWidgetEnabled = true
-        XCTAssertEqual(WidgetLayoutPolicy.enabledWidgets(settings: settings, isMusicPlaying: true, isSpotifyPausedWithNoOtherPlayback: false), settings.widgetOrder)
-        XCTAssertGreaterThan(WidgetLayoutPolicy.totalWidth(for: settings.widgetOrder, showDividers: false), 720)
+    func testLayoutKeepsLookingForSmallerWidgetsAfterOneDoesNotFit() {
+        let widgets = WidgetLayoutPolicy.fittingWidgets(
+            from: [.weather, .calendar, .shortcuts],
+            availableWidth: 350,
+            showDividers: false
+        )
+
+        XCTAssertEqual(widgets, [.weather, .shortcuts])
     }
 
-    func testMusicConsumesItsActualInitialViewportWidth() {
-        XCTAssertEqual(WidgetLayoutPolicy.estimatedWidth(for: .music), 300)
+    func testSmallerWidgetCanBeEnabledAfterAnOversizedCandidate() {
+        XCTAssertTrue(WidgetLayoutPolicy.canFit(
+            .shortcuts,
+            in: [.weather, .calendar],
+            availableWidth: 350,
+            showDividers: false
+        ))
+    }
+
+    func testMusicDoesNotConsumeSupplementaryWidgetCapacity() {
+        let widgets = WidgetLayoutPolicy.fittingWidgets(
+            from: [.music, .weather, .sports, .shortcuts],
+            availableWidth: 450,
+            showDividers: false
+        )
+
+        XCTAssertEqual(WidgetLayoutPolicy.capacityWidth(for: .music), 0)
+        XCTAssertEqual(widgets, [.music, .weather, .sports])
+    }
+
+    func testSpaceLimitCanBeBypassedForAnyWidget() {
+        let widgets = WidgetLayoutPolicy.fittingWidgets(
+            from: [.music, .weather, .calendar, .shortcuts],
+            availableWidth: 1,
+            showDividers: true,
+            bypassSpaceLimit: true
+        )
+
+        XCTAssertEqual(widgets, [.music, .weather, .calendar, .shortcuts])
+        XCTAssertTrue(WidgetLayoutPolicy.canFit(
+            .calendar,
+            in: [.music, .weather],
+            availableWidth: 1,
+            showDividers: true,
+            bypassSpaceLimit: true
+        ))
     }
 
     func testSpaceLimitBypassIsDisabledByDefault() {
