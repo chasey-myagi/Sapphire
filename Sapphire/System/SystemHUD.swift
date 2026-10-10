@@ -584,6 +584,18 @@ class SystemHUDManager: ObservableObject {
         return SEStepMath.next(from: currentLevel, step: coarseStep, direction: direction)
     }
 
+    /// The HUD's app volume slider: the same per-app volume the volume keys change.
+    @MainActor
+    func appVolumeSliderDragged(to level: Float) {
+        guard let applied = AppVolumeSliderCommand.apply(
+            level: level,
+            toAppWithBundleID: currentAppBundleID,
+            setVolume: { PerAppAudioController.shared.setVolume($0, for: $1) }
+        ) else { return }
+        currentAppVolume = applied
+        lastCommittedAppVolume = applied
+    }
+
        @MainActor
        private func performAppVolumeChange(action: MediaKeyAction) {
                   let targetBundleID: String
@@ -800,7 +812,14 @@ struct SystemHUDView: View {
                           device: hudManager.hudOutputDevice,
                           isControllingExternal: isControllingExternal
                       )
-                      ExternalDeviceIndicatorHUD(level: deviceVolume, deviceName: deviceName, deviceIcon: deviceIcon, appIcon: hudManager.currentAppIcon, canControlVolume: canControlVolume)
+                      ExternalDeviceIndicatorHUD(
+                          level: deviceVolume,
+                          deviceName: deviceName,
+                          deviceIcon: deviceIcon,
+                          appIcon: hudManager.currentAppIcon,
+                          canControlVolume: canControlVolume,
+                          onVolumeChanged: { hudManager.appVolumeSliderDragged(to: $0) }
+                      )
                           .transition(.opacity.combined(with: .offset(y: 5)))
                  case .appVolume(let appName, let appIcon, let appVolume):
                      appVolumeContent(appName: appName, appIcon: appIcon, appVolume: appVolume)
@@ -1088,8 +1107,9 @@ struct ExternalDeviceIndicatorHUD: View {
     var isBrightness: Bool = false
     var showName: Bool = true
     var onBrightnessChanged: ((Float) -> Void)? = nil
+    var onVolumeChanged: ((Float) -> Void)? = nil
 
-    init(level: Float, deviceName: String, deviceIcon: String, appIcon: NSImage? = nil, canControlVolume: Bool = true, isBrightness: Bool = false, showName: Bool = true, onBrightnessChanged: ((Float) -> Void)? = nil) {
+    init(level: Float, deviceName: String, deviceIcon: String, appIcon: NSImage? = nil, canControlVolume: Bool = true, isBrightness: Bool = false, showName: Bool = true, onBrightnessChanged: ((Float) -> Void)? = nil, onVolumeChanged: ((Float) -> Void)? = nil) {
         self.externalLevel = level
         self._level = State(initialValue: level)
         self.deviceName = deviceName
@@ -1099,6 +1119,7 @@ struct ExternalDeviceIndicatorHUD: View {
         self.isBrightness = isBrightness
         self.showName = showName
         self.onBrightnessChanged = onBrightnessChanged
+        self.onVolumeChanged = onVolumeChanged
     }
 
     var body: some View {
@@ -1135,6 +1156,8 @@ struct ExternalDeviceIndicatorHUD: View {
                                     level = newLevel
                                     if isBrightness {
                                         onBrightnessChanged?(newLevel)
+                                    } else {
+                                        onVolumeChanged?(newLevel)
                                     }
                                 }
                             ),
@@ -1578,5 +1601,30 @@ struct SystemHUDSlimActivityView {
 extension Comparable {
     func clamped(to limits: ClosedRange<Self>) -> Self {
         return min(max(self, limits.lowerBound), limits.upperBound)
+    }
+}
+/// Routes the HUD's app volume slider to the app the HUD shows. Apps the volume keys
+/// never adjust (Spotify, Music, Sapphire itself) are left alone here too.
+enum AppVolumeSliderCommand {
+    static func controllableBundleID(_ bundleID: String?, ownBundleID: String? = Bundle.main.bundleIdentifier) -> String? {
+        guard let bundleID, !bundleID.isEmpty,
+              bundleID != "com.spotify.client",
+              bundleID != "com.apple.Music",
+              bundleID != ownBundleID else { return nil }
+        return bundleID
+    }
+
+    /// Returns the applied level, or `nil` when the app cannot be adjusted.
+    @discardableResult
+    static func apply(
+        level: Float,
+        toAppWithBundleID bundleID: String?,
+        ownBundleID: String? = Bundle.main.bundleIdentifier,
+        setVolume: (Double, String) -> Void
+    ) -> Float? {
+        guard let target = controllableBundleID(bundleID, ownBundleID: ownBundleID) else { return nil }
+        let clamped = level.clamped(to: 0...1)
+        setVolume(Double(clamped), target)
+        return clamped
     }
 }
