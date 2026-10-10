@@ -125,6 +125,11 @@ class MusicManager: ObservableObject {
     private let settingsProvider: () -> Settings
     private let settingsChanges: AnyPublisher<Settings, Never>
     private var settings: Settings { settingsProvider() }
+    /// Clock for the play-state hold.
+    private let now: () -> Date
+    /// Runs the Now Playing callbacks on the main actor. Production defers each to a new
+    /// main-actor task; tests run them at a point they choose.
+    private let scheduleOnMain: (@escaping @MainActor () -> Void) -> Void
 
     private var volumeListener: AudioObjectPropertyListenerBlock?
     private var currentTrackDuration: TimeInterval = 0
@@ -157,12 +162,16 @@ class MusicManager: ObservableObject {
         mediaController: SystemMediaControlling,
         spotifyScript: SpotifyPlaybackScripting,
         settingsProvider: @escaping () -> Settings,
-        settingsChanges: AnyPublisher<Settings, Never>
+        settingsChanges: AnyPublisher<Settings, Never>,
+        now: @escaping () -> Date = Date.init,
+        scheduleOnMain: @escaping (@escaping @MainActor () -> Void) -> Void = { work in Task { @MainActor in work() } }
     ) {
         self.mediaController = mediaController
         self.spotifyScript = spotifyScript
         self.settingsProvider = settingsProvider
         self.settingsChanges = settingsChanges
+        self.now = now
+        self.scheduleOnMain = scheduleOnMain
         setupHandlers()
         setupNotificationObservers()
         setupVolumeListener()
@@ -172,7 +181,7 @@ class MusicManager: ObservableObject {
     }
 
     private func applyPlayingState(_ playing: Bool) {
-        let holding = Date() < playStateHoldUntil
+        let holding = now() < playStateHoldUntil
         if holding {
             if playing == playStateHoldPreferPlaying {
                 playStateHoldUntil = .distantPast
@@ -211,7 +220,7 @@ class MusicManager: ObservableObject {
 
     private func beginPlayStateHold(preferPlaying: Bool, duration: TimeInterval = 1.0) {
         playStateHoldPreferPlaying = preferPlaying
-        playStateHoldUntil = Date().addingTimeInterval(duration)
+        playStateHoldUntil = now().addingTimeInterval(duration)
     }
 
     deinit {
@@ -361,6 +370,12 @@ class MusicManager: ObservableObject {
 
     /// Spotify is selected but another app owns Now Playing: play, pause and seek must be
     /// addressed to Spotify directly or they would control that other app.
+    ///
+    /// `NativeMediaController` has one owner at a time and reports a change right after
+    /// replacing it, so this holds only between the controller switching owner (or
+    /// clearing) and the deferred `onActiveClientsChanged` work moving the selection off
+    /// Spotify. It is a defensive minimum kept from the signed-out baseline path, not a
+    /// steady state.
     private var shouldScriptSpotify: Bool {
         isSpotifySourceSelected && !isSpotifySystemNowPlaying && spotifyScript.isAppRunning()
     }
@@ -563,8 +578,6 @@ class MusicManager: ObservableObject {
             if !(wasSpotify && isNowSpotify) {
                 lastTrackIdentity = nil
                 lastMediaFingerprint = nil
-                shuffleState = false
-                repeatState = .off
                 currentTrackArtworkToken = "source-switch-\(key)-\(UUID().uuidString)"
                 if !isNowSpotify {
                     if let bundle = key.split(separator: ":").first.map(String.init) {
@@ -585,8 +598,9 @@ class MusicManager: ObservableObject {
     }
 
     private func setupHandlers() {
+        let scheduleOnMain = self.scheduleOnMain
         mediaController.onActiveClientsChanged = { [weak self] clients in
-            Task { @MainActor in
+            scheduleOnMain {
                 guard let self = self else { return }
                 let mergedClients = self.mergedVisibleSources(clients)
                 self.publishMergedSources(mergedClients, reselect: true)
@@ -608,7 +622,7 @@ class MusicManager: ObservableObject {
         }
 
         mediaController.onTrackInfoReceived = { [weak self] trackInfo in
-            Task { @MainActor in
+            scheduleOnMain {
                 guard let self = self, let track = trackInfo else { return }
                 let bundle = MediaApplicationIdentity.canonicalBundleID(track.payload.bundleIdentifier) ?? track.payload.bundleIdentifier ?? "unknown"
                 guard self.settings.isMediaAppVisible(bundleID: bundle) else { return }

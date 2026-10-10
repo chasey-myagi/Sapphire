@@ -83,21 +83,8 @@ struct MusicPlayerView: View {
     private var holdFeedbackColor: Color { holdFeedback.color }
     private var holdFeedbackButtonID: String? { holdFeedback.buttonID }
 
-    private var isSpotifyOrAppleMusic: Bool {
-        let bundleID = musicManager.lastKnownBundleID
-        return bundleID == "com.spotify.client" || bundleID == "com.apple.Music"
-    }
-
     private var buttonLayout: MusicPlayerButtonLayout {
-        MusicPlayerButtonLayout.resolve(
-            slots: settings.settings.musicPlayerButtonSlots,
-            order: settings.settings.musicPlayerButtonOrder
-        ) { type in
-            switch type {
-            case .shuffle: return isSpotifyOrAppleMusic && settings.settings.musicShuffleButtonEnabled
-            case .repeat: return isSpotifyOrAppleMusic && settings.settings.musicRepeatButtonEnabled
-            }
-        }
+        MusicPlayerButtonLayout.forPlayer(settings: settings.settings, sourceBundleID: musicManager.lastKnownBundleID)
     }
 
     private var primaryButtons: [MusicPlayerButtonType?] { buttonLayout.primary }

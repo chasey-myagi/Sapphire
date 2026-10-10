@@ -93,6 +93,29 @@ final class MusicSettingsMigrationTests: XCTestCase {
         XCTAssertEqual(fewerSlots.accessory, [.repeat])
     }
 
+    func testShuffleAndRepeatShowOnlyForSpotifyAndAppleMusic() {
+        var settings = Settings()
+        settings.musicPlayerButtonSlots = [.button, .button]
+        settings.musicShuffleButtonEnabled = true
+        settings.musicRepeatButtonEnabled = true
+
+        for bundleID in ["com.spotify.client", "com.apple.Music"] {
+            let layout = MusicPlayerButtonLayout.forPlayer(settings: settings, sourceBundleID: bundleID)
+            XCTAssertEqual(layout.primary, [.shuffle, .repeat], bundleID)
+        }
+        for bundleID: String? in ["com.google.Chrome", "com.apple.Safari", "com.spotify.client.helper", nil] {
+            let layout = MusicPlayerButtonLayout.forPlayer(settings: settings, sourceBundleID: bundleID)
+            XCTAssertEqual(layout.primary, [nil, nil], String(describing: bundleID))
+            XCTAssertEqual(layout.accessory, [], String(describing: bundleID))
+        }
+
+        settings.musicShuffleButtonEnabled = false
+        let shuffleOff = MusicPlayerButtonLayout.forPlayer(settings: settings, sourceBundleID: "com.spotify.client")
+        XCTAssertEqual(shuffleOff.primary, [.repeat, nil], "A hidden button gives up its slot")
+        settings.musicRepeatButtonEnabled = false
+        XCTAssertEqual(MusicPlayerButtonLayout.forPlayer(settings: settings, sourceBundleID: "com.apple.Music").primary, [nil, nil])
+    }
+
     // MARK: - Hold actions
 
     func testRemovedHoldActionsBecomeNoAction() throws {
@@ -139,6 +162,10 @@ final class MusicSettingsMigrationTests: XCTestCase {
 
     // MARK: - Unrelated preferences
 
+    /// A saved payload that names removed buttons and hold actions, next to removed keys.
+    /// If the migration or filtering of any of them stops working, the whole payload no
+    /// longer decodes and the tolerant per-key fallback resets those fields to their
+    /// defaults, so every expected value here differs from its default.
     func testRetainedPreferencesSurviveRemovedMusicKeys() throws {
         for enabled in [false, true] {
             var settings = Settings()
@@ -153,7 +180,17 @@ final class MusicSettingsMigrationTests: XCTestCase {
             payload["spotifyShowNextSong"] = true
             payload["showSpotifyVolumeHUD"] = true
             payload["musicLongPressLike"] = "shuffle"
+            payload["musicPlayerButtonOrder"] = ["repeat", "playlists", "shuffle", "devices", "like"]
+            payload["musicPlaylistsButtonEnabled"] = false
+            payload["musicLongPressShuffle"] = "like"
+            payload["musicLongPressPrevious"] = "seek"
             let restored = try decode(payload)
+
+            XCTAssertNotEqual(Settings().musicPlayerButtonOrder, [.repeat, .shuffle])
+            XCTAssertEqual(restored.musicPlayerButtonOrder, [.repeat, .shuffle])
+            XCTAssertEqual(restored.musicPlayerButtonSlots, [.button, .button, .reserved])
+            XCTAssertEqual(restored.musicLongPressShuffle, MusicLongPressAction.none, "Not the .repeatMode default")
+            XCTAssertEqual(restored.musicLongPressPrevious, .seek)
 
             XCTAssertEqual(restored.musicShuffleButtonEnabled, enabled)
             XCTAssertEqual(restored.musicRepeatButtonEnabled, !enabled)

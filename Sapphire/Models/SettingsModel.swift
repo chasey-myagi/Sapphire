@@ -639,6 +639,18 @@ struct MusicPlayerButtonLayout: Equatable {
         while primary.count < 2 { primary.append(nil) }
         return MusicPlayerButtonLayout(primary: primary, accessory: entries.dropFirst(2).compactMap { $0 })
     }
+
+    /// The expanded player's layout for the app shown in it: shuffle and repeat appear
+    /// only for Spotify and Apple Music, and only when switched on.
+    static func forPlayer(settings: Settings, sourceBundleID: String?) -> MusicPlayerButtonLayout {
+        let showsModeButtons = sourceBundleID == "com.spotify.client" || sourceBundleID == "com.apple.Music"
+        return resolve(slots: settings.musicPlayerButtonSlots, order: settings.musicPlayerButtonOrder) { type in
+            switch type {
+            case .shuffle: return showsModeButtons && settings.musicShuffleButtonEnabled
+            case .repeat: return showsModeButtons && settings.musicRepeatButtonEnabled
+            }
+        }
+    }
 }
 
 enum MusicLongPressAction: String, Codable, CaseIterable, Identifiable, Equatable {
