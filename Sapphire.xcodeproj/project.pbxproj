@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		A0C100000000000000002001 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = A0C100000000000000002002 /* Localizable.xcstrings */; };
-		3EA625D8CDF343379815DBE6 /* FirebaseAppCheck in Frameworks */ = {isa = PBXBuildFile; productRef = 350EC0B0ACC04131989F6CB6 /* FirebaseAppCheck */; };
 		C0DE20000000000000000001 /* comptest in Embed iDevice Tools */ = {isa = PBXBuildFile; fileRef = C0DE10000000000000000001 /* comptest */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		C0DE20000000000000000002 /* idevice_id in Embed iDevice Tools */ = {isa = PBXBuildFile; fileRef = C0DE10000000000000000002 /* idevice_id */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		C0DE20000000000000000003 /* ideviceinfo in Embed iDevice Tools */ = {isa = PBXBuildFile; fileRef = C0DE10000000000000000003 /* ideviceinfo */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
@@ -25,7 +24,6 @@
 		DA262AE62EA485150027CA69 /* CoreDisplay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA262AE52EA485150027CA69 /* CoreDisplay.framework */; };
 		DA262AF52EA5D1B70027CA69 /* MultitouchSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA262AF42EA5D1B70027CA69 /* MultitouchSupport.framework */; };
 		DA48B01B2E93DF9B0099BF74 /* SQLite in Frameworks */ = {isa = PBXBuildFile; productRef = DA48B01A2E93DF9B0099BF74 /* SQLite */; };
-		DA5E1010304CBB63003D1D37 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = DA5E100F304CBB63003D1D37 /* FirebaseCore */; };
 		DA6344C82E5AA816007EAB5F /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA52567A2E162FA900D8F42E /* ShareViewController.swift */; };
 		DA7C49992E15D33A0049937A /* wire_format.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA7C49942E15D33A0049937A /* wire_format.pb.swift */; };
 		DA7C499A2E15D33A0049937A /* securemessage.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA7C49922E15D33A0049937A /* securemessage.pb.swift */; };
@@ -129,8 +127,6 @@
 		DACA66622E8B70E60056ED60 /* QRCode in Frameworks */ = {isa = PBXBuildFile; productRef = DACA66612E8B70E60056ED60 /* QRCode */; };
 		DACBB01D2E20321D00740C9B /* libNearbyShare.dylib in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DA7C49802E15CCA50049937A /* libNearbyShare.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		DAF7D8AE2E20801E00AB0820 /* SwiftProtobuf_SwiftProtobuf.bundle in CopyFiles */ = {isa = PBXBuildFile; fileRef = DAF7D8AD2E20801E00AB0820 /* SwiftProtobuf_SwiftProtobuf.bundle */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		F3A600000000000000000003 /* Yams in Frameworks */ = {isa = PBXBuildFile; productRef = F3A600000000000000000002 /* Yams */; };
-		F4C6BD0940E54C6EBC832604 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = FD831867A2F947938E17E286 /* FirebaseFirestore */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -501,10 +497,8 @@
 		DA46CF732DCBCA0000F00EC5 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			files = (
-				F3A600000000000000000003 /* Yams in Frameworks */,
 				DA8FB0482E7CBE9400C9BD1A /* IMSharedUtilities.framework in Frameworks */,
 				DABC6CE32E1749CA00A5CF83 /* CoreGraphics.framework in Frameworks */,
-				DA5E1010304CBB63003D1D37 /* FirebaseCore in Frameworks */,
 				DABC6CE12E17458600A5CF83 /* UserNotificationsUI.framework in Frameworks */,
 				DA262AE62EA485150027CA69 /* CoreDisplay.framework in Frameworks */,
 				DA8FB0442E7CBE9000C9BD1A /* TelephonyUtilities.framework in Frameworks */,
@@ -518,8 +512,6 @@
 				DA7C49AD2E15D3800049937A /* libNearbyShare.dylib in Frameworks */,
 				DABC6CDD2E17457A00A5CF83 /* IOKit.framework in Frameworks */,
 				DA8FB0532E7D898F00C9BD1A /* MobileTimerSupport.framework in Frameworks */,
-				3EA625D8CDF343379815DBE6 /* FirebaseAppCheck in Frameworks */,
-				F4C6BD0940E54C6EBC832604 /* FirebaseFirestore in Frameworks */,
 				DA48B01B2E93DF9B0099BF74 /* SQLite in Frameworks */,
 				DA8FB0512E7D898F00C9BD1A /* MobileTimer.framework in Frameworks */,
 			);
@@ -900,11 +892,7 @@
 			);
 			name = Sapphire;
 			packageProductDependencies = (
-				F3A600000000000000000002 /* Yams */,
 				DA48B01A2E93DF9B0099BF74 /* SQLite */,
-				DA5E100F304CBB63003D1D37 /* FirebaseCore */,
-				350EC0B0ACC04131989F6CB6 /* FirebaseAppCheck */,
-				FD831867A2F947938E17E286 /* FirebaseFirestore */,
 			);
 			productName = DynamicNotch;
 			productReference = DA46CF762DCBCA0000F00EC5 /* Sapphire.app */;
@@ -1029,14 +1017,12 @@
 			mainGroup = DA46CF6D2DCBCA0000F00EC5;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				F3A600000000000000000001 /* XCRemoteSwiftPackageReference "Yams" */,
 				DAD47CD22E13C3DB001B70C8 /* XCRemoteSwiftPackageReference "SwiftECC" */,
 				DA7C49A62E15D3660049937A /* XCRemoteSwiftPackageReference "swift-protobuf" */,
 				DA8FAEFC2E7CA8B900C9BD1A /* XCRemoteSwiftPackageReference "CocoaAsyncSocket" */,
 				DAA7D8E02E8488800032748B /* XCRemoteSwiftPackageReference "swift-argument-parser" */,
 				DACA66602E8B70E60056ED60 /* XCRemoteSwiftPackageReference "qrcode" */,
 				DA48B0192E93DF9B0099BF74 /* XCRemoteSwiftPackageReference "SQLite" */,
-				DA5E1008304CBB63003D1D37 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = DA46CF772DCBCA0000F00EC5 /* Products */;
@@ -1880,14 +1866,6 @@
 				minimumVersion = 0.15.4;
 			};
 		};
-		DA5E1008304CBB63003D1D37 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 12.18.0;
-			};
-		};
 		DA7C49A62E15D3660049937A /* XCRemoteSwiftPackageReference "swift-protobuf" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/apple/swift-protobuf.git";
@@ -1928,31 +1906,13 @@
 				minimumVersion = 5.5.0;
 			};
 		};
-		F3A600000000000000000001 /* XCRemoteSwiftPackageReference "Yams" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/jpsim/Yams.git";
-			requirement = {
-				kind = exactVersion;
-				version = 6.2.2;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		350EC0B0ACC04131989F6CB6 /* FirebaseAppCheck */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = DA5E1008304CBB63003D1D37 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseAppCheck;
-		};
 		DA48B01A2E93DF9B0099BF74 /* SQLite */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = DA48B0192E93DF9B0099BF74 /* XCRemoteSwiftPackageReference "SQLite" */;
 			productName = SQLite;
-		};
-		DA5E100F304CBB63003D1D37 /* FirebaseCore */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = DA5E1008304CBB63003D1D37 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseCore;
 		};
 		DA7C49A42E15D34D0049937A /* SwiftECC */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -1968,16 +1928,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = DACA66602E8B70E60056ED60 /* XCRemoteSwiftPackageReference "qrcode" */;
 			productName = QRCode;
-		};
-		F3A600000000000000000002 /* Yams */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = F3A600000000000000000001 /* XCRemoteSwiftPackageReference "Yams" */;
-			productName = Yams;
-		};
-		FD831867A2F947938E17E286 /* FirebaseFirestore */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = DA5E1008304CBB63003D1D37 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseFirestore;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
