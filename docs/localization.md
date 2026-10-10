@@ -63,5 +63,3 @@ The catalog validator rejects missing translations and changed format arguments.
 The Localization resources workflow runs catalog validation, native resource checks and the application test entry point on pull requests. It does not accept UI layout, system permissions or hardware-dependent features.
 
 Before delivery, also verify the built Widget resources, run the navigation tests, and inspect actual Chinese and English screens for clipping, wrapping, search, menus and alerts. Record the tested source commit and app hash. Build success, resource checks, UI acceptance, helper permission, signing and distribution readiness are separate results. Keep hardware-, account- or permission-blocked scenarios visible in the acceptance record.
-
-Tracking: [Simplified Chinese support](https://github.com/chasey-myagi/Sapphire/issues/1) and [regression acceptance](https://github.com/chasey-myagi/Sapphire/issues/11).
