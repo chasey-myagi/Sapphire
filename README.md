@@ -81,7 +81,7 @@ Sapphire is a sleek notch app that displays current activities neatly around the
 
   <div style="border: 1px solid #30363d; border-radius: 8px; padding: 16px; width: 300px; background-color: #1c1c1e;">
     <h3 style="margin-top: 0;">Music</h3>
-    <p>View now playing media on the notch with additional information and controls when the now playing media is expanded, and more.</p>
+    <p>View now playing media from any app on the notch, with basic playback controls (play/pause, skip, seek) when the now playing media is expanded.</p>
   </div>
 
   <div style="border: 1px solid #30363d; border-radius: 8px; padding: 16px; width: 300px; background-color: #1c1c1e;">

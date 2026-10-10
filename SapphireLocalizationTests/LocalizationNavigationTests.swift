@@ -72,6 +72,49 @@ final class LocalizationNavigationTests: XCTestCase {
         XCTAssertFalse(Settings().devActivityEnabled)
     }
 
+    func testRemovedMusicIntegrationIdentifiersKeepRetainedMusicPreferences() throws {
+        for enabled in [false, true] {
+            var settings = Settings()
+            settings.musicShuffleButtonEnabled = enabled
+            settings.musicRepeatButtonEnabled = !enabled
+            settings.persistMusicWidgetWhenPaused = enabled
+            settings.musicLongPressActionsEnabled = enabled
+            settings.musicLongPressShuffle = .playPause
+            settings.mediaSource = .appleMusic
+            settings.musicWidgetEnabled = enabled
+            let data = try SettingsPersistence.encoder.encode(settings)
+            var payload = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
+            payload["musicPlayerButtonOrder"] = ["playlists", "repeat", "devices", "like", "shuffle"]
+            payload["musicLongPressPrevious"] = "openQueue"
+            payload["musicLongPressNext"] = "openDevices"
+            payload["musicLongPressRepeat"] = "like"
+            payload["musicLongPressPlaylists"] = "openDevices"
+            payload["musicLongPressLike"] = "shuffle"
+            payload["lastNotchNavigationStack"] = ["defaultWidgets", "musicPlayer", "musicQueueAndPlaylists", "musicDevices"]
+            payload["showLyricsInLiveActivity"] = true
+            payload["spotifyShowNextSong"] = true
+            payload["musicLikeButtonEnabled"] = true
+            payload["showSpotifyVolumeHUD"] = true
+            let restored = try XCTUnwrap(SettingsPersistence.decodeFromPayload(try JSONSerialization.data(withJSONObject: payload)))
+            XCTAssertEqual(restored.musicPlayerButtonOrder, [.repeat, .shuffle])
+            XCTAssertEqual(restored.musicLongPressPrevious, MusicLongPressAction.none)
+            XCTAssertEqual(restored.musicLongPressNext, MusicLongPressAction.none)
+            XCTAssertEqual(restored.musicLongPressRepeat, MusicLongPressAction.none)
+            XCTAssertEqual(restored.musicLongPressShuffle, .playPause)
+            XCTAssertEqual(restored.lastNotchNavigationStack, [.defaultWidgets, .musicPlayer])
+            XCTAssertEqual(restored.musicShuffleButtonEnabled, enabled)
+            XCTAssertEqual(restored.musicRepeatButtonEnabled, !enabled)
+            XCTAssertEqual(restored.persistMusicWidgetWhenPaused, enabled)
+            XCTAssertEqual(restored.musicLongPressActionsEnabled, enabled)
+            XCTAssertEqual(restored.musicWidgetEnabled, enabled)
+            XCTAssertEqual(restored.mediaSource, .appleMusic)
+            var normalized = settings
+            normalized.normalizeCollectionOrders()
+            XCTAssertEqual(restored.widgetOrder, normalized.widgetOrder)
+        }
+        XCTAssertEqual(Settings().musicPlayerButtonOrder, [.shuffle, .repeat])
+    }
+
     func testChineseAndEnglishNamesFindTheSameSettingsPages() {
         for (query, expected) in [("音乐", SettingsSection.music), ("Music", .music), ("电池", .battery), ("Battery", .battery), ("文件", .fileShelf), ("File Shelf", .fileShelf)] {
             XCTAssertTrue(SettingsSection.sidebarGroups(matching: query).flatMap(\.sections).contains(expected), query)

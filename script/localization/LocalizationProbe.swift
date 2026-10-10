@@ -92,15 +92,15 @@ check("weather-semantic-key-default",
       String(localized: "weather.condition.clear", defaultValue: "Clear", bundle: product),
       chinese ? "晴" : "Clear", scope: "product")
 
-let speakerName = "客厅 100% %@ 🎵 General"
-check("spotify-transferred-device-name-verbatim",
-      String(localized: "Playback moved to \(speakerName).", bundle: product),
-      chinese ? "已切换到 \(speakerName) 播放。" : "Playback moved to \(speakerName).",
+let targetName = "客厅 100% %@ 🎵 General"
+check("hold-target-name-verbatim",
+      String(localized: "Hold \(targetName)", bundle: product),
+      chinese ? "长按 \(targetName)" : "Hold \(targetName)",
       scope: "product")
-let playbackError = "HTTP 429: %@ / 100% 🔒"
-check("spotify-switch-error-detail-verbatim",
-      String(localized: "Couldn’t switch device: \(playbackError)", bundle: product),
-      chinese ? "无法切换设备：\(playbackError)" : "Couldn’t switch device: \(playbackError)",
+let primaryName = "HTTP 429: %@ / 100% 🔒"
+check("hold-help-arguments-verbatim",
+      String(localized: "\(primaryName) · hold for \(targetName)", bundle: product),
+      chinese ? "\(primaryName) · 长按以\(targetName)" : "\(primaryName) · hold for \(targetName)",
       scope: "product")
 
 let expectedLanguage = chinese ? "zh-Hans" : "en"
