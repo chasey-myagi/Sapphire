@@ -1557,7 +1557,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = Sapphire;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_LSUIElement = YES;
-				INFOPLIST_KEY_NSAppleEventsUsageDescription = "Sapphire uses Apple Events to bring the browser tab playing media to the front and to send notification replies through Messages.";
+				INFOPLIST_KEY_NSAppleEventsUsageDescription = "Sapphire uses Apple Events to control Spotify playback, bring the browser tab playing media to the front, and send notification replies through Messages.";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Sapphire needs bluetooth to show new connections and battery low notifications";
 				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "Sapphire needs calendar permission to show upcoming events";
 				INFOPLIST_KEY_NSCalendarsUsageDescription = "Blip can learn from your calendar patterns to better understand your schedule and preferences.";
@@ -1638,7 +1638,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = Sapphire;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_LSUIElement = YES;
-				INFOPLIST_KEY_NSAppleEventsUsageDescription = "Sapphire uses Apple Events to bring the browser tab playing media to the front and to send notification replies through Messages.";
+				INFOPLIST_KEY_NSAppleEventsUsageDescription = "Sapphire uses Apple Events to control Spotify playback, bring the browser tab playing media to the front, and send notification replies through Messages.";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Sapphire needs bluetooth to show new connections and battery low notifications";
 				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "Sapphire needs calendar permission to show upcoming events";
 				INFOPLIST_KEY_NSCalendarsUsageDescription = "Blip can learn from your calendar patterns to better understand your schedule and preferences.";

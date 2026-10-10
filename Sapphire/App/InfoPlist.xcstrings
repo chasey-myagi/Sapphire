@@ -7,13 +7,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Sapphire uses Apple Events to bring the browser tab playing media to the front and to send notification replies through Messages."
+            "value": "Sapphire uses Apple Events to control Spotify playback, bring the browser tab playing media to the front, and send notification replies through Messages."
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "Sapphire 使用 Apple 事件将正在播放媒体的浏览器标签页切换到前台，并通过“信息”发送通知回复。"
+            "value": "Sapphire 使用 Apple 事件控制 Spotify 播放、将正在播放媒体的浏览器标签页切换到前台，并通过“信息”发送通知回复。"
           }
         }
       }

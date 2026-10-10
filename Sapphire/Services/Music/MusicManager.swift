@@ -12,6 +12,31 @@ import SwiftUI
 import AudioToolbox
 import ImageIO
 
+/// The system Now Playing transport (mediaremote-adapter). Abstracted so the source
+/// routing in `MusicManager` can be exercised without the adapter process.
+@MainActor
+protocol SystemMediaControlling: AnyObject {
+    var onActiveClientsChanged: (([String: TrackInfo]) -> Void)? { get set }
+    var onListenerTerminated: (() -> Void)? { get set }
+    var onDecodingError: ((String, String?) -> Void)? { get set }
+    var onTrackInfoReceived: ((TrackInfo?) -> Void)? { get set }
+    /// The app that currently owns system Now Playing, keyed by its source key.
+    var activeClients: [String: TrackInfo] { get }
+
+    func startListening()
+    func restartListeningIfNeeded()
+    func play()
+    func pause()
+    func nextTrack()
+    func previousTrack()
+    func setTime(seconds: Double)
+    func toggleShuffle()
+    func toggleRepeat()
+    func trimArtworkCache(keeping identity: String?)
+}
+
+extension NativeMediaController: SystemMediaControlling {}
+
 @MainActor
 class MusicManager: ObservableObject {
     static let shared = MusicManager()
@@ -95,8 +120,11 @@ class MusicManager: ObservableObject {
     private(set) var playbackProgress: Double = 0.0
 
     // MARK: - Private Properties
-    private let mediaController = NativeMediaController()
-    private let settingsModel = SettingsModel.shared
+    private let mediaController: SystemMediaControlling
+    private let spotifyScript: SpotifyPlaybackScripting
+    private let settingsProvider: () -> Settings
+    private let settingsChanges: AnyPublisher<Settings, Never>
+    private var settings: Settings { settingsProvider() }
 
     private var volumeListener: AudioObjectPropertyListenerBlock?
     private var currentTrackDuration: TimeInterval = 0
@@ -116,7 +144,25 @@ class MusicManager: ObservableObject {
         isDetailPlayerOpen || isMusicLiveActivityActive
     }
 
-    private init() {
+    private convenience init() {
+        self.init(
+            mediaController: NativeMediaController(),
+            spotifyScript: SpotifyAppleScriptManager.shared,
+            settingsProvider: { SettingsModel.shared.settings },
+            settingsChanges: SettingsModel.shared.$settings.eraseToAnyPublisher()
+        )
+    }
+
+    init(
+        mediaController: SystemMediaControlling,
+        spotifyScript: SpotifyPlaybackScripting,
+        settingsProvider: @escaping () -> Settings,
+        settingsChanges: AnyPublisher<Settings, Never>
+    ) {
+        self.mediaController = mediaController
+        self.spotifyScript = spotifyScript
+        self.settingsProvider = settingsProvider
+        self.settingsChanges = settingsChanges
         setupHandlers()
         setupNotificationObservers()
         setupVolumeListener()
@@ -183,12 +229,22 @@ class MusicManager: ObservableObject {
     func play() async {
         beginPlayStateHold(preferPlaying: true, duration: 1.2)
         applyPlayingState(true)
+
+        if shouldScriptSpotify {
+            _ = await spotifyScript.resume()
+            return
+        }
         mediaController.play()
     }
 
     func pause() async {
         beginPlayStateHold(preferPlaying: false, duration: 1.2)
         applyPlayingState(false)
+
+        if shouldScriptSpotify {
+            _ = await spotifyScript.pause()
+            return
+        }
         mediaController.pause()
     }
 
@@ -204,6 +260,12 @@ class MusicManager: ObservableObject {
 
     func seek(to seconds: Double) async {
         let clamped = max(0.0, totalDuration > 0 ? min(seconds, totalDuration) : seconds)
+
+        if shouldScriptSpotify {
+            _ = await spotifyScript.seek(to: clamped)
+            applyOptimisticSeek(to: clamped)
+            return
+        }
         mediaController.setTime(seconds: clamped)
         applyOptimisticSeek(to: clamped)
     }
@@ -214,11 +276,66 @@ class MusicManager: ObservableObject {
     }
 
     func toggleShuffle() async {
+        guard isSpotifySourceSelected else {
+            mediaController.toggleShuffle()
+            return
+        }
+        // Spotify keeps the button's own state, as before, unless Now Playing reports
+        // its shuffle mode. A command is sent only while Spotify owns Now Playing, so
+        // it never reaches another app.
+        guard isSpotifySystemNowPlaying else {
+            shuffleState.toggle()
+            return
+        }
         mediaController.toggleShuffle()
+        if Self.shuffleState(fromMediaRemoteMode: latestTrackPayload?.shuffleMode) == nil {
+            shuffleState.toggle()
+        }
     }
 
     func cycleRepeatMode() async {
+        guard isSpotifySourceSelected else {
+            mediaController.toggleRepeat()
+            return
+        }
+        guard isSpotifySystemNowPlaying else {
+            repeatState = repeatState.next()
+            return
+        }
         mediaController.toggleRepeat()
+        if Self.repeatState(fromMediaRemoteMode: latestTrackPayload?.repeatMode) == nil {
+            repeatState = repeatState.next()
+        }
+    }
+
+    // MARK: - Shuffle / repeat from Now Playing
+
+    /// `kMRMediaRemoteNowPlayingInfoShuffleMode`: 1 off, 2 albums, 3 tracks; 0 or absent is unknown.
+    static func shuffleState(fromMediaRemoteMode mode: Int?) -> Bool? {
+        switch mode {
+        case 1: return false
+        case 2, 3: return true
+        default: return nil
+        }
+    }
+
+    /// `kMRMediaRemoteNowPlayingInfoRepeatMode`: 1 off, 2 one, 3 all; 0 or absent is unknown.
+    static func repeatState(fromMediaRemoteMode mode: Int?) -> RepeatMode? {
+        switch mode {
+        case 1: return .off
+        case 2: return .track
+        case 3: return .context
+        default: return nil
+        }
+    }
+
+    private func applyTransportModes(from payload: TrackInfo.Payload) {
+        if let shuffle = Self.shuffleState(fromMediaRemoteMode: payload.shuffleMode), shuffleState != shuffle {
+            shuffleState = shuffle
+        }
+        if let repeatMode = Self.repeatState(fromMediaRemoteMode: payload.repeatMode), repeatState != repeatMode {
+            repeatState = repeatMode
+        }
     }
 
     // MARK: - Source helpers
@@ -231,6 +348,21 @@ class MusicManager: ObservableObject {
         if currentSourceKey?.hasPrefix(Self.spotifyBundlePrefix) == true { return true }
         if currentSourceKey == nil, lastKnownBundleID == Self.spotifyBundlePrefix { return true }
         return false
+    }
+
+    var isSpotifySourceSelected: Bool {
+        currentSourceKey.map(isSpotifySourceKey) ?? false
+    }
+
+    /// Whether Spotify owns system Now Playing, i.e. MediaRemote commands reach it.
+    private var isSpotifySystemNowPlaying: Bool {
+        mediaController.activeClients.keys.contains(where: isSpotifySourceKey)
+    }
+
+    /// Spotify is selected but another app owns Now Playing: play, pause and seek must be
+    /// addressed to Spotify directly or they would control that other app.
+    private var shouldScriptSpotify: Bool {
+        isSpotifySourceSelected && !isSpotifySystemNowPlaying && spotifyScript.isAppRunning()
     }
 
     var isSpotifySourceActive: Bool {
@@ -261,7 +393,7 @@ class MusicManager: ObservableObject {
     }
 
     private func isSourceVisible(_ key: String) -> Bool {
-        settingsModel.settings.isMediaAppVisible(bundleID: bundleID(fromSourceKey: key))
+        settings.isMediaAppVisible(bundleID: bundleID(fromSourceKey: key))
     }
 
     private func isSystemSourceAlive(key: String, track: TrackInfo?) -> Bool {
@@ -352,7 +484,7 @@ class MusicManager: ObservableObject {
 
     private func preferredSourceKey(restrictedTo pool: [String]) -> String? {
         let preferredKey: String?
-        switch settingsModel.settings.mediaSource {
+        switch settings.mediaSource {
         case .system:
             preferredKey = pool.first(where: { !isSpotifySourceKey($0) })
                 ?? pool.first(where: isSpotifySourceKey)
@@ -431,6 +563,8 @@ class MusicManager: ObservableObject {
             if !(wasSpotify && isNowSpotify) {
                 lastTrackIdentity = nil
                 lastMediaFingerprint = nil
+                shuffleState = false
+                repeatState = .off
                 currentTrackArtworkToken = "source-switch-\(key)-\(UUID().uuidString)"
                 if !isNowSpotify {
                     if let bundle = key.split(separator: ":").first.map(String.init) {
@@ -477,7 +611,7 @@ class MusicManager: ObservableObject {
             Task { @MainActor in
                 guard let self = self, let track = trackInfo else { return }
                 let bundle = MediaApplicationIdentity.canonicalBundleID(track.payload.bundleIdentifier) ?? track.payload.bundleIdentifier ?? "unknown"
-                guard self.settingsModel.settings.isMediaAppVisible(bundleID: bundle) else { return }
+                guard self.settings.isMediaAppVisible(bundleID: bundle) else { return }
                 let newKey = bundle
 
                 guard self.currentSourceKey == newKey else { return }
@@ -555,6 +689,7 @@ class MusicManager: ObservableObject {
         if let newIsPlaying = resolvedIsPlaying(from: payload) {
             applyPlayingState(newIsPlaying)
         }
+        applyTransportModes(from: payload)
 
         let newDuration = TimeInterval(payload.durationMicros ?? 0) / 1_000_000
         if abs(self.totalDuration - newDuration) > 0.5 {
@@ -571,6 +706,7 @@ class MusicManager: ObservableObject {
         if let newIsPlaying = resolvedIsPlaying(from: payload) {
             applyPlayingState(newIsPlaying)
         }
+        applyTransportModes(from: payload)
 
         let duration = TimeInterval(payload.durationMicros ?? 0) / 1_000_000
         if duration > 0, abs(duration - totalDuration) > 0.5 {
@@ -674,7 +810,7 @@ class MusicManager: ObservableObject {
         lastMediaFingerprint = nil
         currentTrackArtworkToken = ""
         self.isPlaying = false; self.totalDuration = 0; self.currentElapsedTime = 0
-        if !settingsModel.settings.persistMusicWidgetWhenPaused {
+        if !settings.persistMusicWidgetWhenPaused {
             self.title = nil; self.artist = nil; self.album = nil; self.artwork = nil
         }
     }
@@ -861,7 +997,7 @@ class MusicManager: ObservableObject {
     }
 
     private func setupSettingsObserver() {
-        settingsModel.$settings
+        settingsChanges
             .map { ($0.mediaAppVisibility, $0.mediaSource, $0.prioritizeMediaSource) }
             .removeDuplicates { $0 == $1 }
             .receive(on: DispatchQueue.main)
@@ -883,7 +1019,7 @@ class MusicManager: ObservableObject {
     }
 
     private func triggerQuickPeek() {
-        guard settingsModel.settings.showQuickPeekOnTrackChange else { return }
+        guard settings.showQuickPeekOnTrackChange else { return }
         quickPeekTimer?.invalidate()
         self.showQuickPeek = true
         quickPeekTimer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: false) { [weak self] _ in
