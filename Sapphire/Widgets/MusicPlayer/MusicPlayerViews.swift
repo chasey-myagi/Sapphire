@@ -88,8 +88,11 @@ struct MusicPlayerView: View {
         return bundleID == "com.spotify.client" || bundleID == "com.apple.Music"
     }
 
-    private var enabledButtons: [MusicPlayerButtonType] {
-        return settings.settings.musicPlayerButtonOrder.filter { type in
+    private var buttonLayout: MusicPlayerButtonLayout {
+        MusicPlayerButtonLayout.resolve(
+            slots: settings.settings.musicPlayerButtonSlots,
+            order: settings.settings.musicPlayerButtonOrder
+        ) { type in
             switch type {
             case .shuffle: return isSpotifyOrAppleMusic && settings.settings.musicShuffleButtonEnabled
             case .repeat: return isSpotifyOrAppleMusic && settings.settings.musicRepeatButtonEnabled
@@ -97,8 +100,8 @@ struct MusicPlayerView: View {
         }
     }
 
-    private var primaryButtons: [MusicPlayerButtonType] { Array(enabledButtons.prefix(2)) }
-    private var accessoryButtons: [MusicPlayerButtonType] { Array(enabledButtons.dropFirst(2)) }
+    private var primaryButtons: [MusicPlayerButtonType?] { buttonLayout.primary }
+    private var accessoryButtons: [MusicPlayerButtonType] { buttonLayout.accessory }
 
     var body: some View {
         VStack(spacing: 4) {
@@ -114,7 +117,7 @@ struct MusicPlayerView: View {
         }
         .frame(width: 400).padding(10)
         .animation(.easeInOut(duration: 0.4), value: musicManager.isPlaying)
-        .animation(.default, value: enabledButtons)
+        .animation(.default, value: buttonLayout)
         .onAppear {
             resetTransientButtonState()
             Task {
@@ -180,7 +183,7 @@ struct MusicPlayerView: View {
             PlayerProgressView()
 
                     HStack {
-                        MusicPlayerActionButton(type: primaryButtons.first, size: .primary)
+                        MusicPlayerActionButton(type: primaryButtons.first ?? nil, size: .primary)
                         Spacer()
                         SeekButton(
                             systemName: "backward.fill",
@@ -234,7 +237,7 @@ struct MusicPlayerView: View {
                         .foregroundStyle(holdFeedbackButtonID == "next" ? holdFeedbackColor : .primary)
                         .help(MusicLongPressUI.skipHelp(primary: String(localized: "music.playback.next", defaultValue: "Next"), target: .next, settings: settings.settings))
                         Spacer()
-                        MusicPlayerActionButton(type: primaryButtons.dropFirst().first, size: .primary)
+                        MusicPlayerActionButton(type: primaryButtons.dropFirst().first ?? nil, size: .primary)
                     }
                     .buttonStyle(PlainButtonStyle()).font(.system(size: 22)).foregroundColor(.primary)
                     .padding(.top, accessoryButtons.isEmpty ? 8 : 0)

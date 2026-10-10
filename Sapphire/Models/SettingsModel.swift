@@ -602,6 +602,45 @@ enum MusicPlayerButtonType: String, Codable, CaseIterable, Identifiable, Equatab
     }
 }
 
+/// A position in the player's button sequence. `reserved` keeps the place of an enabled
+/// button that was removed with the music integrations (queue, devices, like), so the
+/// retained buttons stay in the slots they had before the removal.
+enum MusicPlayerButtonSlot: String, Codable, Equatable {
+    case reserved
+    case button
+}
+
+struct MusicPlayerButtonLayout: Equatable {
+    /// The two slots beside the transport controls; `nil` renders as an empty 40×40 slot.
+    var primary: [MusicPlayerButtonType?]
+    var accessory: [MusicPlayerButtonType]
+
+    /// Fills the `.button` slots with `order` in sequence, drops disabled buttons, and
+    /// splits the result the way the player always did: the first two entries sit beside
+    /// the transport controls and the rest form the accessory row.
+    static func resolve(
+        slots: [MusicPlayerButtonSlot],
+        order: [MusicPlayerButtonType],
+        isEnabled: (MusicPlayerButtonType) -> Bool
+    ) -> MusicPlayerButtonLayout {
+        var remaining = order[...]
+        var entries: [MusicPlayerButtonType?] = []
+        for slot in slots {
+            switch slot {
+            case .reserved:
+                entries.append(nil)
+            case .button:
+                guard let type = remaining.popFirst() else { continue }
+                if isEnabled(type) { entries.append(type) }
+            }
+        }
+        entries.append(contentsOf: remaining.filter(isEnabled).map(Optional.some))
+        var primary = Array(entries.prefix(2))
+        while primary.count < 2 { primary.append(nil) }
+        return MusicPlayerButtonLayout(primary: primary, accessory: entries.dropFirst(2).compactMap { $0 })
+    }
+}
+
 enum MusicLongPressAction: String, Codable, CaseIterable, Identifiable, Equatable {
     case none
     case seek
@@ -1338,6 +1377,9 @@ struct Settings: Codable, Equatable {
     var defaultMusicPlayer: DefaultMusicPlayer = .appleMusic
     var musicOpenOnClick: Bool = true
     var musicPlayerButtonOrder: [MusicPlayerButtonType] = [.shuffle, .repeat]
+    /// The former default order `[queue, devices, like, shuffle, repeat]` with queue and
+    /// devices enabled and like disabled.
+    var musicPlayerButtonSlots: [MusicPlayerButtonSlot] = [.reserved, .reserved, .button, .button]
     var musicShuffleButtonEnabled: Bool = false
     var musicRepeatButtonEnabled: Bool = false
     var hideMusicWidgetWhenNotPlaying: Bool = false
@@ -1743,6 +1785,7 @@ enum SettingsPersistence {
         filterRawIdentifiers(in: &dictionary, key: "liveActivityOrder", as: LiveActivityType.self)
         filterRawIdentifiers(in: &dictionary, key: "notchButtonOrder", as: NotchButtonType.self)
         filterRawIdentifiers(in: &dictionary, key: "lastNotchNavigationStack", as: RestorableNotchMenu.self)
+        migrateRemovedMusicPlayerButtons(in: &dictionary)
         filterRawIdentifiers(in: &dictionary, key: "musicPlayerButtonOrder", as: MusicPlayerButtonType.self)
         for key in removedMusicLongPressActionKeys {
             replaceUnknownRawIdentifier(in: &dictionary, key: key, as: MusicLongPressAction.self, with: .none)
@@ -1792,6 +1835,28 @@ enum SettingsPersistence {
         "musicLongPressShuffle",
         "musicLongPressRepeat",
     ]
+
+    /// Player buttons removed with the music integrations, with the defaults their
+    /// enabled switches had.
+    static let removedMusicPlayerButtonEnabledKeys: [String: (key: String, defaultValue: Bool)] = [
+        "playlists": ("musicPlaylistsButtonEnabled", true),
+        "devices": ("musicDevicesButtonEnabled", true),
+        "like": ("musicLikeButtonEnabled", false),
+    ]
+
+    /// A button order saved before the removal still names the removed buttons. Record
+    /// where the enabled ones were so the retained buttons keep their slots.
+    private static func migrateRemovedMusicPlayerButtons(in dictionary: inout [String: Any]) {
+        guard let identifiers = dictionary["musicPlayerButtonOrder"] as? [String],
+              identifiers.contains(where: { removedMusicPlayerButtonEnabledKeys[$0] != nil }) else { return }
+        let slots: [MusicPlayerButtonSlot] = identifiers.compactMap { identifier in
+            if MusicPlayerButtonType(rawValue: identifier) != nil { return .button }
+            guard let removed = removedMusicPlayerButtonEnabledKeys[identifier] else { return nil }
+            let enabled = dictionary[removed.key] as? Bool ?? removed.defaultValue
+            return enabled ? .reserved : nil
+        }
+        dictionary["musicPlayerButtonSlots"] = slots.map(\.rawValue)
+    }
 
     private static func replaceUnknownRawIdentifier<T: RawRepresentable>(
         in dictionary: inout [String: Any], key: String, as type: T.Type, with fallback: T
@@ -2259,7 +2324,7 @@ class SettingsModel: ObservableObject {
         return loaded
     }
 
-    private static func decodeSettingsFromUserDefaults(_ defaults: UserDefaults) -> Settings? {
+    static func decodeSettingsFromUserDefaults(_ defaults: UserDefaults) -> Settings? {
         let fallback = Settings()
         guard var dictionary = SettingsPersistence.encodeToDictionary(fallback) else {
             return nil
@@ -2282,6 +2347,12 @@ class SettingsModel: ObservableObject {
         if defaults.object(forKey: "systemEnhanceDockClicksSelectedApps") != nil,
            defaults.object(forKey: "systemEnhanceDockClicksAllAppsEnabled") == nil {
             dictionary["systemEnhanceDockClicksAllAppsEnabled"] = false
+        }
+
+        for removed in SettingsPersistence.removedMusicPlayerButtonEnabledKeys.values {
+            if let enabled = defaults.object(forKey: removed.key) as? Bool {
+                dictionary[removed.key] = enabled
+            }
         }
 
         return SettingsPersistence.decodeFromDictionary(dictionary)
