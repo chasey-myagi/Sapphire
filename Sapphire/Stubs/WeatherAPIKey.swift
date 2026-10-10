@@ -9,7 +9,5 @@ import Foundation
 
 enum WeatherAPIKey {
     static let value = ""
-
-    static let musicKitDeveloperToken: String = ""
 }
 #endif

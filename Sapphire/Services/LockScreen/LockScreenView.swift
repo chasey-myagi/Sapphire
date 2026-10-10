@@ -11,11 +11,6 @@ import AppKit
 // MARK: - Lock Screen Navigation
 enum LockScreenMusicView: Hashable {
     case player
-    case queueAndPlaylists
-    case playlistDetail(SpotifyPlaylist)
-    case devices
-    case lyrics
-    case loginPrompt
 }
 
 class LockScreenNavigationManager: ObservableObject {
@@ -33,24 +28,6 @@ class LockScreenNavigationManager: ObservableObject {
         if viewStack.count > 1 {
             _ = viewStack.popLast()
         }
-    }
-}
-
-private struct LockScreenBackButton: View {
-    @EnvironmentObject var navigationManager: LockScreenNavigationManager
-
-    var body: some View {
-        Button(action: {
-            navigationManager.goBack()
-        }) {
-            Image(systemName: "chevron.backward")
-                .font(.system(size: 16, weight: .bold))
-                .foregroundColor(.white)
-                .padding(10)
-                .background(Color.white.opacity(0.15).clipShape(Circle()))
-        }
-        .buttonStyle(.plain)
-        .padding()
     }
 }
 
@@ -82,7 +59,6 @@ struct LockScreenMainWidgetContainerView: View {
     @EnvironmentObject var settings: SettingsModel
     @StateObject private var navigationManager = LockScreenNavigationManager()
     @State private var maxMainWidgetHeight: CGFloat = 0
-    @State private var dummyStack: [NotchWidgetMode] = []
 
     var body: some View {
         HStack(alignment: .top, spacing: LockScreenConfiguration.widgetSpacing) {
@@ -146,51 +122,6 @@ struct LockScreenMainWidgetContainerView: View {
             switch navigationManager.currentView {
             case .player:
                 LockScreenView()
-            case .queueAndPlaylists:
-                LockScreenPaddedBackground {
-                    ZStack(alignment: .topLeading) {
-                        QueueAndPlaylistsView(navigationStack: $dummyStack, isLockScreenMode: true)
-                        LockScreenBackButton()
-                            .padding(.top, 52)
-                            .zIndex(10)
-                    }
-                }
-            case .playlistDetail(let playlist):
-                LockScreenPaddedBackground {
-                    ZStack(alignment: .topLeading) {
-                        PlaylistView(playlist: playlist, isLockScreenMode: true)
-                        LockScreenBackButton()
-                            .padding(.top, 52)
-                            .zIndex(10)
-                    }
-                }
-            case .devices:
-                LockScreenPaddedBackground {
-                    ZStack(alignment: .topLeading) {
-                        QueueAndPlaylistsView(navigationStack: $dummyStack, isLockScreenMode: true)
-                        LockScreenBackButton()
-                            .padding(.top, 52)
-                            .zIndex(10)
-                    }
-                }
-            case .lyrics:
-                 LockScreenPaddedBackground {
-                    ZStack(alignment: .topLeading) {
-                        LyricsView()
-                        LockScreenBackButton()
-                            .padding(.top, 52)
-                            .zIndex(10)
-                    }
-                }
-            case .loginPrompt:
-                LockScreenPaddedBackground {
-                    ZStack(alignment: .topLeading) {
-                        LoginPromptView(navigationStack: $dummyStack)
-                        LockScreenBackButton()
-                            .padding(.top, 52)
-                            .zIndex(10)
-                    }
-                }
             }
         }
     }

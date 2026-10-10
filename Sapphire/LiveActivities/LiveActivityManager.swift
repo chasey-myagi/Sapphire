@@ -52,9 +52,6 @@ private struct LiveActivityEvaluationSettings: Equatable {
     let weatherLiveActivityInterval: Int
     let musicLiveActivityEnabled: Bool
     let enableQuickPeekOnHover: Bool
-    let showLyricsInLiveActivity: Bool
-    let spotifyShowNextSong: Bool
-    let spotifyShowNextSongAlbumArt: Bool
     let calendarLiveActivityEnabled: Bool
     let remindersLiveActivityEnabled: Bool
     let timersLiveActivityEnabled: Bool
@@ -101,9 +98,6 @@ private struct LiveActivityEvaluationSettings: Equatable {
         weatherLiveActivityInterval = settings.weatherLiveActivityInterval
         musicLiveActivityEnabled = settings.musicLiveActivityEnabled
         enableQuickPeekOnHover = settings.enableQuickPeekOnHover
-        showLyricsInLiveActivity = settings.showLyricsInLiveActivity
-        spotifyShowNextSong = settings.spotifyShowNextSong
-        spotifyShowNextSongAlbumArt = settings.spotifyShowNextSongAlbumArt
         calendarLiveActivityEnabled = settings.calendarLiveActivityEnabled
         remindersLiveActivityEnabled = settings.remindersLiveActivityEnabled
         timersLiveActivityEnabled = settings.timersLiveActivityEnabled
@@ -159,7 +153,6 @@ class LiveActivityManager: ObservableObject {
     @Published var isNotificationHovered: Bool = false
 
     // MARK: - Public Properties
-    var showLyricsBinding: Binding<Bool>?
     var isFullViewActivity: Bool {
         if case .full = activityContent { true } else { false }
     }
@@ -290,8 +283,7 @@ class LiveActivityManager: ObservableObject {
 
     private var hasReceivedInitialFocusStatus = false
     private var lastShownBatteryManagementState: ManagementState?
-    private var lastLyricContentID: AnyHashable?
-    private var lyricContentUpdateTask: Task<Void, Never>?
+    private var musicContentUpdateTask: Task<Void, Never>?
     private var lastMusicLiveActivityTick: CFAbsoluteTime = 0
 
     // MARK: - Dependencies
@@ -370,8 +362,8 @@ class LiveActivityManager: ObservableObject {
         tickerRefreshTimer = nil
         sportsWatcher.stop()
 
-        lyricContentUpdateTask?.cancel()
-        lyricContentUpdateTask = nil
+        musicContentUpdateTask?.cancel()
+        musicContentUpdateTask = nil
         pendingEvaluationTask?.cancel()
         pendingEvaluationTask = nil
 
@@ -398,16 +390,6 @@ class LiveActivityManager: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] hudType in
                 self?.handleHUDUpdate(hudType)
-            }
-            .store(in: &cancellables)
-
-        musicWidget.$currentLyric
-            .removeDuplicates { lhs, rhs in
-                lhs?.id == rhs?.id && lhs?.text == rhs?.text && lhs?.translatedText == rhs?.translatedText
-            }
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                self?.handleLyricUpdate()
             }
             .store(in: &cancellables)
 
@@ -586,11 +568,7 @@ class LiveActivityManager: ObservableObject {
             musicWidget.trackDidChange.mapToVoid(),
             musicWidget.$showQuickPeek.removeDuplicates().mapToVoid(),
             musicWidget.$isHoveringAlbumArt.removeDuplicates().mapToVoid(),
-            musicWidget.$currentLyric.map(\.?.id).removeDuplicates().mapToVoid(),
             settingsModel.changes(of: LiveActivityEvaluationSettings.init).mapToVoid(),
-            activeAppMonitor.$isLyricsAllowedForActiveApp
-                .removeDuplicates()
-                .mapToVoid(),
             activeAppMonitor.$fullScreenDisplayIDs.removeDuplicates().mapToVoid(),
             Publishers.CombineLatest(
                 activeAppMonitor.$activeAppBundleID,
@@ -732,10 +710,6 @@ class LiveActivityManager: ObservableObject {
     }
 
     // MARK: - Special Update Handlers
-    private func handleLyricUpdate() {
-        refreshMusicActivityContent()
-    }
-
     private func refreshActiveActivityContent() {
         let type = currentActivity
         guard type != .none else { return }
@@ -764,25 +738,14 @@ class LiveActivityManager: ObservableObject {
     }
 
     private func refreshMusicActivityContent() {
-        guard self.currentActivity == .music else {
-            LyricsLog.infoOnChange("liveActivity.refresh", "Music content refresh skipped: current activity is \(currentActivity)")
-            return
-        }
-        guard isCurrentActivityVisibleOnAnyDisplay else {
-            LyricsLog.infoOnChange("liveActivity.refresh", "Music content refresh skipped: music activity not visible on any display")
-            return
-        }
-        guard let (_, newContent, _) = checkForMusic() else {
-            LyricsLog.infoOnChange("liveActivity.refresh", "Music content refresh skipped: music live activity no longer eligible")
-            return
-        }
-        LyricsLog.infoOnChange("liveActivity.refresh", "Music content refresh running")
+        guard self.currentActivity == .music else { return }
+        guard isCurrentActivityVisibleOnAnyDisplay else { return }
+        guard let (_, newContent, _) = checkForMusic() else { return }
         guard newContent != self.activityContent else { return }
 
-        lastLyricContentID = newContent.id
         self.activityContent = newContent
-        lyricContentUpdateTask?.cancel()
-        lyricContentUpdateTask = Task { @MainActor in
+        musicContentUpdateTask?.cancel()
+        musicContentUpdateTask = Task { @MainActor in
             try? await Task.sleep(for: .milliseconds(250))
             guard !Task.isCancelled else { return }
             self.contentUpdateID = UUID()
@@ -1371,7 +1334,6 @@ class LiveActivityManager: ObservableObject {
         var bottomContentIdentifier = "none"
         let showHoverPeek = settingsModel.settings.enableQuickPeekOnHover && musicWidget.isHoveringAlbumArt
 
-        let bottomLog: String
         if musicWidget.showQuickPeek || showHoverPeek {
             bottomContentType =
                 .peek(
@@ -1379,31 +1341,7 @@ class LiveActivityManager: ObservableObject {
                     artist: musicWidget.artist ?? ""
                 )
             bottomContentIdentifier = "peek"
-            bottomLog = "quick peek (lyrics suppressed)"
-        } else if isPlaying, isUpNextWindow, let upNext = musicLiveActivityUpNext {
-            bottomContentType = .upNext(
-                title: upNext.title,
-                artist: upNext.artist,
-                artworkURL: upNext.artworkURL
-            )
-            bottomContentIdentifier = "upNext-\(upNext.title)"
-            bottomLog = "up next (lyrics suppressed)"
-        } else {
-            switch LiveActivityLyricsPolicy.decide(
-                isPlaying: isPlaying,
-                showLyricsInLiveActivity: settingsModel.settings.showLyricsInLiveActivity,
-                lyricsAllowedForActiveApp: activeAppMonitor.isLyricsAllowedForActiveApp,
-                currentLyric: musicWidget.currentLyric
-            ) {
-            case .show(let line):
-                bottomContentType = .lyrics(line: line)
-                bottomContentIdentifier = line.id.uuidString
-                bottomLog = "showing line \(line.id.uuidString.prefix(8)) (\(line.words.count) words)"
-            case .hide(let reason):
-                bottomLog = "lyrics hidden: \(reason.rawValue)"
-            }
         }
-        LyricsLog.infoOnChange("liveActivity.bottom", "Live activity bottom: \(bottomLog)")
 
         let id = "\((musicWidget.title ?? "") + (musicWidget.artist ?? "") + (musicWidget.album ?? ""))-\(bottomContentIdentifier)-\(isPlaying)"
         let duration: TimeInterval? = isPlaying ? nil : 5.0
@@ -1412,35 +1350,6 @@ class LiveActivityManager: ObservableObject {
             .standard(data: .music(bottom: bottomContentType), id: id),
             duration
         )
-    }
-
-    private var isUpNextWindow: Bool {
-        guard settingsModel.settings.spotifyShowNextSong else { return false }
-        guard musicWidget.totalDuration > 0 else { return false }
-        let remaining = musicWidget.totalDuration - musicWidget.elapsedTime()
-        return remaining >= 0 && remaining <= 10.0
-    }
-
-    private var musicLiveActivityUpNext: (title: String, artist: String?, artworkURL: URL?)? {
-        guard settingsModel.settings.spotifyShowNextSong else { return nil }
-
-        if musicWidget.isSpotifyLiveSourceSelected || musicWidget.isSpotifySourceActive {
-            guard let next = musicWidget.nativeQueue.first else { return nil }
-            let title = (next.metadata?.title ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
-            guard !title.isEmpty else { return nil }
-            return (
-                title,
-                next.metadata?.artistName,
-                settingsModel.settings.spotifyShowNextSongAlbumArt ? next.metadata?.imageURL : nil
-            )
-        }
-
-        if musicWidget.lastKnownBundleID == "com.apple.Music",
-           let next = musicWidget.appleMusicNextTrack {
-            return (next.title, next.artist, nil)
-        }
-
-        return nil
     }
 
     private func checkForCalendar() -> (ActivityType, LiveActivityContent, TimeInterval?)? {

@@ -12,17 +12,13 @@ import ServiceManagement
 // MARK: - Main Onboarding View
 struct OnboardingView: View {
     enum OnboardingStep {
-        case welcome, permissions, helperInstallation, privacyPolicy, musicChoice, spotifySetup, batterySetup, corePreferences, lockScreenSetup, finish
+        case welcome, permissions, helperInstallation, privacyPolicy, musicChoice, batterySetup, corePreferences, lockScreenSetup, finish
     }
 
     @State private var currentStep: OnboardingStep = .welcome
     var onComplete: () -> Void
 
     @EnvironmentObject var settings: SettingsModel
-    @StateObject var musicManager = MusicManager.shared
-
-    @State private var isPrivateApiLoading = false
-    @State private var privateApiError: String?
 
     var body: some View {
         ZStack {
@@ -51,20 +47,7 @@ struct OnboardingView: View {
                     case .privacyPolicy:
                         PrivacyStepView(onContinue: { currentStep = .musicChoice })
                     case .musicChoice:
-                        MusicChoiceStepView(onNext: {
-                            if settings.settings.defaultMusicPlayer == .spotify {
-                                currentStep = .spotifySetup
-                            } else {
-                                currentStep = .batterySetup
-                            }
-                        })
-                    case .spotifySetup:
-                        SpotifySetupStepView(
-                            onNext: { currentStep = .batterySetup },
-                            isLoading: $isPrivateApiLoading,
-                            error: $privateApiError
-                        )
-                        .environmentObject(musicManager)
+                        MusicChoiceStepView(onNext: { currentStep = .batterySetup })
                     case .batterySetup:
                         BatterySetupStepView(onNext: { currentStep = .corePreferences })
                     case .corePreferences:
@@ -373,52 +356,6 @@ private struct MusicChoiceStepView: View {
         }
         .onAppear {
             selection = settings.settings.defaultMusicPlayer
-        }
-    }
-}
-
-private struct SpotifySetupStepView: View {
-    @EnvironmentObject var musicManager: MusicManager
-    @ObservedObject private var spotifyPrivateAPI = SpotifyPrivateAPIManager.shared
-    var onNext: () -> Void
-    @Binding var isLoading: Bool
-    @Binding var error: String?
-    private func handlePrivateApiLogin() { error = nil; isLoading = true; musicManager.spotifyPrivateAPI.login() }
-    var body: some View {
-        VStack(spacing: 20) {
-            Spacer()
-            Text("Spotify Setup").font(.system(size: 32, weight: .bold, design: .rounded))
-            Text("Log in to enable enhanced features like liking tracks and skipping ads directly from the notch.").font(.title3).multilineTextAlignment(.center).foregroundColor(.secondary).padding(.horizontal)
-            VStack(alignment: .center, spacing: 15) {
-                if musicManager.isPrivateAPIAuthenticated {
-                    HStack(spacing: 10) { Image(systemName: "checkmark.circle.fill").font(.title).foregroundColor(.green); Text("Logged in successfully!").font(.headline) }
-                } else {
-                    Text("Private API Login").font(.headline)
-                    Text("This method works for both Free and Premium users. Use at your own risk.").font(.caption).foregroundColor(.secondary).multilineTextAlignment(.center)
-                    if isLoading {
-                        VStack(spacing: 8) { ProgressView(); Text("Logging in...").font(.caption).foregroundColor(.secondary) }.frame(height: 40)
-                    } else {
-                        Button("Log In with Spotify", action: handlePrivateApiLogin).buttonStyle(.borderedProminent).tint(.green).controlSize(.large).frame(height: 40)
-                    }
-                    if let error = error { Text(error).font(.caption).foregroundColor(.red).padding(.top, 4) }
-                }
-            }.padding(25).background(.black.opacity(0.15)).clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous)).overlay(RoundedRectangle(cornerRadius: 20, style: .continuous).stroke(Color.white.opacity(0.1), lineWidth: 1)).padding(50)
-            Spacer()
-            if musicManager.isPrivateAPIAuthenticated { OnboardingButton(title: "Continue", action: onNext) } else if !isLoading { Button("Skip for Now", action: onNext).buttonStyle(.plain).foregroundColor(.secondary).padding(.bottom, 50) } else { OnboardingButton(title: "Continue", action: {}).hidden().padding(.bottom, 50) }
-        }
-        .sheet(item: $spotifyPrivateAPI.loginChallenge) { _ in
-            SpotifyLoginWebView(
-                onComplete: { cookieProperties in
-                    spotifyPrivateAPI.completeLoginAfterWebViewSuccess(with: cookieProperties)
-                    spotifyPrivateAPI.loginChallenge = nil
-                    isLoading = false
-                },
-                onCancel: {
-                    error = String(localized: "Login was cancelled by the user.")
-                    spotifyPrivateAPI.loginChallenge = nil
-                    isLoading = false
-                }
-            )
         }
     }
 }
