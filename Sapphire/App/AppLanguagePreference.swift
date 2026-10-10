@@ -3,7 +3,7 @@ import Combine
 import SwiftUI
 
 enum AppLanguagePreference: CaseIterable, Hashable, Identifiable {
-    case followSystem, simplifiedChinese, english, existingOverride
+    case followSystem, simplifiedChinese, traditionalChinese, english, existingOverride
 
     var id: Self { self }
 
@@ -11,6 +11,7 @@ enum AppLanguagePreference: CaseIterable, Hashable, Identifiable {
         switch self {
         case .followSystem: return String(localized: "Follow System")
         case .simplifiedChinese: return "简体中文"
+        case .traditionalChinese: return "繁體中文"
         case .english: return "English"
         case .existingOverride: return String(localized: "Current language setting")
         }
@@ -31,6 +32,7 @@ struct AppLanguagePreferenceStore {
         }
         if let languages = override as? [String] {
             if languages == ["zh-Hans"] { return .simplifiedChinese }
+            if languages == ["zh-Hant"] { return .traditionalChinese }
             if languages == ["en"] { return .english }
         }
         return .existingOverride
@@ -42,6 +44,8 @@ struct AppLanguagePreferenceStore {
             defaults.removeObject(forKey: "AppleLanguages")
         case .simplifiedChinese:
             defaults.set(["zh-Hans"], forKey: "AppleLanguages")
+        case .traditionalChinese:
+            defaults.set(["zh-Hant"], forKey: "AppleLanguages")
         case .english:
             defaults.set(["en"], forKey: "AppleLanguages")
         case .existingOverride:

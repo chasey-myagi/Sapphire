@@ -30,7 +30,7 @@ final class AppUsabilityTests: XCTestCase {
 
     func testExplicitLanguageChoicesUseNativeAppOverrides() throws {
         try withLanguageStore { defaults, domain, store in
-            for (choice, code) in [(AppLanguagePreference.english, "en"), (.simplifiedChinese, "zh-Hans")] {
+            for (choice, code) in [(AppLanguagePreference.english, "en"), (.simplifiedChinese, "zh-Hans"), (.traditionalChinese, "zh-Hant")] {
                 store.select(choice)
                 XCTAssertEqual(defaults.persistentDomain(forName: domain)?["AppleLanguages"] as? [String], [code])
                 XCTAssertEqual(store.selection, choice)
@@ -52,7 +52,7 @@ final class AppUsabilityTests: XCTestCase {
 
     func testUnknownOverridesAreNotSilentlyReplaced() throws {
         try withLanguageStore { defaults, domain, store in
-            for override in [["fr"], ["en", "zh-Hans"], [String]()] {
+            for override in [["fr"], ["en", "zh-Hans"], ["zh-Hant-TW"], [String]()] {
                 let saved: [String: Any] = ["AppleLanguages": override, "unrelated": "keep"]
                 defaults.setPersistentDomain(saved, forName: domain)
                 XCTAssertEqual(store.selection, .existingOverride)
