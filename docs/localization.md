@@ -17,7 +17,7 @@ One integrator edits each catalog while module contributors supply reviewed keys
 
 - Use `LocalizedStringKey` for reusable SwiftUI components accepting fixed labels. Keep string literals at the call site so Xcode can extract them.
 - Use `String(localized:)` for app-owned strings that must cross a `String` API, such as AppKit menus, alerts and model display properties.
-- Pass user content, file names, device names, song titles, lyrics and third-party responses as `String`/`Text(verbatim:)`. Do not convert arbitrary runtime strings into localization keys.
+- Pass user content, file names, device names, song titles and third-party responses as `String`/`Text(verbatim:)`. Do not convert arbitrary runtime strings into localization keys.
 - Keep IDs, enum raw values, Codable values, defaults keys, URLs, protocol values, paths, commands and diagnostic codes unchanged. Add a display property when a stored identifier is shown to a user.
 - Use a distinct key when the same English word has different meanings. For example, the onboarding next-step button differs from music playback. English values belong in the catalog; use an explicit English `defaultValue` with `String(localized:)` when using a semantic key.
 - Keep interpolation placeholders intact. Use native plural variations for quantities and native date/number formatters for localized values. A Chinese plural normally has an `other` form; the English table must still handle singular and plural correctly.

@@ -63,7 +63,6 @@ struct NotchActivityContentView: View {
     let horizontalPadding: CGFloat
     let screen: NSScreen?
     @Binding var measuredSize: CGSize
-    @Binding var showLyrics: Bool
     var blurRadius: CGFloat = 0
 
     @EnvironmentObject private var settings: SettingsModel
@@ -91,11 +90,7 @@ struct NotchActivityContentView: View {
 
     @ViewBuilder
     private func standardActivityView(from data: StandardActivityData) -> some View {
-        let bottomIsUpNext: Bool = {
-            if case .music(let bottom) = data, case .upNext = bottom { return true }
-            return false
-        }()
-        VStack(alignment: bottomIsUpNext ? .leading : .center, spacing: 0) {
+        VStack(alignment: .center, spacing: 0) {
             let left = buildLeftView(for: data)
             let right = buildRightView(for: data)
 
@@ -128,15 +123,6 @@ struct NotchActivityContentView: View {
                 return nil
             case .peek(let title, let artist):
                 return AnyView(QuickPeekView(title: title, artist: artist))
-            case .lyrics(let line):
-                let view = MusicKaraokeActivityTicker(
-                    lyric: line,
-                    config: config,
-                    showLyrics: $showLyrics
-                )
-                return AnyView(view)
-            case .upNext(let title, let artist, let artworkURL):
-                return AnyView(MusicUpNextView(title: title, artist: artist, artworkURL: artworkURL))
             }
         default:
             return nil
@@ -245,29 +231,6 @@ private struct DesktopActivityRightView: View {
         DesktopActivityView.right(for: desktopManager.desktopNumber(for: screen) ?? 1)
     }
 }
-
-private struct MusicKaraokeActivityTicker: View {
-    @EnvironmentObject private var musicManager: MusicManager
-
-    let lyric: LyricLine
-    let config: ResolvedNotchConfiguration
-    @Binding var showLyrics: Bool
-
-    var body: some View {
-        KaraokeLyricTicker(
-            lyric: lyric,
-            containerWidth: config.lyricsMaxWidth,
-            font: .system(size: config.lyricsFontSize, weight: .semibold, design: .rounded),
-            highlightColor: musicManager.accentColor.opacity(0.9),
-            inactiveColor: musicManager.accentColor
-        )
-        .frame(maxWidth: config.lyricsMaxWidth)
-        .transition(.opacity.animation(.easeInOut(duration: 0.3)))
-        .id("lyric-\(lyric.id.uuidString)")
-        .onTapGesture { showLyrics = true }
-    }
-}
-
 
 private struct TimerActivityLeftView: View {
     @EnvironmentObject private var timerManager: TimerManager

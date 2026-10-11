@@ -92,30 +92,6 @@
         }
       }
     },
-    "#": {
-      "comment": "Native local UI wording in MusicHubViews.swift; intentional nonlinguistic format, symbol or brand retained verbatim",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "#"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "#"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "#"
-          }
-        }
-      },
-      "shouldTranslate": false
-    },
     "%": {
       "comment": "Settings interface",
       "localizations": {
@@ -371,30 +347,6 @@
         }
       }
     },
-    "%@ / %@": {
-      "comment": "Native local UI wording in LyricsViews.swift; intentional nonlinguistic format, symbol or brand retained verbatim",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ / %@"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ / %@"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ / %@"
-          }
-        }
-      },
-      "shouldTranslate": false
-    },
     "%@ Build": {
       "comment": "Runtime user-facing string",
       "localizations": {
@@ -414,29 +366,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "%@ 建置"
-          }
-        }
-      }
-    },
-    "%@ Login": {
-      "comment": "Runtime display or native interpolated quantity",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ Login"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "登录 %@"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "登入 %@"
           }
         }
       }
@@ -533,29 +462,6 @@
         }
       }
     },
-    "%@ followers": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ followers"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ 位关注者"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ 位追蹤者"
-          }
-        }
-      }
-    },
     "%@ from Sapphire Browser": {
       "comment": "Runtime user-facing string",
       "localizations": {
@@ -644,52 +550,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "剩餘 %@"
-          }
-        }
-      }
-    },
-    "%@ monthly": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ monthly"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "每月 %@"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "每月 %@"
-          }
-        }
-      }
-    },
-    "%@ monthly listeners": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ monthly listeners"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ 位月听众"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "每月 %@ 位聽眾"
           }
         }
       }
@@ -926,28 +786,6 @@
         }
       },
       "shouldTranslate": false
-    },
-    "%@, %@": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@, %@"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@，%@"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@，%@"
-          }
-        }
-      }
     },
     "%@:": {
       "comment": "Settings fixed labels; key verified against module-build-01 compiler output.",
@@ -1782,29 +1620,6 @@
                 }
               }
             }
-          }
-        }
-      }
-    },
-    "%lld songs": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld songs"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld 首歌曲"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld 首歌曲"
           }
         }
       }
@@ -3222,29 +3037,6 @@
         }
       }
     },
-    "Account Badge": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Account Badge"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "账户标记"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "帳號標記"
-          }
-        }
-      }
-    },
     "Acoustic": {
       "comment": "Native local UI wording in AudioModels.swift",
       "localizations": {
@@ -4234,29 +4026,6 @@
         }
       }
     },
-    "Add playlists in Apple Music to see them here.": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Add playlists in Apple Music to see them here."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "在 Apple Music 中添加播放列表，即可在此查看。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "在 Apple Music 中加入播放列表，即可在此查看。"
-          }
-        }
-      }
-    },
     "Add shortcuts": {
       "comment": "Native local UI wording in ShortcutWidgetView.swift",
       "localizations": {
@@ -4299,75 +4068,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "加入空間"
-          }
-        }
-      }
-    },
-    "Add to Library": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Add to Library"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "添加到资料库"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "加入資料庫"
-          }
-        }
-      }
-    },
-    "Add to Playlist": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Add to Playlist"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "添加到播放列表"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "加入播放列表"
-          }
-        }
-      }
-    },
-    "Add to Queue": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Add to Queue"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "添加到播放队列"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "加入待播清單"
           }
         }
       }
@@ -4418,52 +4118,6 @@
         }
       }
     },
-    "Added by": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Added by"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "添加者"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "加入者"
-          }
-        }
-      }
-    },
-    "Added to %@": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Added to %@"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "已添加到 %@"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "已加入 %@"
-          }
-        }
-      }
-    },
     "Added to Widget": {
       "comment": "Settings interface",
       "localizations": {
@@ -4483,29 +4137,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "已加入小工具"
-          }
-        }
-      }
-    },
-    "Added to queue": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Added to queue"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "已添加到播放队列"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "已加入待播清單"
           }
         }
       }
@@ -4740,53 +4371,6 @@
         }
       }
     },
-    "AirPlay": {
-      "comment": "Native local UI wording in MusicHubViews.swift; intentional nonlinguistic format, symbol or brand retained verbatim",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "AirPlay"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "AirPlay"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "AirPlay"
-          }
-        }
-      },
-      "shouldTranslate": false
-    },
-    "Album": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Album"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "专辑"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "專輯"
-          }
-        }
-      }
-    },
     "Album art": {
       "comment": "Native local UI wording in MusicPlayerViews.swift",
       "localizations": {
@@ -4806,52 +4390,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "專輯封面"
-          }
-        }
-      }
-    },
-    "Album tracks": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Album tracks"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "专辑歌曲"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "專輯曲目"
-          }
-        }
-      }
-    },
-    "Albums": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Albums"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "专辑"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "專輯"
           }
         }
       }
@@ -5109,29 +4647,6 @@
         }
       }
     },
-    "Allow Lyrics From:": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Allow Lyrics From:"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "允许以下来源的歌词："
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "允許來自以下來源的歌詞："
-          }
-        }
-      }
-    },
     "Allow Notifications From:": {
       "comment": "Settings interface",
       "localizations": {
@@ -5289,29 +4804,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "幾乎不模糊，清晰透明。"
-          }
-        }
-      }
-    },
-    "Alphabetical": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Alphabetical"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "按字母排序"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "依字母排序"
           }
         }
       }
@@ -6213,53 +5705,6 @@
         }
       }
     },
-    "Apple Music": {
-      "comment": "Native local UI wording in MusicHubViews.swift; intentional nonlinguistic format, symbol or brand retained verbatim",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Apple Music"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Apple Music"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Apple Music"
-          }
-        }
-      },
-      "shouldTranslate": false
-    },
-    "Apple Music connection": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Apple Music connection"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Apple Music 连接"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Apple Music 連線"
-          }
-        }
-      }
-    },
     "Apple limits brightness to preserve battery life. While this feature is system-controlled and there are no known side-effects, you should use this feature at your own risk.": {
       "comment": "Settings interface",
       "localizations": {
@@ -6835,52 +6280,6 @@
         }
       }
     },
-    "Artist Profile": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Artist Profile"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "艺人资料"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "藝人簡介"
-          }
-        }
-      }
-    },
-    "Artists": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Artists"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "艺人"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "藝人"
-          }
-        }
-      }
-    },
     "Assign a shortcut to a zone to snap the currently focused window there. Recording a shortcut already used by another zone moves it to this zone.": {
       "comment": "Settings interface",
       "localizations": {
@@ -7084,29 +6483,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "驗證"
-          }
-        }
-      }
-    },
-    "Authentication Failed: %@": {
-      "comment": "Runtime user-facing string",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Authentication Failed: %@"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "身份验证失败：%@"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "驗證失敗：%@"
           }
         }
       }
@@ -7797,29 +7173,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "每個專注區段結束後自動開始休息。"
-          }
-        }
-      }
-    },
-    "Automatically translate non-English lyrics.": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Automatically translate non-English lyrics."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "自动翻译非英语歌词。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "自動翻譯非英文歌詞。"
           }
         }
       }
@@ -9963,29 +9316,6 @@
         }
       }
     },
-    "By %@": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "By %@"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "由 %@ 创建"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "由 %@ 製作"
-          }
-        }
-      }
-    },
     "Byte-for-byte identical files that can be reviewed safely": {
       "comment": "Settings dynamic presentation at literal source; reconcile with final compiler extraction.",
       "localizations": {
@@ -11503,29 +10833,6 @@
         }
       }
     },
-    "Checking playlists…": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Checking playlists…"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "正在检查播放列表…"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "正在檢查播放列表…"
-          }
-        }
-      }
-    },
     "Checking…": {
       "comment": "Settings interface",
       "localizations": {
@@ -12745,54 +12052,6 @@
         }
       }
     },
-    "Client ID": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Client ID"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Client ID"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Client ID"
-          }
-        }
-      },
-      "shouldTranslate": false
-    },
-    "Client Secret": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Client Secret"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Client Secret"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Client Secret"
-          }
-        }
-      },
-      "shouldTranslate": false
-    },
     "Clipboard": {
       "comment": "Settings interface",
       "localizations": {
@@ -13345,29 +12604,6 @@
         }
       }
     },
-    "Complete Login": {
-      "comment": "Compiler-extracted static interface text",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Complete Login"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "完成登录"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "完成登入"
-          }
-        }
-      }
-    },
     "Completed": {
       "comment": "Settings interface",
       "localizations": {
@@ -13433,52 +12669,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "完成率："
-          }
-        }
-      }
-    },
-    "Concert Tickets": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Concert Tickets"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "演唱会门票"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "演唱會門票"
-          }
-        }
-      }
-    },
-    "Concerts": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Concerts"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "演唱会"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "演唱會"
           }
         }
       }
@@ -13663,29 +12853,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "已連接到 %@"
-          }
-        }
-      }
-    },
-    "Connecting to Spotify…": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Connecting to Spotify…"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "正在连接 Spotify…"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "正在連接 Spotify…"
           }
         }
       }
@@ -14587,29 +13754,6 @@
         }
       }
     },
-    "Could not add to %@": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Could not add to %@"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "无法添加到 %@"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "無法加入到 %@"
-          }
-        }
-      }
-    },
     "Could not create AVAssetExportSession for audio.": {
       "comment": "Runtime user-facing string",
       "localizations": {
@@ -14725,29 +13869,6 @@
         }
       }
     },
-    "Could not remove from %@": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Could not remove from %@"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "无法从 %@ 移除"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "無法從 %@ 移除"
-          }
-        }
-      }
-    },
     "Could not retrieve a valid file URL from the dropped item.": {
       "comment": "Native local UI wording in FileDragLandingView.swift",
       "localizations": {
@@ -14817,96 +13938,6 @@
         }
       }
     },
-    "Couldn’t play playlist.": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Couldn’t play playlist."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "无法播放此播放列表。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "無法播放播放列表。"
-          }
-        }
-      }
-    },
-    "Couldn’t play this track in Apple Music.": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Couldn’t play this track in Apple Music."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "无法在 Apple Music 中播放此歌曲。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "無法在 Apple Music 中播放此曲目。"
-          }
-        }
-      }
-    },
-    "Couldn’t start playback: %@": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Couldn’t start playback: %@"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "无法开始播放：%@"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "無法開始播放：%@"
-          }
-        }
-      }
-    },
-    "Couldn’t switch device: %@": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Couldn’t switch device: %@"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "无法切换设备：%@"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "無法切換裝置：%@"
-          }
-        }
-      }
-    },
     "Cover the desktop wallpaper and icons with black for the duration of the session.": {
       "comment": "Settings interface",
       "localizations": {
@@ -14949,75 +13980,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "建立設定組、加入顯示條件，並可選擇綁定至顯示器、空間或專注模式過濾條件。當綁定的情境生效且符合任一條件時，就會顯示隱藏的項目。"
-          }
-        }
-      }
-    },
-    "Create an app at developer.tidal.com, enable the user.read, search.read, collection.read/write, and playlists.read/write scopes, and set the redirect URI exactly to sapphire://callback.": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Create an app at developer.tidal.com, enable the user.read, search.read, collection.read/write, and playlists.read/write scopes, and set the redirect URI exactly to sapphire://callback."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "在 developer.tidal.com 创建应用，启用 user.read、search.read、collection.read/write 和 playlists.read/write 权限范围，并将重定向 URI 精确设为 sapphire://callback。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "在 developer.tidal.com 建立 App，啟用 user.read、search.read、collection.read/write 和 playlists.read/write 範圍，並將重新導向 URI 精確設為 sapphire://callback。"
-          }
-        }
-      }
-    },
-    "Creator": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Creator"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "创建者"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "建立者"
-          }
-        }
-      }
-    },
-    "Credits": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Credits"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "制作人员"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "製作人員"
           }
         }
       }
@@ -15482,29 +14444,6 @@
         }
       }
     },
-    "Custom order": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Custom order"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "自定义顺序"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "自訂順序"
-          }
-        }
-      }
-    },
     "Custom...": {
       "comment": "Settings interface",
       "localizations": {
@@ -15919,29 +14858,6 @@
         }
       }
     },
-    "Date added": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Date added"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "添加日期"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "加入日期"
-          }
-        }
-      }
-    },
     "Day": {
       "comment": "Settings interface",
       "localizations": {
@@ -16260,29 +15176,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "預設音樂 App"
-          }
-        }
-      }
-    },
-    "Default to airplay devices when spotify isn't running and spotify is authenticated": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Default to airplay devices when spotify isn't running and spotify is authenticated"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "已授权 Spotify 且 Spotify 未运行时，默认使用 AirPlay 设备"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Spotify 已驗證但未執行時，預設使用 AirPlay 裝置"
           }
         }
       }
@@ -16770,29 +15663,6 @@
         }
       }
     },
-    "Devices": {
-      "comment": "Runtime user-facing string",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Devices"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "设备"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "裝置"
-          }
-        }
-      }
-    },
     "Diamond": {
       "comment": "ControlItemIconStyle.displayName",
       "localizations": {
@@ -17184,52 +16054,6 @@
         }
       }
     },
-    "Discover": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Discover"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "发现"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "探索"
-          }
-        }
-      }
-    },
-    "Discover more like %@": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Discover more like %@"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "发现更多类似 %@ 的音乐"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "探索更多類似 %@ 的音樂"
-          }
-        }
-      }
-    },
     "Disk Activity": {
       "comment": "StatType.displayName",
       "localizations": {
@@ -17364,29 +16188,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "顯示器睡眠觸發角度"
-          }
-        }
-      }
-    },
-    "Display a special HUD with the active device name when changing volume while Spotify is active.": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Display a special HUD with the active device name when changing volume while Spotify is active."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Spotify 活跃时，调整音量会显示包含当前设备名称的专用提示浮层。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Spotify 使用中時調整音量，會顯示含有目前裝置名稱的特殊浮動提示。"
           }
         }
       }
@@ -17594,29 +16395,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "顯示天氣或電池等靜態資訊。"
-          }
-        }
-      }
-    },
-    "Display synchronized lyrics when available.": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Display synchronized lyrics when available."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "有同步歌词时显示。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "有同步歌詞時顯示。"
           }
         }
       }
@@ -18886,29 +17664,6 @@
         }
       }
     },
-    "Editable": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Editable"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "可编辑"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "可編輯"
-          }
-        }
-      }
-    },
     "Electronic": {
       "comment": "Native local UI wording in AudioModels.swift",
       "localizations": {
@@ -19875,29 +18630,6 @@
         }
       }
     },
-    "Enable Translation": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Enable Translation"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "启用翻译"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "啟用翻譯"
-          }
-        }
-      }
-    },
     "Enable Transparency Blur": {
       "comment": "Settings interface",
       "localizations": {
@@ -20266,52 +18998,6 @@
         }
       }
     },
-    "English": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "English"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "英语"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "英文"
-          }
-        }
-      }
-    },
-    "Enhance": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Enhance"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "增强"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "增強"
-          }
-        }
-      }
-    },
     "Enhance your Mac's lock screen with live activities and widgets directly in the notch area.": {
       "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
       "localizations": {
@@ -20400,52 +19086,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "輸入密碼以解壓縮此封存檔。Sapphire 不會儲存密碼。"
-          }
-        }
-      }
-    },
-    "Enter your Client ID": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Enter your Client ID"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "输入 Client ID"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "輸入你的用戶端 ID"
-          }
-        }
-      }
-    },
-    "Enter your Client Secret": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Enter your Client Secret"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "输入 Client Secret"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "輸入你的用戶端密鑰"
           }
         }
       }
@@ -21692,29 +20332,6 @@
         }
       }
     },
-    "Failed to construct URL: %@": {
-      "comment": "Runtime user-facing string",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Failed to construct URL: %@"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "无法构建 URL：%@"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "無法建構 URL：%@"
-          }
-        }
-      }
-    },
     "Failed to copy the file: %@": {
       "comment": "Native local UI wording in FileDragLandingView.swift",
       "localizations": {
@@ -21734,29 +20351,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "無法拷貝檔案：%@"
-          }
-        }
-      }
-    },
-    "Failed to decode data: %@": {
-      "comment": "Runtime user-facing string",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Failed to decode data: %@"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "数据解码失败：%@"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "無法解碼資料：%@"
           }
         }
       }
@@ -22083,29 +20677,6 @@
         }
       }
     },
-    "Fans also like": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Fans also like"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "听众也喜欢"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "粉絲也喜歡"
-          }
-        }
-      }
-    },
     "Fast": {
       "comment": "SnapWindowAnimation.displayName",
       "localizations": {
@@ -22125,29 +20696,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "快速"
-          }
-        }
-      }
-    },
-    "Featuring": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Featuring"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "参与作品"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "參與作品"
           }
         }
       }
@@ -22539,29 +21087,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "尋找大型檔案夾，並以透明、經你確認的清理方式釋放空間。"
-          }
-        }
-      }
-    },
-    "Find tracks, artists, albums, and playlists.": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Find tracks, artists, albums, and playlists."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "搜索歌曲、艺人、专辑和播放列表。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "搜尋曲目、藝人、專輯和播放列表。"
           }
         }
       }
@@ -23210,29 +21735,6 @@
         }
       }
     },
-    "For You": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "For You"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "为你推荐"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "為你推薦"
-          }
-        }
-      }
-    },
     "For devices like HomePods, show a device-specific icon in the volume HUD.": {
       "comment": "Settings interface",
       "localizations": {
@@ -23325,29 +21827,6 @@
         }
       }
     },
-    "Free": {
-      "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Free"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "免费"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "免費"
-          }
-        }
-      }
-    },
     "Freezing Drizzle": {
       "comment": "Runtime user-facing string",
       "localizations": {
@@ -23390,29 +21869,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "凍雨"
-          }
-        }
-      }
-    },
-    "French": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "French"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "法语"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "法文"
           }
         }
       }
@@ -23758,29 +22214,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "產生一次性啟用碼"
-          }
-        }
-      }
-    },
-    "Generate Word-by-Word Timing": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Generate Word-by-Word Timing"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "生成逐字时间轴"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "產生逐字時間軸"
           }
         }
       }
@@ -25051,29 +23484,6 @@
         }
       }
     },
-    "Heavy Rotation": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Heavy Rotation"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "常听音乐"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "經常播放"
-          }
-        }
-      }
-    },
     "Heavy Showers": {
       "comment": "Runtime user-facing string",
       "localizations": {
@@ -25925,29 +24335,6 @@
         }
       }
     },
-    "Home shelves from Spotify will appear here once loaded.": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Home shelves from Spotify will appear here once loaded."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Spotify 首页内容加载后会显示在此处。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Spotify 首頁內容載入後會顯示在這裡。"
-          }
-        }
-      }
-    },
     "Homebrew is not installed": {
       "comment": "Settings dynamic presentation at literal source; reconcile with final compiler extraction.",
       "localizations": {
@@ -26703,29 +25090,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "已排定豁免日 "
-          }
-        }
-      }
-    },
-    "Import Available": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Import Available"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "可导入"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "可匯入"
           }
         }
       }
@@ -27489,29 +25853,6 @@
         }
       }
     },
-    "Invalid response from Spotify server.": {
-      "comment": "Runtime user-facing string",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Invalid response from Spotify server."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Spotify 服务器响应无效。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Spotify 伺服器回應無效。"
-          }
-        }
-      }
-    },
     "Invalid update URL": {
       "comment": "Settings dynamic presentation at literal source; reconcile with final compiler extraction.",
       "localizations": {
@@ -27623,29 +25964,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "問題"
-          }
-        }
-      }
-    },
-    "Jam Active": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Jam Active"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Jam 已启用"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Jam 進行中"
           }
         }
       }
@@ -28754,29 +27072,6 @@
         }
       }
     },
-    "Library": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Library"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "资料库"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "資料庫"
-          }
-        }
-      }
-    },
     "Light": {
       "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
       "localizations": {
@@ -28888,29 +27183,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "小雪"
-          }
-        }
-      }
-    },
-    "Like": {
-      "comment": "Native local UI wording in MusicPlayerViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Like"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "喜欢"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "喜歡"
           }
         }
       }
@@ -29237,29 +27509,6 @@
         }
       }
     },
-    "Live Canvas Video": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Live Canvas Video"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "动态 Canvas 视频"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "動態 Canvas 影片"
-          }
-        }
-      }
-    },
     "Live face required — photo detected.": {
       "comment": "Runtime user-facing string",
       "localizations": {
@@ -29543,29 +27792,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Loading..."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "正在加载…"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "正在載入…"
-          }
-        }
-      }
-    },
-    "Loading…": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Loading…"
           }
         },
         "zh-Hans": {
@@ -29973,98 +28199,6 @@
         }
       }
     },
-    "Log In": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Log In"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "登录"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "登入"
-          }
-        }
-      }
-    },
-    "Log In via Private API": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Log In via Private API"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "通过私有 API 登录"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "透過私有 API 登入"
-          }
-        }
-      }
-    },
-    "Log In with Spotify": {
-      "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Log In with Spotify"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "使用 Spotify 登录"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "使用 Spotify 登入"
-          }
-        }
-      }
-    },
-    "Log Out": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Log Out"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "退出登录"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "登出"
-          }
-        }
-      }
-    },
     "Log battery during sleep": {
       "comment": "Settings interface",
       "localizations": {
@@ -30111,121 +28245,6 @@
         }
       }
     },
-    "Log in here to enable TIDAL features like catalog search and syncing liked tracks and playlists. Requires a TIDAL developer account (third-party access tier).": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Log in here to enable TIDAL features like catalog search and syncing liked tracks and playlists. Requires a TIDAL developer account (third-party access tier)."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "在此登录以启用 TIDAL 功能，例如曲库搜索以及喜欢的歌曲和播放列表同步。需要 TIDAL 开发者账户（第三方访问级别）。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "在此登入以啟用 TIDAL 功能，例如目錄搜尋，以及同步喜愛的曲目和播放列表。需要 TIDAL 開發者帳號（第三方存取層級）。"
-          }
-        }
-      }
-    },
-    "Log in here to enable official features like device switching for Premium users. This is the standard, recommended login method.": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Log in here to enable official features like device switching for Premium users. This is the standard, recommended login method."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "在此登录以启用官方功能，例如 Premium 用户的设备切换。这是标准且推荐的登录方式。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "在此登入以啟用官方功能，例如為進階版使用者切換裝置。這是標準且建議的登入方式。"
-          }
-        }
-      }
-    },
-    "Log in to TIDAL": {
-      "comment": "Compiler-extracted static interface text",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Log in to TIDAL"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "登录 TIDAL"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "登入 TIDAL"
-          }
-        }
-      }
-    },
-    "Log in to enable enhanced features like liking tracks and skipping ads directly from the notch.": {
-      "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Log in to enable enhanced features like liking tracks and skipping ads directly from the notch."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "登录后即可直接在刘海区域使用收藏歌曲、跳过广告等增强功能。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "登入以啟用增強功能，例如直接從瀏海喜愛曲目和略過廣告。"
-          }
-        }
-      }
-    },
-    "Log out": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Log out"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "退出登录"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "登出"
-          }
-        }
-      }
-    },
     "Logged": {
       "comment": "Settings dynamic presentation at literal source; reconcile with final compiler extraction.",
       "localizations": {
@@ -30249,98 +28268,6 @@
         }
       }
     },
-    "Logged in as %@": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Logged in as %@"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "已登录为 %@"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "已登入為 %@"
-          }
-        }
-      }
-    },
-    "Logged in successfully!": {
-      "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Logged in successfully!"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "登录成功！"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "登入成功！"
-          }
-        }
-      }
-    },
-    "Logged in via Private API": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Logged in via Private API"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "已通过私有 API 登录"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "已透過私有 API 登入"
-          }
-        }
-      }
-    },
-    "Logging in...": {
-      "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Logging in..."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "正在登录…"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "正在登入…"
-          }
-        }
-      }
-    },
     "Login Items approval required": {
       "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
       "localizations": {
@@ -30360,52 +28287,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "需要核准登入項目"
-          }
-        }
-      }
-    },
-    "Login Required": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Login Required"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "需要登录"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "需要登入"
-          }
-        }
-      }
-    },
-    "Login was cancelled by the user.": {
-      "comment": "Runtime user-facing string",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Login was cancelled by the user."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "用户已取消登录。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "使用者已取消登入。"
           }
         }
       }
@@ -30640,29 +28521,6 @@
         }
       }
     },
-    "Love this song": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Love this song"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "喜欢此歌曲"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "喜愛這首歌"
-          }
-        }
-      }
-    },
     "Low": {
       "comment": "Settings dynamic presentation at literal source; reconcile with final compiler extraction.",
       "localizations": {
@@ -30893,75 +28751,6 @@
         }
       }
     },
-    "Lyric Delay": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Lyric Delay"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "歌词延迟"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "歌詞延遲"
-          }
-        }
-      }
-    },
-    "Lyrics": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Lyrics"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "歌词"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "歌詞"
-          }
-        }
-      }
-    },
-    "Lyrics aren't available.": {
-      "comment": "Compiler-extracted static interface text",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Lyrics aren't available."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "暂无歌词。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "沒有可用的歌詞。"
-          }
-        }
-      }
-    },
     "MASTER ADJUSTMENTS": {
       "comment": "Native local UI wording in DeviceAdjustView.swift",
       "localizations": {
@@ -31050,52 +28839,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "僅 MacBook 顯示器"
-          }
-        }
-      }
-    },
-    "Made For You": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Made For You"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "为你定制"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "為你打造"
-          }
-        }
-      }
-    },
-    "Made for You": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Made for You"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "为你定制"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "為你打造"
           }
         }
       }
@@ -32089,29 +29832,6 @@
         }
       }
     },
-    "Merch": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Merch"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "周边商品"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "周邊商品"
-          }
-        }
-      }
-    },
     "Messages": {
       "comment": "Runtime user-facing string",
       "localizations": {
@@ -32526,29 +30246,6 @@
         }
       }
     },
-    "Missing required data: %@": {
-      "comment": "Runtime user-facing string",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Missing required data: %@"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "缺少必要数据：%@"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "缺少必要資料：%@"
-          }
-        }
-      }
-    },
     "Mission Ctl": {
       "comment": "Native local UI wording in FocusSessionDetailView.swift",
       "localizations": {
@@ -32913,52 +30610,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "每月"
-          }
-        }
-      }
-    },
-    "Monthly Listener: %@": {
-      "comment": "Native local UI wording in MusicPlayerViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Monthly Listener: %@"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "月听众：%@"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "每月聽眾：%@"
-          }
-        }
-      }
-    },
-    "More Like This": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "More Like This"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "更多相似音乐"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "更多相似內容"
           }
         }
       }
@@ -33631,29 +31282,6 @@
         }
       }
     },
-    "Nearby Concerts": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nearby Concerts"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "附近演唱会"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "附近的演唱會"
-          }
-        }
-      }
-    },
     "Nearby Share": {
       "comment": "Settings interface",
       "localizations": {
@@ -33696,29 +31324,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Nearby Share 可讓你使用 Android 原生的檔案分享功能（Nearby Share／Quick Share），將檔案從 Android 手機傳送到 Mac。建議保持啟用，方便親友分享檔案給你。"
-          }
-        }
-      }
-    },
-    "Nearby concerts": {
-      "comment": "Native local UI wording in MusicPlayerViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nearby concerts"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "附近演唱会"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "附近的演唱會"
           }
         }
       }
@@ -33769,29 +31374,6 @@
         }
       }
     },
-    "Needed to control playback and get track info from Spotify and Music.": {
-      "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Needed to control playback and get track info from Spotify and Music."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "用于控制 Spotify 和“音乐”的播放并获取曲目信息。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "控制 Spotify 和「音樂」的播放並取得曲目資訊需要此權限。"
-          }
-        }
-      }
-    },
     "Needed to detect connected devices and their battery levels.": {
       "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
       "localizations": {
@@ -33811,29 +31393,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "偵測已連接的裝置及其電量需要此權限。"
-          }
-        }
-      }
-    },
-    "Needed to discover and control supported media players on your network.": {
-      "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Needed to discover and control supported media players on your network."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "用于发现和控制网络中受支持的媒体播放器。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "探索和控制網路上支援的媒體播放器需要此權限。"
           }
         }
       }
@@ -34183,52 +31742,6 @@
         }
       }
     },
-    "Next Song": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Next Song"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "下一首歌曲"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "下一首歌曲"
-          }
-        }
-      }
-    },
-    "Next Song Album Art": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Next Song Album Art"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "下一首专辑封面"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "下一首歌曲專輯插圖"
-          }
-        }
-      }
-    },
     "Next Style": {
       "comment": "Settings interface",
       "localizations": {
@@ -34271,29 +31784,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "下一首曲目"
-          }
-        }
-      }
-    },
-    "Next Up": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Next Up"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "接下来播放"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "接下來播放"
           }
         }
       }
@@ -34386,29 +31876,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "沒有進行中的計時器或碼錶"
-          }
-        }
-      }
-    },
-    "No AirPlay devices found.": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No AirPlay devices found."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "未找到隔空播放设备。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "找不到 AirPlay 裝置。"
           }
         }
       }
@@ -34685,75 +32152,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "尚未建立視窗方案。"
-          }
-        }
-      }
-    },
-    "No Playlists Found": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No Playlists Found"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "未找到播放列表"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "找不到播放列表"
-          }
-        }
-      }
-    },
-    "No Songs Up Next": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No Songs Up Next"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "没有待播放歌曲"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "沒有待播的歌曲"
-          }
-        }
-      }
-    },
-    "No Spotify speakers online. Open the Spotify desktop app (or another Connect device) to play audio — Sapphire only controls playback.": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No Spotify speakers online. Open the Spotify desktop app (or another Connect device) to play audio — Sapphire only controls playback."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "没有在线的 Spotify 播放设备。请打开 Spotify 桌面应用或其他 Connect 设备播放音频；Sapphire 仅控制播放。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "沒有在線上的 Spotify 揚聲器。請打開 Spotify 桌面 App（或其他 Connect 裝置）來播放音訊，Sapphire 僅控制播放。"
           }
         }
       }
@@ -35494,29 +32892,6 @@
         }
       }
     },
-    "No lyrics available.": {
-      "comment": "Native local UI wording in LyricsViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No lyrics available."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "暂无歌词。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "沒有可用的歌詞。"
-          }
-        }
-      }
-    },
     "No macOS asset in latest release": {
       "comment": "Settings dynamic presentation at literal source; reconcile with final compiler extraction.",
       "localizations": {
@@ -35724,29 +33099,6 @@
         }
       }
     },
-    "No playlists available.": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No playlists available."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "暂无播放列表。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "沒有可用的播放列表。"
-          }
-        }
-      }
-    },
     "No release information found": {
       "comment": "Settings dynamic presentation at literal source; reconcile with final compiler extraction.",
       "localizations": {
@@ -35881,29 +33233,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "更新來源中找不到版本"
-          }
-        }
-      }
-    },
-    "No results for \"%@\"": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No results for \"%@\""
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "没有“%@”的搜索结果"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "沒有「%@」的搜尋結果"
           }
         }
       }
@@ -36483,29 +33812,6 @@
         }
       }
     },
-    "Not logged in.": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Not logged in."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "未登录。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "未登入。"
-          }
-        }
-      }
-    },
     "Notch": {
       "comment": "Settings interface",
       "localizations": {
@@ -36663,75 +33969,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "尚未拷貝任何內容"
-          }
-        }
-      }
-    },
-    "Nothing queued": {
-      "comment": "Compiler-extracted static interface text",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nothing queued"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "队列为空"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "待播清單中沒有項目"
-          }
-        }
-      }
-    },
-    "Nothing queued in Apple Music.": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nothing queued in Apple Music."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Apple Music 播放队列为空。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Apple Music 中的待播清單沒有項目。"
-          }
-        }
-      }
-    },
-    "Nothing queued — add tracks from Library or suggestions.": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nothing queued — add tracks from Library or suggestions."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "播放队列为空，请从资料库或推荐内容添加歌曲。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "待播清單中沒有項目：請從資料庫或建議中加入曲目。"
           }
         }
       }
@@ -37219,29 +34456,6 @@
         }
       }
     },
-    "Off — tap for Shuffle": {
-      "comment": "Native local UI wording in MusicPlayerViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Off — tap for Shuffle"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "已关闭 — 点击启用随机播放"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "關閉——點一下以啟用隨機播放"
-          }
-        }
-      }
-    },
     "Old Files": {
       "comment": "Settings dynamic presentation at literal source; reconcile with final compiler extraction.",
       "localizations": {
@@ -37491,29 +34705,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "時段開始時"
-          }
-        }
-      }
-    },
-    "On time": {
-      "comment": "Settings dynamic presentation at literal source; reconcile with final compiler extraction.",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "On time"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "准时"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "準時"
           }
         }
       }
@@ -38001,29 +35192,6 @@
         }
       }
     },
-    "Open Devices": {
-      "comment": "MusicLongPressAction.displayName",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Open Devices"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "打开设备列表"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "打開裝置列表"
-          }
-        }
-      }
-    },
     "Open Link": {
       "comment": "Compiler-extracted static interface text",
       "localizations": {
@@ -38158,29 +35326,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "打開隱私權設定"
-          }
-        }
-      }
-    },
-    "Open Queue": {
-      "comment": "MusicLongPressAction.displayName",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Open Queue"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "打开播放队列"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "打開待播清單"
           }
         }
       }
@@ -38434,73 +35579,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "在瀏覽器中打開"
-          }
-        }
-      }
-    },
-    "Open in Window": {
-      "comment": "Native local UI wording in LyricsViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Open in Window"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "在窗口中打开"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "在視窗中打開"
-          }
-        }
-      }
-    },
-    "Open the Spotify app or another speaker to play audio.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Open the Spotify app or another speaker to play audio."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "请打开 Spotify 应用或其他扬声器来播放音频。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "請打開 Spotify App 或其他揚聲器來播放音訊。"
-          }
-        }
-      }
-    },
-    "Open the Spotify desktop app or another speaker to play audio.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Open the Spotify desktop app or another speaker to play audio."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "请打开 Spotify 桌面应用或其他扬声器来播放音频。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "請打開 Spotify 桌面 App 或其他揚聲器來播放音訊。"
           }
         }
       }
@@ -38915,29 +35993,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "正在播放"
-          }
-        }
-      }
-    },
-    "PREMIUM": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "PREMIUM"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "高级版"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "進階版"
           }
         }
       }
@@ -40137,29 +37192,6 @@
         }
       }
     },
-    "Play": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Play"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "播放"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "播放"
-          }
-        }
-      }
-    },
     "Play / Pause": {
       "comment": "Native local UI wording in LyricsViews.swift, MusicPlayerViews.swift",
       "localizations": {
@@ -40275,52 +37307,6 @@
         }
       }
     },
-    "Play album": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Play album"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "播放专辑"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "播放專輯"
-          }
-        }
-      }
-    },
-    "Play count": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Play count"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "播放次数"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "播放次數"
-          }
-        }
-      }
-    },
     "Play generated white/pink/brown noise or rain to mask noisy surroundings. Starts automatically with each session.": {
       "comment": "Settings interface",
       "localizations": {
@@ -40340,29 +37326,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "播放產生的白噪音／粉紅噪音／棕噪音或雨聲，以掩蓋周遭的噪音。每個時段都會自動開始播放。"
-          }
-        }
-      }
-    },
-    "Play playlist": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Play playlist"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "播放此列表"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "播放播放列表"
           }
         }
       }
@@ -40390,74 +37353,6 @@
         }
       }
     },
-    "Play the album, or open it in Spotify for the full track list.": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Play the album, or open it in Spotify for the full track list."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "播放此专辑，或在 Spotify 中打开以查看完整曲目列表。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "播放專輯，或在 Spotify 中打開以查看完整曲目列表。"
-          }
-        }
-      }
-    },
-    "Playback device": {
-      "comment": "Native local UI wording in MusicPlayerViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Playback device"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "播放设备"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "播放裝置"
-          }
-        }
-      }
-    },
-    "Playback moved to %@.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Playback moved to %@."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "已切换到 %@ 播放。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "已將播放移至 %@。"
-          }
-        }
-      }
-    },
     "Playing": {
       "comment": "Native local UI wording in MultiAudioView.swift",
       "localizations": {
@@ -40477,143 +37372,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "正在播放"
-          }
-        }
-      }
-    },
-    "Playing on %@": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Playing on %@"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "正在 %@ 上播放"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "正在 %@ 上播放"
-          }
-        }
-      }
-    },
-    "Playing on %@.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Playing on %@."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "正在 %@ 上播放。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "正在 %@ 上播放。"
-          }
-        }
-      }
-    },
-    "Playlist": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Playlist"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "播放列表"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "播放列表"
-          }
-        }
-      }
-    },
-    "Playlists": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Playlists"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "播放列表"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "播放列表"
-          }
-        }
-      }
-    },
-    "Playlists sorted by Spotify": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Playlists sorted by Spotify"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "由 Spotify 排序的播放列表"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "由 Spotify 排序的播放列表"
-          }
-        }
-      }
-    },
-    "Please log in to Spotify via the Music section in Sapphire's settings to use this feature.": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Please log in to Spotify via the Music section in Sapphire's settings to use this feature."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "请在 Sapphire 设置的音乐页面登录 Spotify，以使用此功能。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "請透過 Sapphire 設定中的「音樂」部分登入 Spotify，以使用此功能。"
           }
         }
       }
@@ -40775,75 +37533,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "彈出式面板"
-          }
-        }
-      }
-    },
-    "Popular": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Popular"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "热门"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "熱門"
-          }
-        }
-      }
-    },
-    "Popular Releases": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Popular Releases"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "热门发行"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "熱門發行"
-          }
-        }
-      }
-    },
-    "Popularity Score: %lld/100": {
-      "comment": "Runtime interpolation or conditional static UI",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Popularity Score: %lld/100"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "热度：%lld/100"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "熱門度：%lld/100"
           }
         }
       }
@@ -41101,29 +37790,6 @@
         }
       }
     },
-    "Prefer airplay over spotify devices": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Prefer airplay over spotify devices"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "优先使用 AirPlay 而非 Spotify 设备"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "優先使用 AirPlay 而非 Spotify 裝置"
-          }
-        }
-      }
-    },
     "Preferences": {
       "comment": "Settings dynamic presentation at literal source; reconcile with final compiler extraction.",
       "localizations": {
@@ -41258,29 +37924,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "按 Option + 音量鍵可調整目前 App 的音量（Spotify 和 Apple Music 除外）。"
-          }
-        }
-      }
-    },
-    "Press and hold secondary player buttons (Queue, Devices, Like, Shuffle, Repeat) for an alternate action. Previous / Next / Play are tap-only unless you assign a hold action below. When this is off, Previous/Next still seek while held.": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Press and hold secondary player buttons (Queue, Devices, Like, Shuffle, Repeat) for an alternate action. Previous / Next / Play are tap-only unless you assign a hold action below. When this is off, Previous/Next still seek while held."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "长按次要播放器按钮（队列、设备、喜欢、随机播放、循环播放）可执行替代操作。上一首、下一首和播放按钮默认仅响应轻点，除非在下方指定长按操作。关闭此选项后，长按上一首或下一首仍可快退或快进。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "按住次要播放器按鈕（待播清單、裝置、喜歡、隨機播放、重複播放）可執行替代動作。除非你在下方指定按住動作，否則「上一首」、「下一首」和「播放」僅支援點按。關閉此選項時，按住「上一首」／「下一首」仍可倒轉或快轉。"
           }
         }
       }
@@ -41603,29 +38246,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "優先使用所選來源"
-          }
-        }
-      }
-    },
-    "Private API Login": {
-      "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Private API Login"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "私有 API 登录"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "私有 API 登入"
           }
         }
       }
@@ -42017,75 +38637,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "四分割"
-          }
-        }
-      }
-    },
-    "Queue": {
-      "comment": "Native local UI wording in MusicPlayerViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Queue"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "播放队列"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "待播清單"
-          }
-        }
-      }
-    },
-    "Queue & Playlists": {
-      "comment": "MusicPlayerButtonType.displayName",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Queue & Playlists"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "播放队列与播放列表"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "待播清單與播放列表"
-          }
-        }
-      }
-    },
-    "Queue Unavailable": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Queue Unavailable"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "播放队列不可用"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "無法使用待播清單"
           }
         }
       }
@@ -42756,29 +39307,6 @@
         }
       }
     },
-    "Recently Added": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Recently Added"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "最近添加"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "最近加入"
-          }
-        }
-      }
-    },
     "Recently Modified": {
       "comment": "Settings dynamic presentation at literal source; reconcile with final compiler extraction.",
       "localizations": {
@@ -42798,52 +39326,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "最近修改"
-          }
-        }
-      }
-    },
-    "Recently Played": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Recently Played"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "最近播放"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "最近播放"
-          }
-        }
-      }
-    },
-    "Recents": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Recents"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "最近使用"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "最近使用"
           }
         }
       }
@@ -43235,29 +39717,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "重新整理檔案夾內容"
-          }
-        }
-      }
-    },
-    "Register your app at developer.spotify.com and copy these values here. The redirect URI is: sapphire://callback": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Register your app at developer.spotify.com and copy these values here. The redirect URI is: sapphire://callback"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "在 developer.spotify.com 注册应用，并将这些值复制到此处。重定向 URI 为：sapphire://callback"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "在 developer.spotify.com 註冊你的 App，並將這些值拷貝到這裡。重新導向 URI 為：sapphire://callback"
           }
         }
       }
@@ -43791,52 +40250,6 @@
         }
       }
     },
-    "Remove from Queue": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Remove from Queue"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "从播放队列移除"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "從待播清單移除"
-          }
-        }
-      }
-    },
-    "Remove from queue": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Remove from queue"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "从播放队列移除"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "從待播清單移除"
-          }
-        }
-      }
-    },
     "Remove text formatting when using Command-V.": {
       "comment": "Settings interface",
       "localizations": {
@@ -43902,29 +40315,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "移除計時器"
-          }
-        }
-      }
-    },
-    "Removed from %@": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Removed from %@"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "已从 %@ 移除"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "已從 %@ 移除"
           }
         }
       }
@@ -44431,29 +40821,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "需要核准"
-          }
-        }
-      }
-    },
-    "Requires a spotify login": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Requires a spotify login"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "需要登录 Spotify"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "需要登入 Spotify"
           }
         }
       }
@@ -46092,51 +42459,6 @@
         }
       }
     },
-    "Sapphire is a Connect controller only, audio always plays on the Spotify desktop app or another speaker.": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sapphire is a Connect controller only, audio always plays on the Spotify desktop app or another speaker."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sapphire 仅作为 Connect 控制器，音频始终由 Spotify 桌面应用或其他扬声器播放。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sapphire 僅作為 Connect 控制器，音訊一律由 Spotify 桌面 App 或其他揚聲器播放。"
-          }
-        }
-      }
-    },
-    "Sapphire is not a Spotify speaker. Choose the desktop app or another device.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sapphire is not a Spotify speaker. Choose the desktop app or another device."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sapphire 不是 Spotify 播放设备。请选择 Spotify 桌面应用或其他设备。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sapphire 不是 Spotify 揚聲器。請選擇桌面 App 或其他裝置。"
-          }
-        }
-      }
-    },
     "Sapphire is running through an application symlink. Move the real app into Applications before updating.": {
       "comment": "Settings dynamic presentation at literal source; reconcile with final compiler extraction.",
       "localizations": {
@@ -46942,29 +43264,6 @@
         }
       }
     },
-    "Scroll for more": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Scroll for more"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "滚动查看更多"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "捲動以查看更多"
-          }
-        }
-      }
-    },
     "Search": {
       "comment": "Compiler-extracted static interface text",
       "localizations": {
@@ -46984,29 +43283,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "搜尋"
-          }
-        }
-      }
-    },
-    "Search Apple Music…": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Search Apple Music…"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "搜索 Apple Music…"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "搜尋 Apple Music…"
           }
         }
       }
@@ -47057,29 +43333,6 @@
         }
       }
     },
-    "Search Spotify": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Search Spotify"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "搜索 Spotify"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "搜尋 Spotify"
-          }
-        }
-      }
-    },
     "Search clipboard": {
       "comment": "Native local UI wording in ClipboardWidgetView.swift",
       "localizations": {
@@ -47099,29 +43352,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "搜尋剪貼簿"
-          }
-        }
-      }
-    },
-    "Search for songs, artists or albums": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Search for songs, artists or albums"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "搜索歌曲、艺人或专辑"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "搜尋歌曲、藝人或專輯"
           }
         }
       }
@@ -47218,29 +43448,6 @@
         }
       }
     },
-    "Search songs, artists, albums…": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Search songs, artists, albums…"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "搜索歌曲、艺人、专辑…"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "搜尋歌曲、藝人、專輯…"
-          }
-        }
-      }
-    },
     "Search update results": {
       "comment": "Settings fixed labels; key verified against module-build-01 compiler output.",
       "localizations": {
@@ -47271,29 +43478,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Searching..."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "正在搜索…"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "正在搜尋…"
-          }
-        }
-      }
-    },
-    "Searching…": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Searching…"
           }
         },
         "zh-Hans": {
@@ -49196,29 +45380,6 @@
         }
       }
     },
-    "Show Lyrics in Live Activity": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Show Lyrics in Live Activity"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "在实时活动中显示歌词"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "在即時動態中顯示歌詞"
-          }
-        }
-      }
-    },
     "Show Main Widget(s)": {
       "comment": "Settings interface",
       "localizations": {
@@ -49541,75 +45702,6 @@
         }
       }
     },
-    "Show Spotify Device in HUD": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Show Spotify Device in HUD"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "在提示浮层中显示 Spotify 设备"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "在浮動提示中顯示 Spotify 裝置"
-          }
-        }
-      }
-    },
-    "Show Spotify Tab": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Show Spotify Tab"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "显示 Spotify 标签页"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "顯示 Spotify 標籤頁"
-          }
-        }
-      }
-    },
-    "Show Spotify, App & Device Icons": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Show Spotify, App & Device Icons"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "显示 Spotify、应用和设备图标"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "顯示 Spotify、App 和裝置圖像"
-          }
-        }
-      }
-    },
     "Show Time Instead of Ring": {
       "comment": "Settings interface",
       "localizations": {
@@ -49629,29 +45721,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "顯示時間而非圓環"
-          }
-        }
-      }
-    },
-    "Show a compact tickets button when nearby concerts are available for the artist.": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Show a compact tickets button when nearby concerts are available for the artist."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "艺人有附近演出时，显示小型购票按钮。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "當藝人在附近有演唱會時，顯示精簡的購票按鈕。"
           }
         }
       }
@@ -49790,29 +45859,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "在小工具中並排顯示使用者自訂的佈局列表，以便快速選擇。"
-          }
-        }
-      }
-    },
-    "Show album art beside the upcoming track in the live activity.": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Show album art beside the upcoming track in the live activity."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "在实时活动中，在下一首歌曲旁显示专辑封面。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "在即時動態中的下一首曲目旁顯示專輯封面。"
           }
         }
       }
@@ -50024,29 +46070,6 @@
         }
       }
     },
-    "Show in Apple Music": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Show in Apple Music"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "在 Apple Music 中显示"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "在 Apple Music 中顯示"
-          }
-        }
-      }
-    },
     "Show in Normal Volume HUD": {
       "comment": "Settings interface",
       "localizations": {
@@ -50139,29 +46162,6 @@
         }
       }
     },
-    "Show looping Spotify Canvas video behind the artwork when available. Turn off to always use the album thumbnail.": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Show looping Spotify Canvas video behind the artwork when available. Turn off to always use the album thumbnail."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "可用时在封面后播放循环的 Spotify Canvas 视频。关闭后始终显示专辑缩略图。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "可用時在封面後方播放循環的 Spotify Canvas 影片。關閉後一律使用專輯縮覽圖。"
-          }
-        }
-      }
-    },
     "Show on Click": {
       "comment": "Settings interface",
       "localizations": {
@@ -50231,29 +46231,6 @@
         }
       }
     },
-    "Show popularity of track in music player": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Show popularity of track in music player"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "在音乐播放器中显示歌曲热度"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "在音樂播放器中顯示曲目熱門度"
-          }
-        }
-      }
-    },
     "Show recent clipboard items in the notch widget strip.": {
       "comment": "Settings interface",
       "localizations": {
@@ -50277,29 +46254,6 @@
         }
       }
     },
-    "Show related song chips you can play from the music player.": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Show related song chips you can play from the music player."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "显示相关歌曲，可在音乐播放器中点击播放。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "顯示可從音樂播放器播放的相關歌曲標籤。"
-          }
-        }
-      }
-    },
     "Show the AirDrop box in the File Shelf landing view.": {
       "comment": "Settings interface",
       "localizations": {
@@ -50319,52 +46273,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "在檔案暫存架的主畫面中顯示 AirDrop 區塊。"
-          }
-        }
-      }
-    },
-    "Show the Premium / Free account badge next to the track title.": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Show the Premium / Free account badge next to the track title."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "在歌曲名称旁显示 Premium 或免费账户标记。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "在曲目名稱旁顯示 Premium／Free 帳號標記。"
-          }
-        }
-      }
-    },
-    "Show the artist avatar, verified check, and monthly listeners instead of plain artist text.": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Show the artist avatar, verified check, and monthly listeners instead of plain artist text."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "显示艺人头像、认证标记和月听众数，替代纯文字艺人名称。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "顯示藝人頭像、認證標記和每月聽眾數，而非純文字的藝人名稱。"
           }
         }
       }
@@ -50503,29 +46411,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "在右側顯示剩餘時間，而非完成進度圓環。"
-          }
-        }
-      }
-    },
-    "Show the upcoming track from the queue under the now-playing title during the last 10 seconds of the song.": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Show the upcoming track from the queue under the now-playing title during the last 10 seconds of the song."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "在歌曲最后 10 秒内，于当前歌曲名称下方显示队列中的下一首。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "在歌曲最後 10 秒時，於正在播放的標題下方顯示待播清單中的下一首曲目。"
           }
         }
       }
@@ -50737,29 +46622,6 @@
         }
       }
     },
-    "Shuffle — tap for Smart Shuffle": {
-      "comment": "Native local UI wording in MusicPlayerViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Shuffle — tap for Smart Shuffle"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "随机播放 — 点击启用智能随机播放"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "隨機播放：點一下以使用智慧隨機播放"
-          }
-        }
-      }
-    },
     "Sidebar": {
       "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
       "localizations": {
@@ -50829,29 +46691,6 @@
         }
       }
     },
-    "Sign in to Spotify below. Old sessions are cleared first so a revoked login cannot auto-complete.": {
-      "comment": "Compiler-extracted static interface text",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sign in to Spotify below. Old sessions are cleared first so a revoked login cannot auto-complete."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "请在下方登录 Spotify。系统会先清除旧会话，防止已撤销的登录自动完成。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "請在下方登入 Spotify。會先清除舊的工作階段，以免已撤銷的登入自動完成。"
-          }
-        }
-      }
-    },
     "Significant Energy Users": {
       "comment": "Settings interface",
       "localizations": {
@@ -50875,29 +46714,6 @@
         }
       }
     },
-    "Similar Albums": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Similar Albums"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "相似专辑"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "相似專輯"
-          }
-        }
-      }
-    },
     "Single": {
       "comment": "Settings interface",
       "localizations": {
@@ -50917,29 +46733,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "單一"
-          }
-        }
-      }
-    },
-    "Singles & EPs": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Singles & EPs"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "单曲与 EP"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "單曲與 EP"
           }
         }
       }
@@ -51059,29 +46852,6 @@
         }
       }
     },
-    "Skip Ads": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Skip Ads"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "跳过广告"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "略過廣告"
-          }
-        }
-      }
-    },
     "Skip break": {
       "comment": "Native local UI wording in FocusSessionDetailView.swift",
       "localizations": {
@@ -51101,29 +46871,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "略過休息"
-          }
-        }
-      }
-    },
-    "Skip for Now": {
-      "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Skip for Now"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "暂时跳过"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "暫時略過"
           }
         }
       }
@@ -51400,29 +47147,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "智慧收件匣"
-          }
-        }
-      }
-    },
-    "Smart Shuffle — tap for Off": {
-      "comment": "Native local UI wording in MusicPlayerViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Smart Shuffle — tap for Off"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "智能随机播放 — 点击关闭"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "智慧隨機播放：點一下以關閉"
           }
         }
       }
@@ -51749,29 +47473,6 @@
         }
       }
     },
-    "Songs": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Songs"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "歌曲"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "歌曲"
-          }
-        }
-      }
-    },
     "Sound": {
       "comment": "Settings interface",
       "localizations": {
@@ -51929,29 +47630,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "時間跨度："
-          }
-        }
-      }
-    },
-    "Spanish": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Spanish"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "西班牙语"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "西班牙文"
           }
         }
       }
@@ -52136,214 +47814,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "運動小工具設定、喜愛球隊選擇和記分板設定。"
-          }
-        }
-      }
-    },
-    "Spotify": {
-      "comment": "Native local UI wording in MusicHubViews.swift; intentional nonlinguistic format, symbol or brand retained verbatim",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Spotify"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Spotify"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Spotify"
-          }
-        }
-      },
-      "shouldTranslate": false
-    },
-    "Spotify (Official API)": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Spotify (Official API)"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Spotify（官方 API）"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Spotify（官方 API）"
-          }
-        }
-      }
-    },
-    "Spotify (Private API)": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Spotify (Private API)"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Spotify（私有 API）"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Spotify（私有 API）"
-          }
-        }
-      }
-    },
-    "Spotify API Credentials": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Spotify API Credentials"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Spotify API 凭据"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Spotify API 憑證"
-          }
-        }
-      }
-    },
-    "Spotify API Error: %@": {
-      "comment": "Runtime user-facing string",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Spotify API Error: %@"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Spotify API 错误：%@"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Spotify API 錯誤：%@"
-          }
-        }
-      }
-    },
-    "Spotify API Keys Missing": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Spotify API Keys Missing"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "缺少 Spotify API 密钥"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "缺少 Spotify API 金鑰"
-          }
-        }
-      }
-    },
-    "Spotify App Is Not Open": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Spotify App Is Not Open"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Spotify 应用尚未打开"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Spotify App 未打開"
-          }
-        }
-      }
-    },
-    "Spotify Setup": {
-      "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Spotify Setup"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Spotify 设置"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Spotify 設定"
-          }
-        }
-      }
-    },
-    "Spotify is rate limiting requests: %@": {
-      "comment": "Runtime user-facing string",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Spotify is rate limiting requests: %@"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Spotify 请求已受频率限制：%@"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Spotify 正在限制請求頻率：%@"
           }
         }
       }
@@ -54118,29 +49588,6 @@
         }
       }
     },
-    "Suggested Songs": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Suggested Songs"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "推荐歌曲"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "推薦歌曲"
-          }
-        }
-      }
-    },
     "Suggested Unlock RSSI: **%lld dBm**": {
       "comment": "Settings interface",
       "localizations": {
@@ -54160,29 +49607,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "建議的解鎖 RSSI：**%lld dBm**"
-          }
-        }
-      }
-    },
-    "Suggestions": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Suggestions"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "推荐"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "建議"
           }
         }
       }
@@ -54693,29 +50117,6 @@
         }
       }
     },
-    "Switching devices requires a Spotify Premium account or a private api login.": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Switching devices requires a Spotify Premium account or a private api login."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "切换设备需要 Spotify Premium 账户或私有 API 登录。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "切換裝置需要 Spotify Premium 帳號或私有 API 登入。"
-          }
-        }
-      }
-    },
     "Symbolic link target not followed": {
       "comment": "Settings dynamic presentation at literal source; reconcile with final compiler extraction.",
       "localizations": {
@@ -55126,53 +50527,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "點一下「開始」以開始"
-          }
-        }
-      }
-    },
-    "TIDAL": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "TIDAL"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "TIDAL"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "TIDAL"
-          }
-        }
-      },
-      "shouldTranslate": false
-    },
-    "TIDAL API Credentials": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "TIDAL API Credentials"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "TIDAL API 凭据"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "TIDAL API 憑證"
           }
         }
       }
@@ -56648,29 +52002,6 @@
         }
       }
     },
-    "The server closed the connection unexpectedly.": {
-      "comment": "Runtime user-facing string",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The server closed the connection unexpectedly."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "服务器意外关闭了连接。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "伺服器意外關閉了連線。"
-          }
-        }
-      }
-    },
     "The signed app version (%@) does not match the offered release (%@).": {
       "comment": "Settings dynamic interpolated presentation; key and placeholder types verified against module-build-01 compiler output.",
       "localizations": {
@@ -57429,29 +52760,6 @@
         }
       }
     },
-    "This Mac · controls only (no audio)": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "This Mac · controls only (no audio)"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "此 Mac · 仅控制播放（不播放音频）"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "這台 Mac · 僅控制（無音訊）"
-          }
-        }
-      }
-    },
     "This QR code contains your Mac's unique hardware data. **Scan it with the OpenBubbles app** on your other devices to register them for iMessage.": {
       "comment": "Compiler-extracted static interface text",
       "localizations": {
@@ -57586,52 +52894,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "這是受保護的位置，只能檢查。"
-          }
-        }
-      }
-    },
-    "This method works for both Free and Premium users. Use at your own risk.": {
-      "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "This method works for both Free and Premium users. Use at your own risk."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "此方式适用于 Free 和 Premium 用户。使用风险由你自行承担。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "此方式適用於 Free 和 Premium 使用者。使用風險自負。"
-          }
-        }
-      }
-    },
-    "This playlist is empty.": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "This playlist is empty."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "此播放列表为空。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "此播放列表是空的。"
           }
         }
       }
@@ -58234,29 +53496,6 @@
         }
       }
     },
-    "To control playback with a free account, please open the Spotify desktop app first.": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "To control playback with a free account, please open the Spotify desktop app first."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "使用免费账户控制播放前，请先打开 Spotify 桌面应用。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "若要以免費帳號控制播放，請先打開 Spotify 桌面 App。"
-          }
-        }
-      }
-    },
     "To customize the shown icons, right click on the menu bar and select 'Edit Menu Bar Items'. The icons placed in between the dot and expansion icon will always be shown, the icons placed in between the two dots will be hidden when the menu is collapsed, and the icons after the dot will always be hidden.": {
       "comment": "Settings interface",
       "localizations": {
@@ -58322,29 +53561,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "若要啟用 Face ID 或藍牙解鎖，你必須先提供 Mac 的登入密碼。"
-          }
-        }
-      }
-    },
-    "To enable Spotify integration, please add your API credentials in Sapphire's settings.": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "To enable Spotify integration, please add your API credentials in Sapphire's settings."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "请在 Sapphire 设置中添加 API 凭据，以启用 Spotify 集成。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "若要啟用 Spotify 整合，請在 Sapphire 設定中加入你的 API 憑證。"
           }
         }
       }
@@ -58464,29 +53680,6 @@
         }
       }
     },
-    "Top Albums": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Top Albums"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "热门专辑"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "熱門專輯"
-          }
-        }
-      }
-    },
     "Top Buffer": {
       "comment": "Settings interface",
       "localizations": {
@@ -58506,29 +53699,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "頂部緩衝空間"
-          }
-        }
-      }
-    },
-    "Top Charts": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Top Charts"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "排行榜"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "排行榜"
           }
         }
       }
@@ -58598,29 +53768,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "資料點總數"
-          }
-        }
-      }
-    },
-    "Total Plays: %@": {
-      "comment": "Runtime interpolation or conditional static UI",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Total Plays: %@"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "总播放次数：%@"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "總播放次數：%@"
           }
         }
       }
@@ -58740,29 +53887,6 @@
         }
       }
     },
-    "Transfer": {
-      "comment": "Compiler-extracted static interface text",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Transfer"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "切换设备"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "切換裝置"
-          }
-        }
-      }
-    },
     "Transfer Complete": {
       "comment": "Runtime display or native interpolated quantity",
       "localizations": {
@@ -58828,29 +53952,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "在不同即時動態之間轉換時。"
-          }
-        }
-      }
-    },
-    "Translate to": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Translate to"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "翻译为"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "翻譯為"
           }
         }
       }
@@ -59384,29 +54485,6 @@
         }
       }
     },
-    "UP NEXT": {
-      "comment": "Native local UI wording in MusicPlayerViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "UP NEXT"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "接下来播放"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "接下來播放"
-          }
-        }
-      }
-    },
     "UV Index": {
       "comment": "WeatherInfoType.displayName",
       "localizations": {
@@ -59568,29 +54646,6 @@
         }
       }
     },
-    "Unknown Album": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Unknown Album"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "未知专辑"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "未知的專輯"
-          }
-        }
-      }
-    },
     "Unknown App": {
       "comment": "Runtime user-facing string",
       "localizations": {
@@ -59706,29 +54761,6 @@
         }
       }
     },
-    "Unknown Track": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Unknown Track"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "未知歌曲"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "未知的曲目"
-          }
-        }
-      }
-    },
     "Unknown Type": {
       "comment": "Native local UI wording in FileActionView.swift",
       "localizations": {
@@ -59794,52 +54826,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "定位授權狀態未知。"
-          }
-        }
-      }
-    },
-    "Unknown track": {
-      "comment": "Native local UI wording in MusicPlayerViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Unknown track"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "未知歌曲"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "未知的曲目"
-          }
-        }
-      }
-    },
-    "Unlike": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Unlike"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "取消喜欢"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "取消喜好"
           }
         }
       }
@@ -60185,75 +55171,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "未驗證、共享、巢狀元件、重複識別碼和 App 名稱比對的項目，在你檢查前都會保持未勾選。"
-          }
-        }
-      }
-    },
-    "Up Next": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Up Next"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "接下来播放"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "接下來播放"
-          }
-        }
-      }
-    },
-    "Up next: %@": {
-      "comment": "Native local UI wording in MusicPlayerViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Up next: %@"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "下一首：%@"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "下一首：%@"
-          }
-        }
-      }
-    },
-    "Up next: %@ — %@": {
-      "comment": "Native local UI wording in MusicPlayerViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Up next: %@ — %@"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "下一首：%@ — %@"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "下一首：%@ — %@"
           }
         }
       }
@@ -61477,29 +56394,6 @@
         }
       }
     },
-    "View only": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "View only"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "仅查看"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "僅檢視"
-          }
-        }
-      }
-    },
     "Visibility": {
       "comment": "WeatherInfoType.displayName",
       "localizations": {
@@ -61865,29 +56759,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "警告：這些功能皆在開發中，可能無法如預期運作，並可能導致你的 Mac 意外解鎖。使用風險自負。"
-          }
-        }
-      }
-    },
-    "WARNING: This method uses Spotify’s internal APIs to unlock standard and additional features for both Premium and non-Premium users. Use at your own risk, usage may be subject to Spotify’s Terms of Service.": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "WARNING: This method uses Spotify’s internal APIs to unlock standard and additional features for both Premium and non-Premium users. Use at your own risk, usage may be subject to Spotify’s Terms of Service."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "警告：此方式使用 Spotify 内部 API，为 Premium 和免费用户提供标准功能及额外功能。请自行承担使用风险，并遵守 Spotify 服务条款。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "警告：此方式使用 Spotify 的內部 API，為 Premium 與非 Premium 使用者解鎖標準及額外功能。使用風險自負，使用行為可能受 Spotify 服務條款約束。"
           }
         }
       }
@@ -62444,29 +57315,6 @@
         }
       }
     },
-    "Welcome, %@": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Welcome, %@"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "欢迎，%@"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "歡迎，%@"
-          }
-        }
-      }
-    },
     "What is OpenBubbles?": {
       "comment": "Compiler-extracted static interface text",
       "localizations": {
@@ -62490,29 +57338,6 @@
         }
       }
     },
-    "When Spotify desktop on this Mac plays an ad, relaunch it in the background, then resume via Spotify Connect.": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "When Spotify desktop on this Mac plays an ad, relaunch it in the background, then resume via Spotify Connect."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "当此 Mac 上的 Spotify 桌面应用播放广告时，在后台重新启动它，再通过 Spotify Connect 恢复播放。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "當這台 Mac 上的 Spotify 桌面版播放廣告時，在背景重新啟動它，然後透過 Spotify Connect 繼續播放。"
-          }
-        }
-      }
-    },
     "When a Live Activity appears automatically.": {
       "comment": "Settings dynamic presentation at literal source; reconcile with final compiler extraction.",
       "localizations": {
@@ -62532,52 +57357,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "即時動態自動出現時。"
-          }
-        }
-      }
-    },
-    "When a song only has line timing, listen to the music app's audio on this Mac to time each word, and share good results. Asks for audio access and downloads Apple's speech model once.": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "When a song only has line timing, listen to the music app's audio on this Mac to time each word, and share good results. Asks for audio access and downloads Apple's speech model once."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "歌曲仅有逐行时间轴时，监听此 Mac 上音乐应用的音频，为每个字词确定时间，并分享质量良好的结果。需要音频访问权限，且首次使用会下载 Apple 的语音模型。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "當歌曲只有逐行時間時，聆聽此 Mac 上音樂 App 的音訊來為每個字詞計時，並分享良好的結果。會要求音訊取用權限，並下載一次 Apple 的語音模型。"
-          }
-        }
-      }
-    },
-    "When another app is playing, show a Spotify source tab so you can switch medias. Hidden while Spotify itself is the main media source.": {
-      "comment": "Settings interface",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "When another app is playing, show a Spotify source tab so you can switch medias. Hidden while Spotify itself is the main media source."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "其他应用播放时显示 Spotify 来源标签页，以便切换媒体。Spotify 已是主要媒体来源时不显示。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "當其他 App 正在播放時，顯示 Spotify 來源標籤頁以便切換媒體。當 Spotify 本身為主要媒體來源時則隱藏。"
           }
         }
       }
@@ -63664,52 +58443,6 @@
         }
       }
     },
-    "Your Apple Music playlists": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Your Apple Music playlists"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "你的 Apple Music 播放列表"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "你的 Apple Music 播放列表"
-          }
-        }
-      }
-    },
-    "Your Home": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Your Home"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "你的首页"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "你的首頁"
-          }
-        }
-      }
-    },
     "Your Mac's password is securely stored in the Keychain.": {
       "comment": "Settings interface",
       "localizations": {
@@ -63798,29 +58531,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "你的隱私很重要"
-          }
-        }
-      }
-    },
-    "Your Replay": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Your Replay"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "你的音乐回忆"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "你的音樂回顧"
           }
         }
       }
@@ -63937,28 +58647,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "新增擷取影像至「%@」臉部設定檔"
-          }
-        }
-      }
-    },
-    "another device": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "another device"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "其他设备"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "其他裝置"
           }
         }
       }
@@ -64906,29 +59594,6 @@
         }
       }
     },
-    "music.hub.now": {
-      "comment": "Native local UI wording in MusicHubViews.swift",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Now"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "正在播放"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "正在播放"
-          }
-        }
-      }
-    },
     "music.playback.next": {
       "comment": "Native local UI wording in LyricsViews.swift, MusicPlayerViews.swift",
       "localizations": {
@@ -65413,28 +60078,6 @@
         }
       }
     },
-    "your speaker": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "your speaker"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "你的扬声器"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "你的揚聲器"
-          }
-        }
-      }
-    },
     "© 2025 Shariq Charolia. All rights reserved.": {
       "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
       "localizations": {
@@ -65572,30 +60215,6 @@
           }
         }
       }
-    },
-    "—": {
-      "comment": "Native local UI wording in MusicHubViews.swift; intentional nonlinguistic format, symbol or brand retained verbatim",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "—"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "—"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "—"
-          }
-        }
-      },
-      "shouldTranslate": false
     },
     "↑ Improving": {
       "comment": "Settings dynamic presentation at literal source; reconcile with final compiler extraction.",
@@ -66070,6 +60689,75 @@
           "stringUnit": {
             "state": "translated",
             "value": "無法排版 PDF 文字。"
+          }
+        }
+      }
+    },
+    "Needed to discover nearby devices for Nearby Share transfers.": {
+      "comment": "Onboarding, app menus, helper, shared utilities, public build placeholders",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Needed to discover nearby devices for Nearby Share transfers."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "用于发现附近设备，以进行附近共享文件传输。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "用於探索附近的裝置，以進行 Nearby Share 檔案傳輸。"
+          }
+        }
+      }
+    },
+    "Press and hold secondary player buttons (Shuffle, Repeat) for an alternate action. Previous / Next / Play are tap-only unless you assign a hold action below. When this is off, Previous/Next still seek while held.": {
+      "comment": "Settings interface",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Press and hold secondary player buttons (Shuffle, Repeat) for an alternate action. Previous / Next / Play are tap-only unless you assign a hold action below. When this is off, Previous/Next still seek while held."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "长按次要播放器按钮（随机播放、循环播放）可执行替代操作。上一首、下一首和播放按钮默认仅响应轻点，除非在下方指定长按操作。关闭此选项后，长按上一首或下一首仍可快退或快进。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "按住次要播放器按鈕（隨機播放、重複播放）可執行替代動作。除非在下方指定按住動作，否則上一首、下一首和播放按鈕預設只回應點按。關閉此選項後，按住上一首或下一首仍可倒轉或快轉。"
+          }
+        }
+      }
+    },
+    "Show App & Device Icons": {
+      "comment": "Settings interface",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show App & Device Icons"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "显示应用和设备图标"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "顯示 App 和裝置圖像"
           }
         }
       }

@@ -100,15 +100,15 @@ check("weather-semantic-key-default",
       String(localized: "weather.condition.clear", defaultValue: "Clear", bundle: product),
       pick("Clear", "晴", "晴"), scope: "product")
 
-let speakerName = "客厅 100% %@ 🎵 General"
-check("spotify-transferred-device-name-verbatim",
-      String(localized: "Playback moved to \(speakerName).", bundle: product),
-      pick("Playback moved to \(speakerName).", "已切换到 \(speakerName) 播放。", "已將播放移至 \(speakerName)。"),
+let targetName = "客厅 100% %@ 🎵 General"
+check("hold-target-name-verbatim",
+      String(localized: "Hold \(targetName)", bundle: product),
+      pick("Hold \(targetName)", "长按 \(targetName)", "按住 \(targetName)"),
       scope: "product")
-let playbackError = "HTTP 429: %@ / 100% 🔒"
-check("spotify-switch-error-detail-verbatim",
-      String(localized: "Couldn’t switch device: \(playbackError)", bundle: product),
-      pick("Couldn’t switch device: \(playbackError)", "无法切换设备：\(playbackError)", "無法切換裝置：\(playbackError)"),
+let primaryName = "HTTP 429: %@ / 100% 🔒"
+check("hold-help-arguments-verbatim",
+      String(localized: "\(primaryName) · hold for \(targetName)", bundle: product),
+      pick("\(primaryName) · hold for \(targetName)", "\(primaryName) · 长按以\(targetName)", "\(primaryName) · 按住以\(targetName)"),
       scope: "product")
 
 check("selected-product-language", product.preferredLocalizations.first ?? "<missing>",

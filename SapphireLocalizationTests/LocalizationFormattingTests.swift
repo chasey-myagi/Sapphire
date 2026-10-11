@@ -17,32 +17,6 @@ final class LocalizationFormattingTests: XCTestCase {
         isTraditionalChinese ? traditional : isChinese ? simplified : english
     }
 
-    /// Traditional Chinese uses the same thresholds and rounding; only the myriad units differ.
-    private func chineseCount(_ simplified: String) -> String {
-        isTraditionalChinese
-            ? simplified.replacingOccurrences(of: "万", with: "萬").replacingOccurrences(of: "亿", with: "億")
-            : simplified
-    }
-
-    private let countCases: [(value: Int, playEnglish: String, playChinese: String, compactEnglish: String, compactChinese: String)] = [
-        (0, "0", "0", "0", "0"),
-        (1, "1", "1", "1", "1"),
-        (999, "999", "999", "999", "999"),
-        (1_000, "1K", "1000", "1K", "1000"),
-        (1_499, "1.5K", "1499", "1.5K", "1499"),
-        (1_500, "1.5K", "1500", "1.5K", "1500"),
-        (9_999, "10K", "9999", "10K", "9999"),
-        (10_000, "10K", "1万", "10K", "1万"),
-        (12_345, "12K", "1.2万", "12.3K", "1.2万"),
-        (123_456, "123K", "12万", "123.5K", "12.3万"),
-        (999_999, "1M", "100万", "1M", "100万"),
-        (1_000_000, "1M", "100万", "1M", "100万"),
-        (1_250_000, "1.2M", "125万", "1.2M", "125万"),
-        (100_000_000, "100M", "1亿", "100M", "1亿"),
-        (1_000_000_000, "1B", "10亿", "1B", "10亿"),
-        (1_250_000_000, "1.2B", "12亿", "1.2B", "12.5亿"),
-    ]
-
     func testProcessUsesAnExpectedLanguageAndRegion() {
         print("LOCALIZATION_TEST_LOCALE \(Locale.current.identifier); languages=\(Locale.preferredLanguages)")
         let language = Locale.current.language.languageCode?.identifier ?? ""
@@ -53,27 +27,6 @@ final class LocalizationFormattingTests: XCTestCase {
                 (isTraditionalChinese && region == "TW"),
             "Run formatting tests in en/US, zh-Hans/CN, zh-Hans/US, or zh-Hant/TW; got \(Locale.current.identifier)"
         )
-    }
-
-    @MainActor
-    func testPlayCountUsesLocaleThresholdsAndItsOwnRounding() {
-        for item in countCases {
-            XCTAssertEqual(
-                PlayCountFetcher.formatPlayCount(item.value),
-                isChinese ? chineseCount(item.playChinese) : item.playEnglish,
-                "Play count \(item.value), locale \(Locale.current.identifier)"
-            )
-        }
-    }
-
-    func testCompactIntegerUsesLocaleThresholdsAndOneFractionDigit() {
-        for item in countCases {
-            XCTAssertEqual(
-                item.value.compactFormatted,
-                isChinese ? chineseCount(item.compactChinese) : item.compactEnglish,
-                "Compact integer \(item.value), locale \(Locale.current.identifier)"
-            )
-        }
     }
 
     func testWeekdayNamesKeepTheirStoredCalendarIdentifiers() {

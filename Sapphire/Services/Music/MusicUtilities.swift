@@ -12,599 +12,6 @@ import CryptoKit
 import AVFoundation
 import CoreAudio
 import Accelerate
-import Yams
-
-// MARK: - Consolidated from LyricsFetcher.swift
-
-enum LyricsParser {
-    private static let maximumLyricsfileBytes = 1_048_576
-    private static let maximumResponseBytes = 4_194_304
-    private static let maximumNodeCount = 50_000
-    private static let maximumNodeDepth = 64
-
-    private struct LRCLibResponse: Decodable {
-        let lyricsfile: String?
-        let syncedLyrics: String?
-    }
-
-    static func parseLRCLibResponse(_ data: Data) -> [LyricLine]? {
-        guard data.count <= maximumResponseBytes else {
-            LyricsLog.error("LRCLIB response rejected: \(data.count) bytes exceeds limit")
-            return nil
-        }
-        let response: LRCLibResponse
-        do {
-            response = try JSONDecoder().decode(LRCLibResponse.self, from: data)
-        } catch {
-            LyricsLog.error("LRCLIB response JSON decode failed: \(error.localizedDescription)")
-            return nil
-        }
-
-        if let lyricsfile = response.lyricsfile,
-           !lyricsfile.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            if let parsed = parseLyricsfile(lyricsfile) {
-                let wordSynced = parsed.filter(\.hasWordTiming).count
-                LyricsLog.info("LRCLIB: using lyricsfile, \(parsed.count) lines (\(wordSynced) word-synced)")
-                return parsed
-            }
-            LyricsLog.info("LRCLIB: lyricsfile rejected, falling back to syncedLyrics")
-        } else {
-            LyricsLog.info("LRCLIB: no lyricsfile in response, falling back to syncedLyrics")
-        }
-
-        guard let syncedLyrics = response.syncedLyrics,
-              !syncedLyrics.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-            LyricsLog.info("LRCLIB: no syncedLyrics either")
-            return nil
-        }
-        let parsed = parseLRC(syncedLyrics)
-        LyricsLog.info("LRCLIB: syncedLyrics parsed into \(parsed?.count ?? 0) lines")
-        return parsed
-    }
-
-    static func parseLyricsfile(_ yaml: String) -> [LyricLine]? {
-        guard !yaml.isEmpty else { return rejectLyricsfile("empty") }
-        guard yaml.utf8.count <= maximumLyricsfileBytes else { return rejectLyricsfile("exceeds size limit") }
-
-        do {
-            let parser = try Parser(
-                yaml: yaml,
-                resolver: lyricsfileResolver,
-                encoding: .utf8
-            )
-            guard let root = try parser.singleRoot() else { return rejectLyricsfile("no document") }
-            guard isSafeDocumentTree(root) else {
-                return rejectLyricsfile("unsafe tree (alias, anchor, disallowed tag, duplicate key, or size limit)")
-            }
-            guard let document = stringKeyedMapping(root) else { return rejectLyricsfile("root is not a string-keyed mapping") }
-            guard strictString(document["version"]) == "1.0" else { return rejectLyricsfile("unsupported version") }
-            guard let metadataNode = document["metadata"],
-                  let metadata = stringKeyedMapping(metadataNode) else {
-                return rejectLyricsfile("missing metadata mapping")
-            }
-            guard validateMetadata(metadata) else { return rejectLyricsfile("metadata field has the wrong type") }
-
-            let plain: String?
-            if let plainNode = document["plain"] {
-                guard let parsedPlain = strictString(plainNode) else { return rejectLyricsfile("plain is not a string") }
-                plain = parsedPlain
-            } else {
-                plain = nil
-            }
-
-            let lineNodes: [Node]
-            if let linesNode = document["lines"] {
-                guard let parsedLines = sequence(linesNode) else { return rejectLyricsfile("lines is not a sequence") }
-                lineNodes = parsedLines
-            } else {
-                lineNodes = []
-            }
-
-            let instrumental = metadata["instrumental"].flatMap { strictBool($0) } ?? false
-            if instrumental, !lineNodes.isEmpty || !(plain?.isEmpty ?? true) {
-                return rejectLyricsfile("instrumental document contains lyrics")
-            }
-
-            var parsedLines: [(sourceIndex: Int, line: LyricLine)] = []
-            parsedLines.reserveCapacity(lineNodes.count)
-            for (sourceIndex, lineNode) in lineNodes.enumerated() {
-                guard let line = parseLine(lineNode) else {
-                    return rejectLyricsfile("line \(sourceIndex) has a missing or mistyped field")
-                }
-                parsedLines.append((sourceIndex, line))
-            }
-
-            return parsedLines.sorted {
-                if $0.line.timestamp == $1.line.timestamp {
-                    return $0.sourceIndex < $1.sourceIndex
-                }
-                return $0.line.timestamp < $1.line.timestamp
-            }.map(\.line)
-        } catch {
-            return rejectLyricsfile("YAML error \(type(of: error))")
-        }
-    }
-
-    private static func rejectLyricsfile(_ reason: String) -> [LyricLine]? {
-        LyricsLog.info("Lyricsfile rejected: \(reason)")
-        return nil
-    }
-
-    static func parseLRC(_ lrcString: String) -> [LyricLine]? {
-        guard !lrcString.isEmpty, lrcString.utf8.count <= maximumLyricsfileBytes else { return nil }
-
-        var parsed: [(sourceIndex: Int, line: LyricLine)] = []
-        var sourceIndex = 0
-
-        for rawLine in lrcString.components(separatedBy: .newlines) {
-            let nsLine = rawLine as NSString
-            let fullRange = NSRange(location: 0, length: nsLine.length)
-            let matches = lrcTimestampRegex.matches(in: rawLine, range: fullRange)
-            guard let firstMatch = matches.first, firstMatch.range.location == 0 else { continue }
-
-            var timestamps: [TimeInterval] = []
-            var lyricStart = 0
-            for match in matches {
-                guard match.range.location == lyricStart,
-                      let timestamp = lrcTimestamp(from: match, in: nsLine) else {
-                    break
-                }
-                timestamps.append(timestamp)
-                lyricStart = NSMaxRange(match.range)
-            }
-            guard !timestamps.isEmpty else { continue }
-
-            let text = nsLine.substring(from: lyricStart)
-                .trimmingCharacters(in: .whitespaces)
-            for timestamp in timestamps {
-                parsed.append((
-                    sourceIndex,
-                    LyricLine(text: text, timestamp: timestamp)
-                ))
-                sourceIndex += 1
-            }
-        }
-
-        guard !parsed.isEmpty else { return nil }
-        return parsed.sorted {
-            if $0.line.timestamp == $1.line.timestamp {
-                return $0.sourceIndex < $1.sourceIndex
-            }
-            return $0.line.timestamp < $1.line.timestamp
-        }.map(\.line)
-    }
-
-    private static func validateMetadata(_ metadata: [String: Node]) -> Bool {
-        guard strictString(metadata["title"]) != nil,
-              strictString(metadata["artist"]) != nil else {
-            return false
-        }
-        if let album = metadata["album"], strictString(album) == nil { return false }
-        if let language = metadata["language"], strictString(language) == nil { return false }
-        if let instrumental = metadata["instrumental"], strictBool(instrumental) == nil { return false }
-        if let offset = metadata["offset_ms"], strictInt(offset) == nil { return false }
-        if let duration = metadata["duration_ms"] {
-            guard let milliseconds = strictInt(duration), milliseconds >= 0 else { return false }
-        }
-        return true
-    }
-
-    private static func parseLine(_ node: Node) -> LyricLine? {
-        guard let mapping = stringKeyedMapping(node),
-              let text = strictString(mapping["text"]),
-              let startMilliseconds = strictInt(mapping["start_ms"]),
-              startMilliseconds >= 0 else {
-            return nil
-        }
-
-        let endMilliseconds: Int?
-        if let endNode = mapping["end_ms"] {
-            guard let value = strictInt(endNode), value >= startMilliseconds else { return nil }
-            endMilliseconds = value
-        } else {
-            endMilliseconds = nil
-        }
-
-        var words: [LyricWord] = []
-        if let wordsNode = mapping["words"] {
-            guard let wordNodes = sequence(wordsNode) else { return nil }
-            words.reserveCapacity(wordNodes.count)
-            for wordNode in wordNodes {
-                guard let word = parseWord(wordNode) else { return nil }
-                words.append(word)
-            }
-        }
-
-        return LyricLine(
-            text: text,
-            timestamp: seconds(fromMilliseconds: startMilliseconds),
-            endTimestamp: endMilliseconds.map { seconds(fromMilliseconds: $0) },
-            words: words
-        )
-    }
-
-    private static func parseWord(_ node: Node) -> LyricWord? {
-        guard let mapping = stringKeyedMapping(node),
-              let text = strictString(mapping["text"]),
-              let startMilliseconds = strictInt(mapping["start_ms"]),
-              startMilliseconds >= 0 else {
-            return nil
-        }
-
-        let endMilliseconds: Int?
-        if let endNode = mapping["end_ms"] {
-            guard let value = strictInt(endNode), value >= startMilliseconds else { return nil }
-            endMilliseconds = value
-        } else {
-            endMilliseconds = nil
-        }
-
-        return LyricWord(
-            text: text,
-            timestamp: seconds(fromMilliseconds: startMilliseconds),
-            endTimestamp: endMilliseconds.map { seconds(fromMilliseconds: $0) }
-        )
-    }
-
-    private static func isSafeDocumentTree(_ root: Node) -> Bool {
-        let allowedTags: Set<String> = [
-            "tag:yaml.org,2002:map",
-            "tag:yaml.org,2002:seq",
-            "tag:yaml.org,2002:str",
-            "tag:yaml.org,2002:int",
-            "tag:yaml.org,2002:bool",
-            "tag:yaml.org,2002:null",
-        ]
-        var stack: [(node: Node, depth: Int)] = [(root, 1)]
-        var nodeCount = 0
-
-        while let current = stack.popLast() {
-            nodeCount += 1
-            guard nodeCount <= maximumNodeCount,
-                  current.depth <= maximumNodeDepth,
-                  current.node.anchor == nil,
-                  allowedTags.contains(current.node.tag.rawValue) else {
-                return false
-            }
-
-            switch current.node {
-            case .scalar:
-                break
-            case .alias:
-                return false
-            case .sequence(let sequence):
-                for child in sequence {
-                    stack.append((child, current.depth + 1))
-                }
-            case .mapping(let mapping):
-                var keys = Set<String>()
-                for pair in mapping {
-                    guard let key = strictString(pair.key), keys.insert(key).inserted else {
-                        return false
-                    }
-                    stack.append((pair.key, current.depth + 1))
-                    stack.append((pair.value, current.depth + 1))
-                }
-            }
-        }
-        return true
-    }
-
-    private static func stringKeyedMapping(_ node: Node) -> [String: Node]? {
-        guard case .mapping(let mapping) = node else { return nil }
-        var result: [String: Node] = [:]
-        result.reserveCapacity(mapping.count)
-        for pair in mapping {
-            guard let key = strictString(pair.key), result[key] == nil else { return nil }
-            result[key] = pair.value
-        }
-        return result
-    }
-
-    private static func sequence(_ node: Node) -> [Node]? {
-        guard case .sequence(let sequence) = node else { return nil }
-        return Array(sequence)
-    }
-
-    private static func strictString(_ node: Node?) -> String? {
-        guard let node, case .scalar(let scalar) = node,
-              node.tag.rawValue == "tag:yaml.org,2002:str" else {
-            return nil
-        }
-        return scalar.string
-    }
-
-    private static func strictInt(_ node: Node?) -> Int? {
-        guard let node, node.tag.rawValue == "tag:yaml.org,2002:int" else { return nil }
-        return node.int
-    }
-
-    private static func strictBool(_ node: Node?) -> Bool? {
-        guard let node, node.tag.rawValue == "tag:yaml.org,2002:bool" else { return nil }
-        return node.bool
-    }
-
-    private static func seconds(fromMilliseconds milliseconds: Int) -> TimeInterval {
-        TimeInterval(milliseconds) / 1_000
-    }
-
-    private static let lyricsfileResolver: Resolver = {
-        let yaml12Boolean = try! Resolver.Rule(
-            .bool,
-            #"^(?:true|True|TRUE|false|False|FALSE)$"#
-        )
-        let yaml12Integer = try! Resolver.Rule(
-            .int,
-            #"^(?:[-+]?0b[0-1_]+|[-+]?0o[0-7_]+|[-+]?(?:0|[1-9][0-9_]*)|[-+]?0x[0-9a-fA-F_]+)$"#
-        )
-        let yaml12Float = try! Resolver.Rule(
-            .float,
-            #"^(?:[-+]?(?:[0-9][0-9_]*)(?:\.[0-9_]*)?(?:[eE][-+]?[0-9]+)?|\.[0-9_]+(?:[eE][-+]?[0-9]+)?|[-+]?\.(?:inf|Inf|INF)|\.(?:nan|NaN|NAN))$"#
-        )
-        let yaml12Null = try! Resolver.Rule(
-            .null,
-            #"^(?:~|null|Null|NULL|)$"#
-        )
-        return Resolver.basic
-            .appending(yaml12Boolean)
-            .appending(yaml12Integer)
-            .appending(yaml12Float)
-            .appending(yaml12Null)
-    }()
-
-    private static let lrcTimestampRegex = try! NSRegularExpression(
-        pattern: #"\[(\d+):([0-5]?\d)(?:[\.:](\d{1,3}))?\]"#
-    )
-
-    private static func lrcTimestamp(
-        from match: NSTextCheckingResult,
-        in line: NSString
-    ) -> TimeInterval? {
-        guard match.numberOfRanges == 4,
-              let minutes = Int(line.substring(with: match.range(at: 1))),
-              let seconds = Int(line.substring(with: match.range(at: 2))),
-              seconds < 60,
-              minutes <= (Int.max - seconds) / 60 else {
-            return nil
-        }
-
-        var fraction = 0.0
-        let fractionRange = match.range(at: 3)
-        if fractionRange.location != NSNotFound {
-            let digits = line.substring(with: fractionRange)
-            guard let value = Int(digits) else { return nil }
-            fraction = Double(value) / pow(10, Double(digits.count))
-        }
-        return TimeInterval(minutes * 60 + seconds) + fraction
-    }
-}
-
-class LyricsFetcher {
-
-    func fetchSyncedLyrics(for title: String, artist: String, album: String) async -> [LyricLine]? {
-
-        var components = URLComponents(string: "https://lrclib.net/api/get")!
-        components.queryItems = [
-            URLQueryItem(name: "track_name", value: title),
-            URLQueryItem(name: "artist_name", value: artist),
-            URLQueryItem(name: "album_name", value: album)
-        ]
-
-        guard let url = components.url else { return nil }
-
-        var request = URLRequest(url: url, timeoutInterval: 10)
-        request.setValue(Self.lrclibUserAgent, forHTTPHeaderField: "User-Agent")
-        request.setValue("application/json", forHTTPHeaderField: "Accept")
-
-        let started = Date()
-        do {
-            let (data, response) = try await URLSession.shared.data(for: request)
-            let status = (response as? HTTPURLResponse)?.statusCode ?? -1
-            let elapsedMs = Int(Date().timeIntervalSince(started) * 1000)
-            LyricsLog.info("LRCLIB GET '\(title)' / '\(artist)' / '\(album)': HTTP \(status), \(data.count) bytes, \(elapsedMs)ms")
-            guard (200...299).contains(status) else { return nil }
-            return LyricsParser.parseLRCLibResponse(data)
-        } catch {
-            LyricsLog.error("LRCLIB GET '\(title)' / '\(artist)' failed: \(error.localizedDescription)")
-            return nil
-        }
-    }
-
-    func detectLanguage(for text: String) async -> String? {
-
-        let trimmedText = text.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmedText.isEmpty else {
-            return nil
-        }
-
-        var components = URLComponents(string: "https://translate.googleapis.com/translate_a/single")!
-        components.queryItems = [
-            URLQueryItem(name: "client", value: "gtx"),
-            URLQueryItem(name: "sl", value: "auto"),
-            URLQueryItem(name: "tl", value: "en"),
-            URLQueryItem(name: "dt", value: "t"),
-            URLQueryItem(name: "q", value: trimmedText.description)
-        ]
-
-        guard let url = components.url else { return nil }
-
-        struct UnofficialGoogleDetectionResponse: Decodable {
-            let detectedLanguage: String?
-            init(from decoder: Decoder) throws {
-                var container = try decoder.unkeyedContainer()
-                _ = try? container.nestedUnkeyedContainer()
-                _ = try? container.decode(String?.self)
-                self.detectedLanguage = try? container.decode(String.self)
-            }
-        }
-
-        do {
-            let (data, _) = try await URLSession.shared.data(from: url)
-            let unofficialResponse = try Self.decoder.decode(UnofficialGoogleDetectionResponse.self, from: data)
-            if let lang = unofficialResponse.detectedLanguage {
-                return lang
-            }
-        } catch {
-        }
-        return nil
-    }
-
-    func translate(lyrics: inout [LyricLine], from sourceLanguage: String, to targetLanguage: String) async {
-        guard !lyrics.isEmpty else { return }
-
-        var chunks: [[(index: Int, text: String)]] = []
-        var currentChunk: [(index: Int, text: String)] = []
-        var currentLength = 0
-
-        for i in 0..<lyrics.count {
-            let originalText = lyrics[i].text.trimmingCharacters(in: .whitespacesAndNewlines)
-            if originalText.isEmpty {
-                lyrics[i].translatedText = ""
-                continue
-            }
-
-            if currentLength + originalText.count + 1 > 1800 && !currentChunk.isEmpty {
-                chunks.append(currentChunk)
-                currentChunk = []
-                currentLength = 0
-            }
-
-            currentChunk.append((index: i, text: originalText))
-            currentLength += originalText.count + 1
-        }
-        if !currentChunk.isEmpty {
-            chunks.append(currentChunk)
-        }
-
-        struct UnofficialGoogleTranslateResponse: Decodable {
-            let translatedText: String?
-            init(from decoder: Decoder) throws {
-                var container = try decoder.unkeyedContainer()
-                if var outerArray = try? container.nestedUnkeyedContainer() {
-                    var combinedTranslation = ""
-                    while !outerArray.isAtEnd {
-                        if var firstInnerArray = try? outerArray.nestedUnkeyedContainer(),
-                           let translatedSegment = try? firstInnerArray.decode(String.self) {
-                            combinedTranslation += translatedSegment
-                        } else {
-                            _ = try? outerArray.decode(AnyCodable.self)
-                        }
-                    }
-                    self.translatedText = combinedTranslation.isEmpty ? nil : combinedTranslation
-                } else {
-                    self.translatedText = nil
-                }
-            }
-        }
-
-        struct AnyCodable: Decodable {}
-
-        await withTaskGroup(of: [(Int, String)].self) { group in
-            for chunk in chunks {
-                group.addTask {
-                    let combinedText = chunk.map { $0.text }.joined(separator: "\n")
-
-                    var components = URLComponents(string: "https://translate.googleapis.com/translate_a/single")!
-                    components.queryItems = [
-                        URLQueryItem(name: "client", value: "gtx"),
-                        URLQueryItem(name: "sl", value: sourceLanguage),
-                        URLQueryItem(name: "tl", value: targetLanguage),
-                        URLQueryItem(name: "dt", value: "t"),
-                        URLQueryItem(name: "q", value: combinedText)
-                    ]
-
-                    guard let url = components.url else { return [] }
-
-                    do {
-                        let (data, _) = try await URLSession.shared.data(from: url)
-                        let unofficialResponse = try Self.decoder.decode(UnofficialGoogleTranslateResponse.self, from: data)
-
-                        if let translatedResult = unofficialResponse.translatedText {
-                            let translatedLines = translatedResult.components(separatedBy: "\n")
-                            var results: [(Int, String)] = []
-                            for (offset, item) in chunk.enumerated() {
-                                if offset < translatedLines.count {
-                                    let cleanText = translatedLines[offset].trimmingCharacters(in: .whitespacesAndNewlines)
-                                    results.append((item.index, cleanText.isEmpty ? item.text : cleanText))
-                                } else {
-                                    results.append((item.index, item.text))
-                                }
-                            }
-                            return results
-                        }
-                    } catch {
-                    }
-                    return chunk.map { ($0.index, $0.text) }
-                }
-            }
-
-            for await chunkResult in group {
-                for (index, translatedText) in chunkResult {
-                    lyrics[index].translatedText = translatedText
-                }
-            }
-        }
-
-        for i in 0..<lyrics.count {
-            if lyrics[i].translatedText == nil {
-                lyrics[i].translatedText = lyrics[i].text
-            }
-        }
-    }
-
-    private static let decoder: JSONDecoder = {
-        return JSONDecoder()
-    }()
-
-    private static var lrclibUserAgent: String {
-        let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
-        let displayVersion = version.flatMap { $0.isEmpty ? nil : $0 } ?? "unknown"
-        return "Sapphire v\(displayVersion) (https://github.com/cshariq/Sapphire)"
-    }
-}
-
-// MARK: - Consolidated from PlayCountResponse.swift
-
-fileprivate struct PlayCountResponse: Codable {
-    let success: Bool
-    let playcount: Int?
-    let uri: String?
-}
-
-@MainActor
-class PlayCountFetcher {
-    static let shared = PlayCountFetcher()
-
-    private static let decoder = JSONDecoder()
-
-    private init() {}
-
-    func getPlayCountValue(for trackID: String) async -> Int? {
-        let cleanTrackID = trackID.components(separatedBy: ":").last ?? trackID
-
-        guard let url = URL(string: "https://api.stats.fm/api/v1/tracks/\(cleanTrackID)") else {
-            return nil
-        }
-
-        do {
-            let (data, _) = try await URLSession.shared.data(from: url)
-            let response = try Self.decoder.decode(PlayCountResponse.self, from: data)
-            return response.playcount
-        } catch {
-            print("[PlayCountFetcher] Failed to fetch or decode play count: \(error)")
-            return nil
-        }
-    }
-
-    func getPlayCount(for trackID: String) async -> String? {
-        guard let count = await getPlayCountValue(for: trackID) else { return nil }
-        return Self.formatPlayCount(count)
-    }
-
-    static func formatPlayCount(_ number: Int) -> String {
-        number.formatted(.number.notation(.compactName))
-    }
-}
 
 // MARK: - Consolidated from BrowserAppleScriptManager.swift
 
@@ -834,25 +241,10 @@ class SystemAudioMonitor: ObservableObject {
 
 // MARK: - Consolidated from MusicLongPressSupport.swift
 
-extension Notification.Name {
-    static let sapphireOpenMusicQueue = Notification.Name("sapphireOpenMusicQueue")
-    static let sapphireOpenMusicDevices = Notification.Name("sapphireOpenMusicDevices")
-}
-
-struct MusicLongPressNavigation {
-    var openQueue: (() -> Void)?
-    var openDevices: (() -> Void)?
-
-    static let notifications = MusicLongPressNavigation(
-        openQueue: { NotificationCenter.default.post(name: .sapphireOpenMusicQueue, object: nil) },
-        openDevices: { NotificationCenter.default.post(name: .sapphireOpenMusicDevices, object: nil) }
-    )
-}
-
 extension MusicLongPressAction {
     var isRepeatableWhileHeld: Bool {
         switch self {
-        case .repeatMode, .shuffle, .playPause, .like, .nextTrack, .previousTrack:
+        case .repeatMode, .shuffle, .playPause, .nextTrack, .previousTrack:
             return true
         default:
             return false
@@ -863,25 +255,19 @@ extension MusicLongPressAction {
     func feedbackSystemImage(musicManager: MusicManager) -> String {
         switch self {
         case .shuffle:
-            return musicManager.spotifyPrivateAPI.isSmartShuffleActive ? "sparkles" : "shuffle"
+            return "shuffle"
         case .repeatMode:
             switch musicManager.repeatState {
             case .track: return "repeat.1"
             case .context: return "repeat"
             case .off: return "repeat"
             }
-        case .like:
-            return musicManager.isLiked ? "heart.fill" : "heart"
         case .playPause:
             return musicManager.isPlaying ? "pause.fill" : "play.fill"
         case .nextTrack:
             return "forward.fill"
         case .previousTrack:
             return "backward.fill"
-        case .openQueue:
-            return "list.bullet"
-        case .openDevices:
-            return "hifispeaker.fill"
         case .seek:
             return "goforward"
         case .none:
@@ -893,11 +279,9 @@ extension MusicLongPressAction {
     func feedbackColor(musicManager: MusicManager) -> Color {
         switch self {
         case .shuffle:
-            return (musicManager.shuffleState || musicManager.spotifyPrivateAPI.isSmartShuffleActive) ? .green : .secondary
+            return musicManager.shuffleState ? .green : .secondary
         case .repeatMode:
             return musicManager.repeatState != .off ? .green : .secondary
-        case .like:
-            return musicManager.isLiked ? .pink : .secondary
         default:
             return .primary
         }
@@ -906,7 +290,7 @@ extension MusicLongPressAction {
 
 @MainActor
 extension MusicManager {
-    func performLongPressAction(_ action: MusicLongPressAction, navigation: MusicLongPressNavigation? = nil) async {
+    func performLongPressAction(_ action: MusicLongPressAction) async {
         switch action {
         case .none, .seek:
             break
@@ -914,8 +298,6 @@ extension MusicManager {
             await toggleShuffle()
         case .repeatMode:
             await cycleRepeatMode()
-        case .like:
-            await toggleLike()
         case .playPause:
             if isPlaying {
                 await pause()
@@ -926,18 +308,6 @@ extension MusicManager {
             await nextTrack()
         case .previousTrack:
             await previousTrack()
-        case .openQueue:
-            if let openQueue = navigation?.openQueue {
-                openQueue()
-            } else {
-                NotificationCenter.default.post(name: .sapphireOpenMusicQueue, object: nil)
-            }
-        case .openDevices:
-            if let openDevices = navigation?.openDevices {
-                openDevices()
-            } else {
-                NotificationCenter.default.post(name: .sapphireOpenMusicDevices, object: nil)
-            }
         }
     }
 }
@@ -947,13 +317,12 @@ enum MusicLongPressUI {
     static func skipHoldHandler(
         for target: MusicLongPressTarget,
         settings: Settings,
-        musicManager: MusicManager,
-        navigation: MusicLongPressNavigation? = nil
+        musicManager: MusicManager
     ) -> (() -> Void)? {
         let action = settings.resolvedSkipHoldAction(for: target)
         guard action != .seek, action != .none else { return nil }
         return {
-            Task { await musicManager.performLongPressAction(action, navigation: navigation) }
+            Task { await musicManager.performLongPressAction(action) }
         }
     }
 
@@ -1008,7 +377,6 @@ final class MusicHoldFeedbackController: ObservableObject {
     func handler(
         for action: MusicLongPressAction,
         musicManager: MusicManager,
-        navigation: MusicLongPressNavigation?,
         onCompletion: @escaping @MainActor () -> Void = {}
     ) -> () -> Void {
         { [weak self] in
@@ -1016,7 +384,7 @@ final class MusicHoldFeedbackController: ObservableObject {
                 guard let self, !self.actionInFlight else { return }
                 self.actionInFlight = true
                 defer { self.actionInFlight = false }
-                await musicManager.performLongPressAction(action, navigation: navigation)
+                await musicManager.performLongPressAction(action)
                 self.refresh(using: musicManager)
                 onCompletion()
             }

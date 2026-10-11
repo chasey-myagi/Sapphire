@@ -481,8 +481,11 @@ final class NativeMediaController: NSObject {
             || existingClient?.payload.playbackRate != track.payload.playbackRate
         let positionChanged = playbackPositionChanged(from: existingClient?.payload, to: track.payload)
         let artworkArrived = track.payload.artwork != nil && existingClient?.payload.artwork == nil
+        let transportModesChanged = existingClient?.payload.shuffleMode != track.payload.shuffleMode
+            || existingClient?.payload.repeatMode != track.payload.repeatMode
 
         let shouldNotify = trackChanged || playStateChanged || positionChanged || artworkChanged || artworkArrived
+            || transportModesChanged
 
         activeClients = [targetKey: track]
 

@@ -183,8 +183,6 @@ struct NotchWidgetView: View {
         switch mode {
         case .defaultWidgets:
             NotchDefaultWidgetsView(calendarViewModel: calendarViewModel)
-        case .musicApiKeysMissing:
-            ApiKeysMissingView(navigationStack: navigationStack)
         case .musicPlayer:
             MusicPlayerView(navigationStack: navigationStack)
         case .sportsPlayer:
@@ -195,20 +193,6 @@ struct NotchWidgetView: View {
             ClipboardPlayerView(navigationStack: navigationStack)
         case .mirrorPlayer:
             MirrorPlayerView()
-        case .musicLoginPrompt:
-            LoginPromptView(navigationStack: navigationStack)
-        case .musicQueueAndPlaylists:
-            QueueAndPlaylistsView(navigationStack: navigationStack)
-        case .musicDevices:
-            QueueAndPlaylistsView(navigationStack: navigationStack)
-        case .musicLyrics:
-            LyricsView()
-        case .musicPlaylistDetail(let playlist):
-            PlaylistView(playlist: playlist)
-        case .musicArtistDetail(let uri, let name):
-            SpotifyArtistDetailView(uri: uri, name: name, navigationStack: navigationStack)
-        case .musicAlbumDetail(let uri, let name):
-            SpotifyAlbumDetailView(uri: uri, name: name, navigationStack: navigationStack)
         case .nearDrop:
             FileTaskView(navigationStack: navigationStack)
         case .weatherPlayer:

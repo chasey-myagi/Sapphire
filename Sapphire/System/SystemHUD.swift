@@ -139,13 +139,6 @@ class SystemHUDManager: ObservableObject {
 
     private var isAccessibilitySuspended = false
 
-    private var spotifyStateForAction: ActiveSpotifyDeviceState?
-    private var lastKnownSpotifyState: ActiveSpotifyDeviceState?
-    private var currentSpotifyVolumeForAction: Float?
-    private var lastCommittedSpotifyVolume: Float?
-    private var isFetchingSpotifyState = false
-    private var isControllingSpotify = false
-    private var spotifyFetchRequestID = UUID()
 
     private var currentAppBundleID: String?
     private var currentAppVolume: Float = 0.5
@@ -367,37 +360,6 @@ class SystemHUDManager: ObservableObject {
         cachedOutputDevice = AudioDeviceManager.shared.getCurrentOutputDevice()
         hudOutputDevice = cachedOutputDevice
 
-        if action == .volumeUp || action == .volumeDown {
-            let requestID = UUID()
-            spotifyFetchRequestID = requestID
-
-            if settings.settings.showSpotifyVolumeHUD,
-               musicManager.lastKnownBundleID == "com.spotify.client",
-               let cachedState = musicManager.getActiveCachedSpotifyDeviceState() ?? self.lastKnownSpotifyState {
-                self.spotifyStateForAction = cachedState
-                self.lastKnownSpotifyState = cachedState
-                self.updateVolumeHUD()
-            }
-
-            if settings.settings.showSpotifyVolumeHUD && !isFetchingSpotifyState {
-                isFetchingSpotifyState = true
-                Task { @MainActor in
-                    defer { self.isFetchingSpotifyState = false }
-                    if let freshState = await musicManager.fetchActiveSpotifyDeviceState(forceRefresh: false) {
-                        guard self.spotifyFetchRequestID == requestID, self.currentAction == action else { return }
-                        self.spotifyStateForAction = freshState
-                        self.lastKnownSpotifyState = freshState
-                        if self.currentHUD != nil {
-                            self.updateVolumeHUD()
-                        }
-                    }
-                    Task.detached(priority: .utility) {
-                        _ = await MusicManager.shared.fetchActiveSpotifyDeviceState(forceRefresh: true)
-                    }
-                }
-            }
-        }
-
         performChange()
 
         glowIntensity = 0.15
@@ -414,17 +376,6 @@ class SystemHUDManager: ObservableObject {
 
      private func stopContinuousChange() {
          if let lastAction = currentAction, (lastAction == .volumeUp || lastAction == .volumeDown) {
-             if isControllingSpotify,
-                let finalVolume = self.currentSpotifyVolumeForAction,
-                let lastCommitted = self.lastCommittedSpotifyVolume,
-                Int(finalVolume.rounded()) != Int(lastCommitted.rounded()) {
-
-                 let finalVolumeInt = Int(finalVolume.rounded())
-                 Task {
-                     _ = await self.musicManager.setSpotifyVolume(percent: finalVolumeInt)
-                 }
-             }
-
              if isControllingAppVolume {
                  self.lastCommittedAppVolume = self.currentAppVolume
              }
@@ -441,7 +392,6 @@ class SystemHUDManager: ObservableObject {
          keyRepeatTimer?.invalidate()
          keyRepeatTimer = nil
          currentAction = nil
-         spotifyFetchRequestID = UUID()
          cachedOutputDevice = nil
 
          glowIntensity = 0.0
@@ -473,34 +423,11 @@ class SystemHUDManager: ObservableObject {
           switch action {
           case .volumeUp, .volumeDown:
               let isSystemFineTune = currentModifiers.contains([.option, .shift]) && !currentModifiers.contains(.command)
-              let isSpotifyModifierPressed = currentModifiers.contains(.option) || currentModifiers.contains(.command)
-              let isSpotifyControlAttempt = settings.settings.showSpotifyVolumeHUD && isSpotifyModifierPressed && !isSystemFineTune
+              let isAppVolumeModifierPressed = currentModifiers.contains(.option) || currentModifiers.contains(.command)
 
-               if isSpotifyControlAttempt {
-                   if let spotifyState = self.spotifyStateForAction, spotifyState.canControlVolume {
-                       self.isControllingSpotify = true
-                       self.isControllingAppVolume = false
-
-                       if self.currentSpotifyVolumeForAction == nil {
-                           self.currentSpotifyVolumeForAction = Float(spotifyState.volumePercent ?? 0)
-                           self.lastCommittedSpotifyVolume = self.currentSpotifyVolumeForAction
-                       }
-                       let isFineTuningForSpotify = currentModifiers.contains(.option) || currentModifiers.contains(.shift)
-                       performSpotifyVolumeChange(action: action, isFineTuning: isFineTuningForSpotify)
-
-                   } else if settings.settings.showAppVolumeHUD && isSpotifyModifierPressed && !isSystemFineTune {
-                       self.isControllingSpotify = false
-                       self.performAppVolumeChange(action: action)
-                   } else {
-                       self.isControllingSpotify = false
-                       self.isControllingAppVolume = false
-                       self.changeSystemVolume(action: action, isFineTuning: isSystemFineTune)
-                   }
-              } else if settings.settings.showAppVolumeHUD && isSpotifyModifierPressed && !isSystemFineTune {
-                  self.isControllingSpotify = false
+              if settings.settings.showAppVolumeHUD && isAppVolumeModifierPressed && !isSystemFineTune {
                   self.performAppVolumeChange(action: action)
               } else {
-                  self.isControllingSpotify = false
                   self.isControllingAppVolume = false
                   self.changeSystemVolume(action: action, isFineTuning: isSystemFineTune)
               }
@@ -657,28 +584,16 @@ class SystemHUDManager: ObservableObject {
         return SEStepMath.next(from: currentLevel, step: coarseStep, direction: direction)
     }
 
-    @MainActor private func performSpotifyVolumeChange(action: MediaKeyAction, isFineTuning: Bool) {
-        guard let currentVolume = self.currentSpotifyVolumeForAction else { return }
-
-        let changeDirection: Float = action == .volumeUp ? 1 : -1
-        let currentDevice = AudioDeviceManager.shared.getCurrentOutputDevice()
-        let step: Float = isFineTuning ? 1.0 : Float(settings.volumeSliderStep(forDeviceUID: currentDevice?.uid))
-
-        let newSpotifyVolume = (currentVolume + (step * changeDirection)).clamped(to: 0...100)
-        self.currentSpotifyVolumeForAction = newSpotifyVolume
-
-        let lastCommitted = self.lastCommittedSpotifyVolume ?? newSpotifyVolume
-        let commitThreshold: Float = isFineTuning ? 5 : 15
-        let oldZone = Int(lastCommitted / commitThreshold)
-        let newZone = Int(newSpotifyVolume / commitThreshold)
-
-        if oldZone != newZone {
-            let volumeToSend = Int(newSpotifyVolume.rounded())
-            Task {
-                _ = await self.musicManager.setSpotifyVolume(percent: volumeToSend)
-            }
-            self.lastCommittedSpotifyVolume = newSpotifyVolume
-        }
+    /// The HUD's app volume slider: the same per-app volume the volume keys change.
+    @MainActor
+    func appVolumeSliderDragged(to level: Float) {
+        guard let applied = AppVolumeSliderCommand.apply(
+            level: level,
+            toAppWithBundleID: currentAppBundleID,
+            setVolume: { PerAppAudioController.shared.setVolume($0, for: $1) }
+        ) else { return }
+        currentAppVolume = applied
+        lastCommittedAppVolume = applied
     }
 
        @MainActor
@@ -772,22 +687,7 @@ class SystemHUDManager: ObservableObject {
        private func updateVolumeHUD() {
             let systemVolume = SystemControl.getVolume()
 
-            if self.spotifyStateForAction != nil && (musicManager.lastKnownBundleID != "com.spotify.client" || !musicManager.isPlaying) {
-                self.spotifyStateForAction = nil
-            }
-
-            if settings.settings.showSpotifyVolumeHUD, let spotifyState = self.spotifyStateForAction, musicManager.lastKnownBundleID == "com.spotify.client", musicManager.isPlaying {
-                let spotifyVolumePercent = self.currentSpotifyVolumeForAction ?? Float(spotifyState.volumePercent ?? 75)
-                let hud = HUDType.externalDeviceVolume(
-                    deviceName: spotifyState.name,
-                    deviceIcon: spotifyState.iconName,
-                    deviceVolume: spotifyVolumePercent / 100.0,
-                    systemVolume: systemVolume,
-                    isControllingExternal: isControllingSpotify,
-                    canControlVolume: spotifyState.canControlVolume
-                )
-                showHUD(for: hud)
-            } else if isControllingAppVolume, let bundleID = self.currentAppBundleID {
+            if isControllingAppVolume, let bundleID = self.currentAppBundleID {
                 let runningApp = NSWorkspace.shared.runningApplications.first(where: { $0.bundleIdentifier == bundleID })
                 let appName = runningApp?.localizedName ?? String(localized: "Unknown App")
                 let appIconImage = self.currentAppIcon ?? runningApp?.icon
@@ -866,10 +766,6 @@ class SystemHUDManager: ObservableObject {
              self.hudDismissalTimer = Timer.scheduledTimer(withTimeInterval: self.settings.settings.hudDuration, repeats: false) { [weak self] _ in
                  self?.currentHUD = nil
                  self?.lastPublishedHUD = nil
-                 self?.spotifyStateForAction = nil
-                 self?.currentSpotifyVolumeForAction = nil
-                 self?.lastCommittedSpotifyVolume = nil
-                 self?.isControllingSpotify = false
                  self?.currentAppBundleID = nil
                  self?.currentAppVolume = 0.5
                  self?.lastCommittedAppVolume = nil
@@ -886,21 +782,11 @@ class SystemHUDManager: ObservableObject {
          self.hudDismissalTimer?.invalidate()
          self.hudDismissalTimer = Timer.scheduledTimer(withTimeInterval: self.settings.settings.hudDuration, repeats: false) { [weak self] _ in
              self?.currentHUD = nil
-             self?.spotifyStateForAction = nil
-             self?.currentSpotifyVolumeForAction = nil
-             self?.lastCommittedSpotifyVolume = nil
-             self?.isControllingSpotify = false
              self?.currentAppBundleID = nil
              self?.currentAppVolume = 0.5
              self?.lastCommittedAppVolume = nil
              self?.isControllingAppVolume = false
          }
-     }
-
-     @MainActor
-     func spotifySliderDragged(percent: Float) {
-         currentSpotifyVolumeForAction = percent
-         lastCommittedSpotifyVolume = percent
      }
 }
 
@@ -926,7 +812,14 @@ struct SystemHUDView: View {
                           device: hudManager.hudOutputDevice,
                           isControllingExternal: isControllingExternal
                       )
-                      ExternalDeviceIndicatorHUD(level: deviceVolume, deviceName: deviceName, deviceIcon: deviceIcon, appIcon: hudManager.currentAppIcon, canControlVolume: canControlVolume)
+                      ExternalDeviceIndicatorHUD(
+                          level: deviceVolume,
+                          deviceName: deviceName,
+                          deviceIcon: deviceIcon,
+                          appIcon: hudManager.currentAppIcon,
+                          canControlVolume: canControlVolume,
+                          onVolumeChanged: { hudManager.appVolumeSliderDragged(to: $0) }
+                      )
                           .transition(.opacity.combined(with: .offset(y: 5)))
                  case .appVolume(let appName, let appIcon, let appVolume):
                      appVolumeContent(appName: appName, appIcon: appIcon, appVolume: appVolume)
@@ -1214,10 +1107,9 @@ struct ExternalDeviceIndicatorHUD: View {
     var isBrightness: Bool = false
     var showName: Bool = true
     var onBrightnessChanged: ((Float) -> Void)? = nil
+    var onVolumeChanged: ((Float) -> Void)? = nil
 
-    @State private var sliderDebouncer = Debouncer(delay: 0.2)
-
-    init(level: Float, deviceName: String, deviceIcon: String, appIcon: NSImage? = nil, canControlVolume: Bool = true, isBrightness: Bool = false, showName: Bool = true, onBrightnessChanged: ((Float) -> Void)? = nil) {
+    init(level: Float, deviceName: String, deviceIcon: String, appIcon: NSImage? = nil, canControlVolume: Bool = true, isBrightness: Bool = false, showName: Bool = true, onBrightnessChanged: ((Float) -> Void)? = nil, onVolumeChanged: ((Float) -> Void)? = nil) {
         self.externalLevel = level
         self._level = State(initialValue: level)
         self.deviceName = deviceName
@@ -1227,6 +1119,7 @@ struct ExternalDeviceIndicatorHUD: View {
         self.isBrightness = isBrightness
         self.showName = showName
         self.onBrightnessChanged = onBrightnessChanged
+        self.onVolumeChanged = onVolumeChanged
     }
 
     var body: some View {
@@ -1264,14 +1157,7 @@ struct ExternalDeviceIndicatorHUD: View {
                                     if isBrightness {
                                         onBrightnessChanged?(newLevel)
                                     } else {
-                                        SystemHUDManager.shared.spotifySliderDragged(percent: newLevel * 100)
-                                        sliderDebouncer.debounce {
-                                            Task {
-                                                _ = await MusicManager.shared.setSpotifyVolume(
-                                                    percent: Int((newLevel * 100).rounded(.toNearestOrAwayFromZero))
-                                                )
-                                            }
-                                        }
+                                        onVolumeChanged?(newLevel)
                                     }
                                 }
                             ),
@@ -1299,7 +1185,6 @@ struct ExternalDeviceIndicatorHUD: View {
         .onChange(of: externalLevel) { _, newLevel in
             level = newLevel
         }
-        .onDisappear { sliderDebouncer.flush() }
     }
 }
 
@@ -1716,5 +1601,30 @@ struct SystemHUDSlimActivityView {
 extension Comparable {
     func clamped(to limits: ClosedRange<Self>) -> Self {
         return min(max(self, limits.lowerBound), limits.upperBound)
+    }
+}
+/// Routes the HUD's app volume slider to the app the HUD shows. Apps the volume keys
+/// never adjust (Spotify, Music, Sapphire itself) are left alone here too.
+enum AppVolumeSliderCommand {
+    static func controllableBundleID(_ bundleID: String?, ownBundleID: String? = Bundle.main.bundleIdentifier) -> String? {
+        guard let bundleID, !bundleID.isEmpty,
+              bundleID != "com.spotify.client",
+              bundleID != "com.apple.Music",
+              bundleID != ownBundleID else { return nil }
+        return bundleID
+    }
+
+    /// Returns the applied level, or `nil` when the app cannot be adjusted.
+    @discardableResult
+    static func apply(
+        level: Float,
+        toAppWithBundleID bundleID: String?,
+        ownBundleID: String? = Bundle.main.bundleIdentifier,
+        setVolume: (Double, String) -> Void
+    ) -> Float? {
+        guard let target = controllableBundleID(bundleID, ownBundleID: ownBundleID) else { return nil }
+        let clamped = level.clamped(to: 0...1)
+        setVolume(Double(clamped), target)
+        return clamped
     }
 }

@@ -12,7 +12,6 @@ import UserNotifications
 import NearbyShare
 import ApplicationServices
 import ServiceManagement
-import Network
 import os.log
 
 private let appDelegateLog = Logger(
@@ -95,12 +94,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
     private var cgsSpace: CGSSpace?
     private var onboardingWindow: NSWindow?
     private var settingsWindow: NSWindow?
-    private var lyricsWindow: NSWindow?
     private var isMainAppRunning = false
     private var backgroundInitializationTask: Task<Void, Never>?
     private var bluetoothPermissionObservation: AnyCancellable?
     private var sessionObserversInstalled = false
-    private var networkPathSatisfied: Bool?
     private var pendingAllocatorRelief: DispatchWorkItem?
 
     private lazy var lockScreenManager = LockScreenManager.shared
@@ -187,7 +184,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
     private lazy var launchpadGestureMonitor: LaunchpadGestureMonitor = .shared
 
     private var statusItem: NSStatusItem?
-    private var networkMonitor: NWPathMonitor?
     private var previouslyFrontmostApp: NSRunningApplication?
     private var didActivateForNotchFocus = false
 
@@ -387,10 +383,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         onboardingWindow?.contentView = nil
         onboardingWindow = nil
 
-        lyricsWindow?.orderOut(nil)
-        lyricsWindow?.contentView = nil
-        lyricsWindow = nil
-
         teardownLaunchpad()
 
         interactionManager?.stopMonitoring()
@@ -569,7 +561,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         }
 
         SystemControl.configureKeyboardBacklight()
-        NSAppleEventManager.shared().setEventHandler(self, andSelector: #selector(handleGetURL), forEventClass: AEEventClass(kInternetEventClass), andEventID: AEEventID(kAEGetURL))
         setupSessionObservers()
         NotificationCenter.default.addObserver(self, selector: #selector(screenParametersChanged), name: NSApplication.didChangeScreenParametersNotification, object: nil)
         UNUserNotificationCenter.current().delegate = self
@@ -672,20 +663,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
             name: NSApplication.didBecomeActiveNotification,
             object: nil
         )
-
-        networkMonitor = NWPathMonitor()
-        networkMonitor?.pathUpdateHandler = { [weak self] path in
-            guard let self else { return }
-            DispatchQueue.main.async {
-                let isSatisfied = path.status == .satisfied
-                let wasSatisfied = self.networkPathSatisfied
-                self.networkPathSatisfied = isSatisfied
-                guard self.isMainAppRunning, isSatisfied, wasSatisfied == false else { return }
-                print("[AppDelegate] Network connection became available.")
-                self.musicManager.spotifyPrivateAPI.checkAndReconnectIfNeeded()
-            }
-        }
-        networkMonitor?.start(queue: DispatchQueue(label: "NetworkMonitor", qos: .utility))
     }
 
     private var hasPresentedHelperConnectionAlertThisSession = false
@@ -695,11 +672,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         scheduleNotchDisplayRefresh()
         batteryManager.reconnectHelper()
         HelperManager.shared.checkIfRunning(force: true)
-
-        let reconnectDelay: TimeInterval = AuthenticationManager.shared.isFaceIDSessionActive ? 4.0 : 1.0
-        DispatchQueue.main.asyncAfter(deadline: .now() + reconnectDelay) { [weak self] in
-            self?.musicManager.spotifyPrivateAPI.checkAndReconnectIfNeeded()
-        }
         AuthenticationManager.shared.handleSystemDidWake()
     }
 
@@ -994,10 +966,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
             }
         }
 
-        NSAppleEventManager.shared().removeEventHandler(
-            forEventClass: AEEventClass(kInternetEventClass),
-            andEventID: AEEventID(kAEGetURL)
-        )
         cgsSpace = nil
         NotificationCenter.default.removeObserver(self, name: NSApplication.didChangeScreenParametersNotification, object: nil)
         backgroundInitializationTask?.cancel()
@@ -1011,9 +979,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
             liveActivityManager.stop()
             DevActivityMonitor.shared.stop()
         }
-        networkMonitor?.cancel()
-        networkMonitor = nil
-        networkPathSatisfied = nil
         sessionObserversInstalled = false
         UpdateChecker.shared.stopPeriodicChecks()
         teardownLaunchpad()
@@ -1050,18 +1015,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         if !layoutURLs.isEmpty {
             DockLayoutsManager.shared.importLayoutFiles(at: layoutURLs)
         }
-    }
-
-    // MARK: - URL Handling
-
-    @objc func handleGetURL(event: NSAppleEventDescriptor!, withReplyEvent: NSAppleEventDescriptor!) {
-        guard
-            let urlString = event.paramDescriptor(forKeyword: AEKeyword(keyDirectObject))?.stringValue,
-            let url = URL(string: urlString),
-            url.scheme == "sapphire"
-        else { return }
-        musicManager.spotifyOfficialAPI.handleRedirect(url: url)
-        musicManager.tidalAPI.handleRedirect(url: url)
     }
 
     // MARK: - Status Bar Item (Launchpad / Main Toggle)
@@ -1453,38 +1406,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         frameView.layer?.masksToBounds = true
     }
 
-    func openLyricsWindow() {
-        if let window = lyricsWindow {
-            UtilityWindowPresenter.presentSettingsWindow(window)
-            return
-        }
-
-        let window = KeyableWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 1080, height: 620),
-            styleMask: [.titled, .resizable, .closable, .miniaturizable],
-            backing: .buffered,
-            defer: false
-        )
-        window.title = String(localized: "Lyrics")
-        window.isMovableByWindowBackground = false
-        window.backgroundColor = .clear
-        window.isOpaque = false
-        window.hasShadow = true
-        window.isReleasedWhenClosed = false
-        window.sharingType = settingsModel.settings.hideFromScreenSharing ? .none : .readOnly
-
-        let root = LyricsDetachedWindowView()
-            .environmentObject(musicManager)
-            .environmentObject(settingsModel)
-
-        let hosting = FocusableHostingView(rootView: root)
-        window.contentView = hosting
-        window.delegate = self
-        lyricsWindow = window
-
-        UtilityWindowPresenter.presentSettingsWindow(window)
-    }
-
     func windowWillClose(_ notification: Notification) {
         guard let window = notification.object as? NSWindow else { return }
 
@@ -1494,8 +1415,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         }
 
         let isSettings = window === settingsWindow
-        let isLyrics = window === lyricsWindow
-        guard isSettings || isLyrics else { return }
+        guard isSettings else { return }
 
         if isSettings {
             NotificationCenter.default.post(name: .sapphireSettingsWillClose, object: nil)
@@ -1504,7 +1424,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         window.contentView = nil
         window.delegate = nil
         if isSettings, settingsWindow === window { settingsWindow = nil }
-        if isLyrics, lyricsWindow === window { lyricsWindow = nil }
         finishClosingUserWindow()
     }
 
@@ -1533,7 +1452,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
     }
 
     private func restoreAgentActivationIfNeeded() {
-        let hasUserWindow = [settingsWindow, lyricsWindow, onboardingWindow]
+        let hasUserWindow = [settingsWindow, onboardingWindow]
             .compactMap { $0 }
             .contains { $0.isVisible }
         guard !hasUserWindow else { return }
@@ -1601,7 +1520,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         }
         onboardingWindow?.sharingType = sharingType
         settingsWindow?.sharingType = sharingType
-        lyricsWindow?.sharingType = sharingType
     }
 
     // MARK: - Display Power Control

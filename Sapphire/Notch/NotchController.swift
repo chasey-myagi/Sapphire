@@ -99,7 +99,6 @@ struct NotchController: View {
     @State private var notchDragLocationState = NotchDragLocationState()
     @State private var dropZoneFrames: [DropZone: CGRect] = [:]
     @State private var snapZoneHitRegions: [SnapZoneHitRegion] = []
-    @State private var showLyrics: Bool = false
     @State private var liveActivityHorizontalPadding: CGFloat = 0
     @State private var expansionAnimation: Animation = .default
     @State private var awaitingDropCompletion: Bool = false
@@ -475,7 +474,6 @@ struct NotchController: View {
                     horizontalPadding: liveActivityHorizontalPadding,
                     screen: notchWindow?.screen,
                     measuredSize: $measuredAutoContentSize,
-                    showLyrics: $showLyrics,
                     blurRadius: activityBlurRadius
                 )
                     .geometryGroup()
@@ -555,9 +553,7 @@ struct NotchController: View {
 
     private static let notchNotifications = Publishers.MergeMany(
         [
-            Notification.Name.sapphireOpenMusicQueue,
-            .sapphireOpenMusicDevices,
-            .sapphireRevealHiddenNotch,
+            Notification.Name.sapphireRevealHiddenNotch,
             .sapphireOpenCircleToSearch,
             NSApplication.didChangeScreenParametersNotification
         ].map { NotificationCenter.default.publisher(for: $0) }
@@ -567,10 +563,6 @@ struct NotchController: View {
         view
             .onReceive(Self.notchNotifications) { notification in
                 switch notification.name {
-                case .sapphireOpenMusicQueue:
-                    openMusicHub(mode: .musicQueueAndPlaylists)
-                case .sapphireOpenMusicDevices:
-                    openMusicHub(mode: .musicDevices)
                 case .sapphireRevealHiddenNotch:
                     guard isManuallyHidden,
                           let displayID = notchDisplayID,
@@ -591,7 +583,6 @@ struct NotchController: View {
 
     private func applyNotchSettingsHandlers<V: View>(to view: V) -> some View {
         view
-            .onChange(of: showLyrics, perform: handleShowLyricsChange)
             .onChange(of: isInteractive) { _, isNowInteractive in
                 updateMouseEventHandling(isInteractive: isNowInteractive)
                 MenuBarInteractionManager.shared.setSuspended(isNowInteractive)
@@ -835,7 +826,6 @@ struct NotchController: View {
             )
         }
         dragManager.startMonitoring()
-        liveActivityManager.showLyricsBinding = $showLyrics
 
         MenuBarInteractionManager.shared.setSuspended(isInteractive)
 
@@ -1582,13 +1572,6 @@ struct NotchController: View {
         }
     }
 
-    private func handleShowLyricsChange(newValue: Bool) {
-        if newValue {
-            navigationStack.append(.musicLyrics)
-            DispatchQueue.main.async { self.showLyrics = false }
-        }
-    }
-
     private func handleTrackpadSwipe(vector: CGVector) {
         guard !isCalendarHovered else {
             return
@@ -1846,12 +1829,6 @@ struct NotchController: View {
         notchLog.info("Releasing swipe-reveal override on displayID=\(notchDisplayID.map(String.init) ?? "nil", privacy: .public)")
         inactiveHideUserOverride = false
         evaluateInactiveNotchVisibility()
-    }
-
-    private func openMusicHub(mode: NotchWidgetMode) {
-        measuredClickContentSize = .zero
-        navigationStack = [mode]
-        notchState = .clickExpanded
     }
 
     private func openCircleToSearch(object: String?) {
@@ -2184,8 +2161,6 @@ struct NotchController: View {
         switch mode {
         case .defaultWidgets: return .defaultWidgets
         case .musicPlayer: return .musicPlayer
-        case .musicQueueAndPlaylists: return .musicQueueAndPlaylists
-        case .musicDevices: return .musicDevices
         case .nearDrop: return .nearDrop
         case .fileShelf: return .fileShelf
         case .multiAudio: return .multiAudio
@@ -2196,8 +2171,7 @@ struct NotchController: View {
         case .notesPlayer: return .notesPlayer
         case .clipboardPlayer: return .clipboardPlayer
         case .mirrorPlayer: return nil
-        case .musicApiKeysMissing, .musicLoginPrompt, .musicLyrics,
-                .musicPlaylistDetail, .musicArtistDetail, .musicAlbumDetail, .snapZones, .fileShelfLanding, .fileActionPreview,
+        case .snapZones, .fileShelfLanding, .fileActionPreview,
                 .multiAudioDeviceAdjust, .multiAudioAppEQ, .multiAudioApp8D, .multiAudioAppSurround, .multiAudioEQ, .dragActivated,
                 .circleToSearch, .updateAvailable, .focusSessionDetailView, .batteryDetailView,
                 .storageDetailView:
@@ -2458,14 +2432,12 @@ private struct NotchHUDOverlayContent: View {
 }
 
 enum MusicBottomContentKind: Equatable {
-    case none, peek, lyrics, upNext
+    case none, peek
 
     init(_ contentType: MusicBottomContentType) {
         switch contentType {
         case .none: self = .none
         case .peek: self = .peek
-        case .lyrics: self = .lyrics
-        case .upNext: self = .upNext
         }
     }
 }

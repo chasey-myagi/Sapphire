@@ -71,7 +71,6 @@ class ActiveAppMonitor: ObservableObject {
 
     static let shared = ActiveAppMonitor()
 
-    @Published private(set) var isLyricsAllowedForActiveApp: Bool = true
     @Published private(set) var activeAppBundleID: String?
     @Published private(set) var isFullScreen: Bool = false
     @Published private(set) var fullScreenDisplayIDs: Set<CGDirectDisplayID> = [] {
@@ -110,20 +109,6 @@ class ActiveAppMonitor: ObservableObject {
         Publishers.Merge3(spaceChangePublisher, appChangePublisher, screenChangePublisher)
             .debounce(for: .milliseconds(200), scheduler: DispatchQueue.main)
             .sink { [weak self] reason in self?.updateActiveAppState(reason: reason) }
-            .store(in: &cancellables)
-
-        $activeAppBundleID
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in self?.updateLyricPermission() }
-            .store(in: &cancellables)
-
-        settingsModel.$settings
-            .map { (settings: Settings) -> [String: Bool]? in
-                settings.showLyricsInLiveActivity ? settings.musicAppStates : nil
-            }
-            .removeDuplicates()
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in self?.updateLyricPermission() }
             .store(in: &cancellables)
 
         settingsModel.$settings
@@ -203,32 +188,6 @@ class ActiveAppMonitor: ObservableObject {
 
     private static func describe(_ displayIDs: Set<CGDirectDisplayID>) -> String {
         displayIDs.sorted().map(String.init).joined(separator: ",")
-    }
-
-    private func updateLyricPermission() {
-        let newPermissionState: Bool = {
-            guard settingsModel.settings.showLyricsInLiveActivity else { return false }
-            guard let activeBundleID = activeAppBundleID else { return true }
-            if let isAllowed = settingsModel.settings.musicAppStates[activeBundleID] { return isAllowed }
-            return !isBrowser(activeBundleID)
-        }()
-        if isLyricsAllowedForActiveApp != newPermissionState {
-            isLyricsAllowedForActiveApp = newPermissionState
-        }
-    }
-
-    private var browserBundleIDs: [String: Bool] = [:]
-
-    private func isBrowser(_ bundleID: String) -> Bool {
-        if let cached = browserBundleIDs[bundleID] { return cached }
-        var isBrowser = false
-        if let appURL = NSWorkspace.shared.urlForApplication(withBundleIdentifier: bundleID),
-           let bundle = Bundle(url: appURL),
-           let urlTypes = bundle.infoDictionary?["CFBundleURLTypes"] as? [[String: Any]] {
-            isBrowser = urlTypes.contains { ($0["CFBundleURLSchemes"] as? [String])?.contains("http") ?? false }
-        }
-        browserBundleIDs[bundleID] = isBrowser
-        return isBrowser
     }
 
     // MARK: - Window Drag Detection
