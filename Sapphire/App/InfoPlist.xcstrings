@@ -15,6 +15,12 @@
             "state": "translated",
             "value": "Sapphire 使用 Apple 事件控制 Spotify 播放、将正在播放媒体的浏览器标签页切换到前台，并通过“信息”发送通知回复。"
           }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sapphire 使用 Apple 事件控制 Spotify 播放、將正在播放媒體的瀏覽器分頁切換到前景，並透過「訊息」傳送通知回覆。"
+          }
         }
       }
     },
@@ -31,6 +37,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sapphire 会在此 Mac 上采集应用音频，用于单独调节应用音量和音效。音频不会离开你的 Mac。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sapphire 會在這台 Mac 上擷取 App 音訊，用於個別調整 App 音量和音效。音訊絕不會離開你的 Mac。"
           }
         }
       }
@@ -49,6 +61,12 @@
             "state": "translated",
             "value": "Sapphire 使用蓝牙显示设备连接通知和电池状态，并提供近距离解锁。"
           }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sapphire 使用藍牙顯示裝置連線通知和電池狀態，並提供近距離解鎖。"
+          }
         }
       }
     },
@@ -65,6 +83,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sapphire 需要访问日历来显示即将开始的日程。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sapphire 需要行事曆權限來顯示即將到來的行程。"
           }
         }
       }
@@ -83,6 +107,12 @@
             "state": "translated",
             "value": "Sapphire 使用日历权限显示即将到来的日程。"
           }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sapphire 使用行事曆取用權限顯示即將到來的行程。"
+          }
         }
       }
     },
@@ -99,6 +129,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sapphire 使用摄像头提供镜子小组件，让你能在刘海区域看到自己。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sapphire 使用相機提供「鏡子」小工具，讓你可以在瀏海區域中看到自己。"
           }
         }
       }
@@ -117,6 +153,12 @@
             "state": "translated",
             "value": "Sapphire 需要访问通讯录，以便在回复通知时找到正确的电话号码或电子邮件地址。"
           }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sapphire 需要取用你的聯絡人，以便從通知傳送回覆時找到正確的電話號碼或電子郵件。"
+          }
         }
       }
     },
@@ -133,6 +175,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "用于实时更新专注状态。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "用於提供即時的專注狀態更新。"
           }
         }
       }
@@ -151,6 +199,12 @@
             "state": "translated",
             "value": "Sapphire 使用本地网络进行附近共享文件传输。"
           }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sapphire 使用區域網路進行 Nearby Share 檔案傳輸。"
+          }
         }
       }
     },
@@ -167,6 +221,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "用于实时更新天气。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "用於提供即時的天氣更新。"
           }
         }
       }
@@ -185,6 +245,12 @@
             "state": "translated",
             "value": "Sapphire 需要使用位置来提供天气信息。"
           }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sapphire 需要此權限以提供天氣資訊。"
+          }
         }
       }
     },
@@ -201,6 +267,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sapphire 使用你的位置显示本地天气。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sapphire 使用你的位置顯示當地天氣。"
           }
         }
       }
@@ -219,6 +291,12 @@
             "state": "translated",
             "value": "Sapphire 使用麦克风采集音频。"
           }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sapphire 使用麥克風擷取音訊。"
+          }
         }
       }
     },
@@ -235,6 +313,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sapphire 需要访问网络宗卷来提供附近互传功能。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sapphire 需要此權限以提供 Nearby Share 功能。"
           }
         }
       }
@@ -253,6 +337,12 @@
             "state": "translated",
             "value": "Sapphire 需要访问提醒事项来显示即将到来的提醒。"
           }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sapphire 需要此權限以顯示即將到來的提醒事項。"
+          }
         }
       }
     },
@@ -270,6 +360,12 @@
             "state": "translated",
             "value": "用于显示提醒事项。"
           }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "用於顯示提醒事項。"
+          }
         }
       }
     },
@@ -286,6 +382,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sapphire 使用屏幕录制权限采集应用音频并显示实时窗口预览。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sapphire 使用螢幕錄製權限擷取各 App 音訊並顯示即時視窗預覽。"
           }
         }
       }

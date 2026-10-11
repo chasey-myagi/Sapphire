@@ -73,7 +73,7 @@ final class LocalizationNavigationTests: XCTestCase {
     }
 
     func testChineseAndEnglishNamesFindTheSameSettingsPages() {
-        for (query, expected) in [("音乐", SettingsSection.music), ("Music", .music), ("电池", .battery), ("Battery", .battery), ("文件", .fileShelf), ("File Shelf", .fileShelf)] {
+        for (query, expected) in [("音乐", SettingsSection.music), ("Music", .music), ("电池", .battery), ("Battery", .battery), ("文件", .fileShelf), ("File Shelf", .fileShelf), ("音樂", .music), ("電池", .battery), ("檔案", .fileShelf)] {
             XCTAssertTrue(SettingsSection.sidebarGroups(matching: query).flatMap(\.sections).contains(expected), query)
         }
     }
