@@ -411,8 +411,6 @@ enum AppSnapLayoutConfiguration: Codable, Equatable {
 enum RestorableNotchMenu: String, Codable, Equatable {
     case defaultWidgets
     case musicPlayer
-    case musicQueueAndPlaylists
-    case musicDevices
     case sportsPlayer
     case notesPlayer
     case clipboardPlayer
@@ -429,8 +427,6 @@ enum RestorableNotchMenu: String, Codable, Equatable {
         switch self {
         case .defaultWidgets: return .defaultWidgets
         case .musicPlayer: return .musicPlayer
-        case .musicQueueAndPlaylists: return .musicQueueAndPlaylists
-        case .musicDevices: return .musicDevices
         case .sportsPlayer: return .sportsPlayer
         case .notesPlayer: return .notesPlayer
         case .clipboardPlayer: return .clipboardPlayer
@@ -588,26 +584,71 @@ enum NotchBackgroundStyle: String, Codable, CaseIterable, Identifiable {
 }
 
 enum MusicPlayerButtonType: String, Codable, CaseIterable, Identifiable, Equatable {
-    case like, shuffle, `repeat`, playlists, devices
+    case shuffle, `repeat`
     var id: String { self.rawValue }
 
     var displayName: String {
         switch self {
-        case .like: String(localized: "Like")
         case .shuffle: String(localized: "Shuffle")
         case .repeat: String(localized: "Repeat")
-        case .playlists: String(localized: "Queue & Playlists")
-        case .devices: String(localized: "Devices")
         }
     }
 
     var systemImage: String {
         switch self {
-        case .like: "heart.fill"
         case .shuffle: "shuffle"
         case .repeat: "repeat"
-        case .playlists: "list.bullet"
-        case .devices: "hifispeaker"
+        }
+    }
+}
+
+/// A position in the player's button sequence. `reserved` keeps the place of an enabled
+/// button that was removed with the music integrations (queue, devices, like), so the
+/// retained buttons stay in the slots they had before the removal.
+enum MusicPlayerButtonSlot: String, Codable, Equatable {
+    case reserved
+    case button
+}
+
+struct MusicPlayerButtonLayout: Equatable {
+    /// The two slots beside the transport controls; `nil` renders as an empty 40×40 slot.
+    var primary: [MusicPlayerButtonType?]
+    var accessory: [MusicPlayerButtonType]
+
+    /// Fills the `.button` slots with `order` in sequence, drops disabled buttons, and
+    /// splits the result the way the player always did: the first two entries sit beside
+    /// the transport controls and the rest form the accessory row.
+    static func resolve(
+        slots: [MusicPlayerButtonSlot],
+        order: [MusicPlayerButtonType],
+        isEnabled: (MusicPlayerButtonType) -> Bool
+    ) -> MusicPlayerButtonLayout {
+        var remaining = order[...]
+        var entries: [MusicPlayerButtonType?] = []
+        for slot in slots {
+            switch slot {
+            case .reserved:
+                entries.append(nil)
+            case .button:
+                guard let type = remaining.popFirst() else { continue }
+                if isEnabled(type) { entries.append(type) }
+            }
+        }
+        entries.append(contentsOf: remaining.filter(isEnabled).map(Optional.some))
+        var primary = Array(entries.prefix(2))
+        while primary.count < 2 { primary.append(nil) }
+        return MusicPlayerButtonLayout(primary: primary, accessory: entries.dropFirst(2).compactMap { $0 })
+    }
+
+    /// The expanded player's layout for the app shown in it: shuffle and repeat appear
+    /// only for Spotify and Apple Music, and only when switched on.
+    static func forPlayer(settings: Settings, sourceBundleID: String?) -> MusicPlayerButtonLayout {
+        let showsModeButtons = sourceBundleID == "com.spotify.client" || sourceBundleID == "com.apple.Music"
+        return resolve(slots: settings.musicPlayerButtonSlots, order: settings.musicPlayerButtonOrder) { type in
+            switch type {
+            case .shuffle: return showsModeButtons && settings.musicShuffleButtonEnabled
+            case .repeat: return showsModeButtons && settings.musicRepeatButtonEnabled
+            }
         }
     }
 }
@@ -617,12 +658,9 @@ enum MusicLongPressAction: String, Codable, CaseIterable, Identifiable, Equatabl
     case seek
     case shuffle
     case repeatMode
-    case like
     case playPause
     case nextTrack
     case previousTrack
-    case openQueue
-    case openDevices
 
     var id: String { rawValue }
 
@@ -632,21 +670,18 @@ enum MusicLongPressAction: String, Codable, CaseIterable, Identifiable, Equatabl
         case .seek: return String(localized: "Seek")
         case .shuffle: return String(localized: "Shuffle")
         case .repeatMode: return String(localized: "Repeat")
-        case .like: return String(localized: "Like")
         case .playPause: return String(localized: "Play / Pause")
         case .nextTrack: return String(localized: "Next Track")
         case .previousTrack: return String(localized: "Previous Track")
-        case .openQueue: return String(localized: "Open Queue")
-        case .openDevices: return String(localized: "Open Devices")
         }
     }
 
     static var skipButtonOptions: [MusicLongPressAction] {
-        [.none, .seek, .shuffle, .repeatMode, .like, .playPause, .nextTrack, .previousTrack, .openQueue, .openDevices]
+        [.none, .seek, .shuffle, .repeatMode, .playPause, .nextTrack, .previousTrack]
     }
 
     static var accessoryButtonOptions: [MusicLongPressAction] {
-        [.none, .shuffle, .repeatMode, .like, .playPause, .nextTrack, .previousTrack, .openQueue, .openDevices]
+        [.none, .shuffle, .repeatMode, .playPause, .nextTrack, .previousTrack]
     }
 }
 
@@ -654,9 +689,6 @@ enum MusicLongPressTarget: String, CaseIterable, Identifiable {
     case previous
     case next
     case playPause
-    case playlists
-    case devices
-    case like
     case shuffle
     case repeatMode
 
@@ -667,9 +699,6 @@ enum MusicLongPressTarget: String, CaseIterable, Identifiable {
         case .previous: return String(localized: "Previous")
         case .next: return String(localized: "Next")
         case .playPause: return String(localized: "Play / Pause")
-        case .playlists: return String(localized: "Queue")
-        case .devices: return String(localized: "Devices")
-        case .like: return String(localized: "Like")
         case .shuffle: return String(localized: "Shuffle")
         case .repeatMode: return String(localized: "Repeat")
         }
@@ -696,9 +725,6 @@ enum MusicLongPressTarget: String, CaseIterable, Identifiable {
         case .previous: return settings.musicLongPressPrevious
         case .next: return settings.musicLongPressNext
         case .playPause: return settings.musicLongPressPlayPause
-        case .playlists: return settings.musicLongPressPlaylists
-        case .devices: return settings.musicLongPressDevices
-        case .like: return settings.musicLongPressLike
         case .shuffle: return settings.musicLongPressShuffle
         case .repeatMode: return settings.musicLongPressRepeat
         }
@@ -706,9 +732,6 @@ enum MusicLongPressTarget: String, CaseIterable, Identifiable {
 
     static func from(buttonType: MusicPlayerButtonType) -> MusicLongPressTarget? {
         switch buttonType {
-        case .playlists: return .playlists
-        case .devices: return .devices
-        case .like: return .like
         case .shuffle: return .shuffle
         case .repeat: return .repeatMode
         }
@@ -721,9 +744,6 @@ extension Settings {
         case .previous: musicLongPressPrevious = action
         case .next: musicLongPressNext = action
         case .playPause: musicLongPressPlayPause = action
-        case .playlists: musicLongPressPlaylists = action
-        case .devices: musicLongPressDevices = action
-        case .like: musicLongPressLike = action
         case .shuffle: musicLongPressShuffle = action
         case .repeatMode: musicLongPressRepeat = action
         }
@@ -1359,52 +1379,24 @@ struct Settings: Codable, Equatable {
     var musicLongPressPrevious: MusicLongPressAction = .none
     var musicLongPressNext: MusicLongPressAction = .none
     var musicLongPressPlayPause: MusicLongPressAction = .none
-    var musicLongPressPlaylists: MusicLongPressAction = .openDevices
-    var musicLongPressDevices: MusicLongPressAction = .openQueue
-    var musicLongPressLike: MusicLongPressAction = .shuffle
     var musicLongPressShuffle: MusicLongPressAction = .repeatMode
-    var musicLongPressRepeat: MusicLongPressAction = .like
+    var musicLongPressRepeat: MusicLongPressAction = .none
     var waveformUseGradient: Bool = true
     var useStaticWaveform: Bool = false
     var waveformBarCount: Int = 3
     var waveformBarThickness: Double = 4.0
     var musicWaveformIsVolumeSensitive: Bool = false
-    var spotifyClientId: String {
-        get { APIKeyManager.shared.spotifyClientId }
-        set { APIKeyManager.shared.spotifyClientId = newValue }
-    }
-    var spotifyClientSecret: String {
-        get { APIKeyManager.shared.spotifyClientSecret }
-        set { APIKeyManager.shared.spotifyClientSecret = newValue }
-    }
-    var skipSpotifyAd: Bool = false
     var defaultMusicPlayer: DefaultMusicPlayer = .appleMusic
-    var showLyricsInLiveActivity: Bool = false
-    var enableLyricTranslation: Bool = true
-    var lyricTranslationLanguage: String = "en"
-    var lyricOffset: Double = 0.0
-    var generateWordTimedLyrics: Bool = false
-    var musicAppStates: [String: Bool] = [:]
     var musicOpenOnClick: Bool = true
-    var musicPlayerButtonOrder: [MusicPlayerButtonType] = [.playlists, .devices, .like, .shuffle, .repeat]
-    var musicLikeButtonEnabled: Bool = false
+    var musicPlayerButtonOrder: [MusicPlayerButtonType] = [.shuffle, .repeat]
+    /// The former default order `[queue, devices, like, shuffle, repeat]` with queue and
+    /// devices enabled and like disabled.
+    var musicPlayerButtonSlots: [MusicPlayerButtonSlot] = [.reserved, .reserved, .button, .button]
     var musicShuffleButtonEnabled: Bool = false
     var musicRepeatButtonEnabled: Bool = false
-    var musicPlaylistsButtonEnabled: Bool = true
-    var musicDevicesButtonEnabled: Bool = true
-    var showPopularityInMusicPlayer: Bool = true
     var hideMusicWidgetWhenNotPlaying: Bool = false
     var hideMusicWidgetWhenSpotifyPausedAndIdle: Bool = false
     var persistMusicWidgetWhenPaused: Bool = true
-    var preferAirPlayOverSpotify: Bool = true
-    var spotifyCanvasLiveVideo: Bool = true
-    var showSpotifySourceTab: Bool = true
-    var spotifyShowArtistProfile: Bool = true
-    var spotifyShowSuggestedSongs: Bool = true
-    var spotifyShowNextSong: Bool = true
-    var spotifyShowNextSongAlbumArt: Bool = true
-    var spotifyShowConcertTickets: Bool = false
-    var spotifyShowAccountBadge: Bool = true
 
     var hudDuration: Double = 2.5
     var hudShowPercentage: Bool = true
@@ -1415,7 +1407,6 @@ struct Settings: Codable, Equatable {
     var volumeHUDStyle: HUDStyle = .default
     var volumeHUDShowDots: Bool = false
     var volumeHUDSoundEnabled: Bool = true
-    var showSpotifyVolumeHUD: Bool = true
     var showAppVolumeHUD: Bool = true
     var showAppVolumeInNormalHUD: Bool = false
     var perAppVolumeSystemDependent: Bool = true
@@ -1806,6 +1797,11 @@ enum SettingsPersistence {
         filterRawIdentifiers(in: &dictionary, key: "liveActivityOrder", as: LiveActivityType.self)
         filterRawIdentifiers(in: &dictionary, key: "notchButtonOrder", as: NotchButtonType.self)
         filterRawIdentifiers(in: &dictionary, key: "lastNotchNavigationStack", as: RestorableNotchMenu.self)
+        migrateRemovedMusicPlayerButtons(in: &dictionary)
+        filterRawIdentifiers(in: &dictionary, key: "musicPlayerButtonOrder", as: MusicPlayerButtonType.self)
+        for key in removedMusicLongPressActionKeys {
+            replaceUnknownRawIdentifier(in: &dictionary, key: key, as: MusicLongPressAction.self, with: .none)
+        }
         if dictionary["systemEnhanceDockClicksAllAppsEnabled"] == nil,
            dictionary["systemEnhanceDockClicksSelectedApps"] != nil {
             dictionary["systemEnhanceDockClicksAllAppsEnabled"] = false
@@ -1840,6 +1836,45 @@ enum SettingsPersistence {
             print("[SettingsModel] Settings import: reverted incompatible keys to defaults: \(droppedKeys.sorted())")
         }
         return decodeFromJSONDictionary(merged)
+    }
+
+    /// Hold-action settings that may still name actions removed with the third-party
+    /// music integrations (like, open queue, open devices).
+    private static let removedMusicLongPressActionKeys = [
+        "musicLongPressPrevious",
+        "musicLongPressNext",
+        "musicLongPressPlayPause",
+        "musicLongPressShuffle",
+        "musicLongPressRepeat",
+    ]
+
+    /// Player buttons removed with the music integrations, with the defaults their
+    /// enabled switches had.
+    static let removedMusicPlayerButtonEnabledKeys: [String: (key: String, defaultValue: Bool)] = [
+        "playlists": ("musicPlaylistsButtonEnabled", true),
+        "devices": ("musicDevicesButtonEnabled", true),
+        "like": ("musicLikeButtonEnabled", false),
+    ]
+
+    /// A button order saved before the removal still names the removed buttons. Record
+    /// where the enabled ones were so the retained buttons keep their slots.
+    private static func migrateRemovedMusicPlayerButtons(in dictionary: inout [String: Any]) {
+        guard let identifiers = dictionary["musicPlayerButtonOrder"] as? [String],
+              identifiers.contains(where: { removedMusicPlayerButtonEnabledKeys[$0] != nil }) else { return }
+        let slots: [MusicPlayerButtonSlot] = identifiers.compactMap { identifier in
+            if MusicPlayerButtonType(rawValue: identifier) != nil { return .button }
+            guard let removed = removedMusicPlayerButtonEnabledKeys[identifier] else { return nil }
+            let enabled = dictionary[removed.key] as? Bool ?? removed.defaultValue
+            return enabled ? .reserved : nil
+        }
+        dictionary["musicPlayerButtonSlots"] = slots.map(\.rawValue)
+    }
+
+    private static func replaceUnknownRawIdentifier<T: RawRepresentable>(
+        in dictionary: inout [String: Any], key: String, as type: T.Type, with fallback: T
+    ) where T.RawValue == String {
+        guard let identifier = dictionary[key] as? String, T(rawValue: identifier) == nil else { return }
+        dictionary[key] = fallback.rawValue
     }
 
     private static func filterRawIdentifiers<T: RawRepresentable>(
@@ -2214,7 +2249,6 @@ class SettingsModel: ObservableObject {
         saveTimer.resume()
         self.saveTimer = saveTimer
 
-        _ = APIKeyManager.shared
         var loaded = Self.readSettingsFromStorage()
         loaded.normalizeCollectionOrders()
         loaded.volumeHUDSoundEnabled = SystemSoundFeedback.isVolumeChangeFeedbackEnabled
@@ -2271,12 +2305,6 @@ class SettingsModel: ObservableObject {
             loaded.musicLongPressPrevious = .none
             loaded.musicLongPressNext = .none
             loaded.musicLongPressPlayPause = .none
-            if loaded.musicLongPressPlaylists == .none {
-                loaded.musicLongPressPlaylists = .openDevices
-            }
-            if loaded.musicLongPressDevices == .none {
-                loaded.musicLongPressDevices = .openQueue
-            }
             defaults.set(true, forKey: "musicLongPressActionsMigratedV2")
         } else if defaults.object(forKey: "musicLongPressPrevious") == nil {
             if loaded.musicHoldSkipForSecondaryActions {
@@ -2308,7 +2336,7 @@ class SettingsModel: ObservableObject {
         return loaded
     }
 
-    private static func decodeSettingsFromUserDefaults(_ defaults: UserDefaults) -> Settings? {
+    static func decodeSettingsFromUserDefaults(_ defaults: UserDefaults) -> Settings? {
         let fallback = Settings()
         guard var dictionary = SettingsPersistence.encodeToDictionary(fallback) else {
             return nil
@@ -2331,6 +2359,12 @@ class SettingsModel: ObservableObject {
         if defaults.object(forKey: "systemEnhanceDockClicksSelectedApps") != nil,
            defaults.object(forKey: "systemEnhanceDockClicksAllAppsEnabled") == nil {
             dictionary["systemEnhanceDockClicksAllAppsEnabled"] = false
+        }
+
+        for removed in SettingsPersistence.removedMusicPlayerButtonEnabledKeys.values {
+            if let enabled = defaults.object(forKey: removed.key) as? Bool {
+                dictionary[removed.key] = enabled
+            }
         }
 
         return SettingsPersistence.decodeFromDictionary(dictionary)
@@ -2442,7 +2476,6 @@ class SettingsModel: ObservableObject {
         updated.focusBlockedApps.remove(bundleIdentifier)
         updated.focusAllowedApps.remove(bundleIdentifier)
         updated.mediaAppVisibility.removeValue(forKey: bundleIdentifier)
-        updated.musicAppStates.removeValue(forKey: bundleIdentifier)
         updated.appSpecificLayoutConfigurations.removeValue(forKey: bundleIdentifier)
         updated.appNotificationStates.removeValue(forKey: bundleIdentifier)
         if updated != settings {
@@ -3047,7 +3080,7 @@ enum SettingsSection: String, CaseIterable, Identifiable {
         case .archives: ["archive", "unarchive", "extract", "extractor", "unarchiver", "zip", "unzip", "rar", "7z", "7-zip", "tar", "gzip", "bzip2", "xz", "compressed", "password", "encrypted", "iso", "cpio", "uncompress", "dmg", "disk image", "install", "mount", "unmount", "eject", "trash", "cleanup", "easy dmg", "easydmg", "Archives & DMG", "归档与 DMG", "归档", "压缩包", "解压", "磁盘映像"]
         case .mirror: ["mirror", "camera", "camera feed", "selfie", "webcam", "镜子", "摄像头"]
         case .caffeine: ["caffeinate", "caffeine", "sleep", "awake", "clamshell", "lid", "timeout", "timer", "保持唤醒", "防休眠", "合盖"]
-        case .music: ["music", "media", "spotify", "playback", "音乐", "播放", "媒体"]
+        case .music: ["music", "media", "playback", "音乐", "播放", "媒体"]
         case .weather: ["weather", "forecast", "temperature", "location", "天气", "温度", "预报"]
         case .calendar: ["calendar", "reminders", "events", "schedule", "日历", "日程", "提醒事项"]
         case .eyeBreak: ["eye", "break", "rest", "wellness", "focus", "Eye Break", "护眼休息", "护眼", "休息"]

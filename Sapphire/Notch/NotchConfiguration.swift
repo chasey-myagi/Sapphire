@@ -262,10 +262,6 @@ struct ResolvedNotchConfiguration: Equatable {
     let contentBottomPadding: CGFloat
     let contentHorizontalPadding: CGFloat
 
-    // MARK: - Lyric View Configuration
-    let lyricsFontSize: CGFloat
-    let lyricsMaxWidth: CGFloat
-
     // MARK: - Navigation Header Configuration
     let navHeaderLeadingPadding: CGFloat
     let navHeaderTopPadding: CGFloat
@@ -323,8 +319,6 @@ struct ResolvedNotchConfiguration: Equatable {
             self.contentBottomPadding = 10 * screenHeightAdj
             self.contentHorizontalPadding = 35 * screenHeightAdj
             self.activityContentBottomPadding = 10 * screenHeightAdj
-            self.lyricsFontSize = 10 * screenHeightAdj
-            self.lyricsMaxWidth = 200 * screenWidthAdj
             self.navHeaderLeadingPadding = 40 * screenWidthAdj
             self.navHeaderTopPadding = 8 * screenHeightAdj
             self.navHeaderTitleFontSize = 18 * screenHeightAdj

@@ -8461,20 +8461,14 @@ struct HUDSettingsView: View {
                 .animation(.default, value: pillStyleEnabled)
                 .animation(.default, value: settings.settings.hudVisualStyle)
 
-                // MARK: Spotify, App & Device Icons (essential)
+                // MARK: App & Device Icons (essential)
                 VStack(alignment: .leading, spacing: 0) {
-                    Text("Show Spotify, App & Device Icons")
+                    Text("Show App & Device Icons")
                         .font(.headline)
                         .padding([.horizontal, .top])
 
                     Divider().padding(.top, 10).padding(.leading, 20)
 
-                    ToggleRow(
-                        title: "Show Spotify Device in HUD",
-                        description: "Display a special HUD with the active device name when changing volume while Spotify is active.",
-                        isOn: $settings.settings.showSpotifyVolumeHUD
-                    )
-                    Divider().padding(.leading, 20)
                     ToggleRow(
                         title: "Show App Volume in HUD",
                         description: "Press Option + Volume keys to adjust volume for the active app (excludes Spotify and Apple Music).",
@@ -8733,16 +8727,6 @@ struct HUDSettingsView: View {
 struct MusicSettingsView: View {
     @EnvironmentObject var settings: SettingsEditingSession
 
-    @State private var isPrivateApiLoading = false
-    @State private var privateApiError: String?
-    @State private var isPrivateAuth = false
-    @State private var isOfficialAuth = false
-    @State private var officialDisplayName: String?
-    @State private var isTidalAuth = false
-    @State private var tidalDisplayName: String?
-    @State private var loginChallenge: LoginChallengeDetails?
-    @State private var showTidalLogin = false
-
     var body: some View {
         ScrollView {
             LazyVStack(alignment: .leading, spacing: 20) {
@@ -8794,7 +8778,7 @@ struct MusicSettingsView: View {
                     Text("Hold Actions").font(.headline).padding([.top, .horizontal])
                     ToggleRow(
                         title: "Enable Hold Actions",
-                        description: "Press and hold secondary player buttons (Queue, Devices, Like, Shuffle, Repeat) for an alternate action. Previous / Next / Play are tap-only unless you assign a hold action below. When this is off, Previous/Next still seek while held.",
+                        description: "Press and hold secondary player buttons (Shuffle, Repeat) for an alternate action. Previous / Next / Play are tap-only unless you assign a hold action below. When this is off, Previous/Next still seek while held.",
                         isOn: $settings.settings.musicLongPressActionsEnabled
                     )
                     if settings.settings.musicLongPressActionsEnabled {
@@ -8865,251 +8849,13 @@ struct MusicSettingsView: View {
                     ToggleRow(title: "Enable track info on Hover", description: "Hover over the album art in the live activity to see the song title.", isOn: $settings.settings.enableQuickPeekOnHover)
                     Divider().padding(.leading, 20)
                     ToggleRow(title: "Show track info on Track Change", description: "Briefly show the song title when a new track begins.", isOn: $settings.settings.showQuickPeekOnTrackChange)
-                    Divider().padding(.leading, 20)
-                    ToggleRow(title: "Show popularity of track in music player", description: "Requires a spotify login", isOn: $settings.settings.showPopularityInMusicPlayer)
-                    Divider().padding(.leading, 20)
-                    ToggleRow(title: "Prefer airplay over spotify devices", description: "Default to airplay devices when spotify isn't running and spotify is authenticated", isOn: $settings.settings.preferAirPlayOverSpotify)
                 }.modifier(SettingsContainerModifier())
-
-                VStack(alignment: .leading, spacing: 10) {
-                    Text("Spotify (Private API)").font(.headline).padding([.horizontal, .top])
-                    InfoContainer(text: "WARNING: This method uses Spotify’s internal APIs to unlock standard and additional features for both Premium and non-Premium users. Use at your own risk, usage may be subject to Spotify’s Terms of Service.", iconName: "exclamationmark.triangle.fill", color: .yellow).padding(.horizontal)
-                    InfoContainer(text: "Sapphire is a Connect controller only, audio always plays on the Spotify desktop app or another speaker.", iconName: "hifispeaker", color: .blue).padding(.horizontal)
-                    Divider().padding(.horizontal, 20)
-                    if isPrivateAuth {
-                        VStack(spacing: 0) {
-                            HStack {
-                                Image(systemName: "checkmark.circle.fill").foregroundColor(.green)
-                                Text("Logged in via Private API")
-                                Spacer()
-                                Button("Log Out", role: .destructive) { MusicManager.shared.spotifyPrivateAPI.logout() }
-                            }.padding()
-
-                            Divider().padding(.leading, 20)
-
-                            ToggleRow(title: "Skip Ads", description: "When Spotify desktop on this Mac plays an ad, relaunch it in the background, then resume via Spotify Connect.", isOn: $settings.settings.skipSpotifyAd)
-                            ToggleRow(title: "Show Spotify Tab", description: "When another app is playing, show a Spotify source tab so you can switch medias. Hidden while Spotify itself is the main media source.", isOn: $settings.settings.showSpotifySourceTab)
-                                .disabled(!isPrivateAuth)
-                            ToggleRow(title: "Live Canvas Video", description: "Show looping Spotify Canvas video behind the artwork when available. Turn off to always use the album thumbnail.", isOn: $settings.settings.spotifyCanvasLiveVideo)
-                                .disabled(!isPrivateAuth)
-                            ToggleRow(title: "Artist Profile", description: "Show the artist avatar, verified check, and monthly listeners instead of plain artist text.", isOn: $settings.settings.spotifyShowArtistProfile)
-                                .disabled(!isPrivateAuth)
-                            ToggleRow(title: "Next Song", description: "Show the upcoming track from the queue under the now-playing title during the last 10 seconds of the song.", isOn: $settings.settings.spotifyShowNextSong)
-                                .disabled(!isPrivateAuth)
-                            ToggleRow(title: "Next Song Album Art", description: "Show album art beside the upcoming track in the live activity.", isOn: $settings.settings.spotifyShowNextSongAlbumArt)
-                                .disabled(!isPrivateAuth || !settings.settings.spotifyShowNextSong)
-                            ToggleRow(title: "Suggested Songs", description: "Show related song chips you can play from the music player.", isOn: $settings.settings.spotifyShowSuggestedSongs)
-                                .disabled(!isPrivateAuth)
-                            ToggleRow(title: "Concert Tickets", description: "Show a compact tickets button when nearby concerts are available for the artist.", isOn: $settings.settings.spotifyShowConcertTickets)
-                                .disabled(!isPrivateAuth)
-                            ToggleRow(title: "Account Badge", description: "Show the Premium / Free account badge next to the track title.", isOn: $settings.settings.spotifyShowAccountBadge)
-                                .disabled(!isPrivateAuth)
-                        }
-                    } else {
-                        VStack(spacing: 12) {
-                            if let error = privateApiError {
-                                Text(error).font(.caption).foregroundColor(.red)
-                            }
-                            if isPrivateApiLoading {
-                                ProgressView().frame(maxWidth: .infinity, alignment: .center)
-                            } else {
-                                Button("Log In via Private API") { handlePrivateApiLogin() }
-                                    .buttonStyle(.borderedProminent).tint(.accentColor)
-                            }
-                        }.padding()
-                    }
-                }
-                .modifier(SettingsContainerModifier())
-                .animation(.default, value: isPrivateAuth)
-
-                VStack(alignment: .leading, spacing: 10) {
-                    Text("Spotify (Official API)").font(.headline).padding([.horizontal, .top])
-VStack(alignment: .leading, spacing: 8) {
-                        Text("Spotify API Credentials").font(.system(size: 14, weight: .medium))
-                        Text("Register your app at developer.spotify.com and copy these values here. The redirect URI is: sapphire://callback").font(.caption).foregroundColor(.secondary).padding(.bottom, 4)
-                        Text("Client ID").font(.system(size: 13, weight: .medium)).foregroundStyle(.white.opacity(0.8))
-                        SecureField("Enter your Client ID", text: Binding(
-                            get: { APIKeyManager.shared.spotifyClientId },
-                            set: { APIKeyManager.shared.spotifyClientId = $0 }
-                        )).textFieldStyle(.plain).padding(8).background(Color.black.opacity(0.2)).clipShape(RoundedRectangle(cornerRadius: 8)).overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.white.opacity(0.2)))
-                        Text("Client Secret").font(.system(size: 13, weight: .medium)).foregroundStyle(.white.opacity(0.8)).padding(.top, 5)
-                        SecureField("Enter your Client Secret", text: Binding(
-                            get: { APIKeyManager.shared.spotifyClientSecret },
-                            set: { APIKeyManager.shared.spotifyClientSecret = $0 }
-                        )).textFieldStyle(.plain).padding(8).background(Color.black.opacity(0.2)).clipShape(RoundedRectangle(cornerRadius: 8)).overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.white.opacity(0.2)))
-                    }.padding().padding(.top, 5)
-                    Text("Log in here to enable official features like device switching for Premium users. This is the standard, recommended login method.").font(.caption).foregroundColor(.secondary).padding(.horizontal)
-                    Divider().padding(.horizontal, 20)
-                    HStack {
-                        if isOfficialAuth, let name = officialDisplayName {
-                            HStack { Image(systemName: "checkmark.circle.fill").foregroundColor(.green); Text("Logged in as \(name)") }
-                            Spacer()
-                            Button("Log Out", role: .destructive) { MusicManager.shared.spotifyOfficialAPI.logout() }
-                        } else {
-                            Text("Not logged in.").foregroundColor(.secondary)
-                            Spacer()
-                            Button("Log In") { MusicManager.shared.spotifyOfficialAPI.login() }
-                        }
-                    }.padding()
-                }
-                .modifier(SettingsContainerModifier())
-                .animation(.default, value: isOfficialAuth)
-
-                VStack(alignment: .leading, spacing: 10) {
-                    Text("TIDAL").font(.headline).padding([.horizontal, .top])
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("TIDAL API Credentials").font(.system(size: 14, weight: .medium))
-                        Text("Create an app at developer.tidal.com, enable the user.read, search.read, collection.read/write, and playlists.read/write scopes, and set the redirect URI exactly to sapphire://callback.").font(.caption).foregroundColor(.secondary).padding(.bottom, 4)
-                        Text("Client ID").font(.system(size: 13, weight: .medium)).foregroundStyle(.white.opacity(0.8))
-                        SecureField("Enter your Client ID", text: Binding(
-                            get: { APIKeyManager.shared.tidalClientId },
-                            set: { APIKeyManager.shared.tidalClientId = $0 }
-                        )).textFieldStyle(.plain).padding(8).background(Color.black.opacity(0.2)).clipShape(RoundedRectangle(cornerRadius: 8)).overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.white.opacity(0.2)))
-                        Text("Client Secret").font(.system(size: 13, weight: .medium)).foregroundStyle(.white.opacity(0.8)).padding(.top, 5)
-                        SecureField("Enter your Client Secret", text: Binding(
-                            get: { APIKeyManager.shared.tidalClientSecret },
-                            set: { APIKeyManager.shared.tidalClientSecret = $0 }
-                        )).textFieldStyle(.plain).padding(8).background(Color.black.opacity(0.2)).clipShape(RoundedRectangle(cornerRadius: 8)).overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.white.opacity(0.2)))
-                    }.padding().padding(.top, 5)
-                    Text("Log in here to enable TIDAL features like catalog search and syncing liked tracks and playlists. Requires a TIDAL developer account (third-party access tier).").font(.caption).foregroundColor(.secondary).padding(.horizontal)
-                    Divider().padding(.horizontal, 20)
-                    HStack {
-                        if isTidalAuth, let name = tidalDisplayName {
-                            HStack { Image(systemName: "checkmark.circle.fill").foregroundColor(.green); Text("Logged in as \(name)") }
-                            Spacer()
-                            Button("Log Out", role: .destructive) { MusicManager.shared.tidalAPI.logout() }
-                        } else {
-                            Text("Not logged in.").foregroundColor(.secondary)
-                            Spacer()
-                            Button("Log In") { showTidalLogin = true }
-                        }
-                    }.padding()
-                }
-                .modifier(SettingsContainerModifier())
-                .animation(.default, value: isTidalAuth)
-
-                VStack(alignment: .leading, spacing: 0) {
-                    Text("Lyrics").font(.headline).padding([.top, .horizontal])
-                    ToggleRow(title: "Show Lyrics in Live Activity", description: "Display synchronized lyrics when available.", isOn: $settings.settings.showLyricsInLiveActivity)
-                    if settings.settings.showLyricsInLiveActivity {
-                        Divider().padding(.leading, 20)
-                        ToggleRow(title: "Enable Translation", description: "Automatically translate non-English lyrics.", isOn: $settings.settings.enableLyricTranslation)
-                        HStack {
-                            Text("Translate to"); Spacer()
-                            Picker("", selection: $settings.settings.lyricTranslationLanguage) { Text("English").tag("en"); Text("Spanish").tag("es"); Text("French").tag("fr") }.labelsHidden().frame(width: 150)
-                        }.padding().disabled(!settings.settings.enableLyricTranslation).opacity(settings.settings.enableLyricTranslation ? 1.0 : 0.5)
-                        Divider().padding(.leading, 20)
-                        HStack {
-                            Text("Lyric Delay"); Spacer()
-                            let offset = settings.settings.lyricOffset
-                            let label = offset == 0 ? String(localized: "On time") : String(format: "%+.1fs", offset)
-                            if #available(macOS 13.0, *) {
-                                Text(label).font(.caption).foregroundColor(.secondary)
-                                Stepper("", value: $settings.settings.lyricOffset, in: -5.0...5.0, step: 0.1)
-                                    .labelsHidden()
-                            } else {
-                                DeferredValueEditor(value: $settings.settings.lyricOffset) { draft, onEditingChanged in
-                                    HStack(spacing: 8) {
-                                        Slider(
-                                            value: draft,
-                                            in: -5.0...5.0,
-                                            step: 0.1,
-                                            label: { Text("Lyric Delay") },
-                                            onEditingChanged: onEditingChanged
-                                        )
-                                        let draftOffset = draft.wrappedValue
-                                        let draftLabel = draftOffset == 0 ? String(localized: "On time") : String(format: "%+.1fs", draftOffset)
-                                        Text(draftLabel).font(.caption).foregroundColor(.secondary).frame(width: 80, alignment: .trailing)
-                                    }
-                                }
-                            }
-                        }.padding()
-                        if #available(macOS 26.0, *) {
-                            Divider().padding(.leading, 20)
-                            ToggleRow(
-                                title: "Generate Word-by-Word Timing",
-                                description: "When a song only has line timing, listen to the music app's audio on this Mac to time each word, and share good results. Asks for audio access and downloads Apple's speech model once.",
-                                isOn: $settings.settings.generateWordTimedLyrics
-                            )
-                        }
-                    }
-                }
-                .modifier(SettingsContainerModifier())
-                .animation(.default, value: settings.settings.showLyricsInLiveActivity)
-
-                if settings.settings.showLyricsInLiveActivity {
-                    VStack(alignment: .leading, spacing: 10) {
-                        Text("Allow Lyrics From:").font(.headline).padding([.horizontal, .top])
-                        AppTogglesListView(
-                            isEnabled: { app in binding(for: app, isBrowser: app.isBrowser) },
-                            maxHeight: 360,
-                            browsersSectionTitle: "Browsers (Disabled by Default)"
-                        )
-                    }.modifier(SettingsContainerModifier()).transition(.opacity.combined(with: .move(edge: .top)))
-                }
 
                 RequiredPermissionsView(section: .music)
             }
             .padding(25)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-            .onAppear {
-                syncMusicAuthState()
-            }
-            .onReceive(MusicManager.shared.$isPrivateAPIAuthenticated) { isPrivateAuth = $0 }
-            .onReceive(MusicManager.shared.$isOfficialAPIAuthenticated) { isOfficialAuth = $0 }
-            .onReceive(MusicManager.shared.$isTidalAPIAuthenticated) { isTidalAuth = $0 }
-            .onReceive(MusicManager.shared.tidalAPI.$userProfile) { profile in
-                tidalDisplayName = profile?.username
-            }
-            .onReceive(MusicManager.shared.spotifyOfficialAPI.$userProfile) { profile in
-                officialDisplayName = profile?.displayName
-            }
-            .onReceive(SpotifyPrivateAPIManager.shared.$loginChallenge) { loginChallenge = $0 }
         }
-        .sheet(item: $loginChallenge) { _ in
-            SpotifyLoginWebView(
-                onComplete: { cookieProperties in
-                    MusicManager.shared.spotifyPrivateAPI.completeLoginAfterWebViewSuccess(with: cookieProperties)
-                    MusicManager.shared.spotifyPrivateAPI.loginChallenge = nil
-                    isPrivateApiLoading = false
-                },
-                onCancel: {
-                    privateApiError = "Login was cancelled."
-                    MusicManager.shared.spotifyPrivateAPI.loginChallenge = nil
-                    isPrivateApiLoading = false
-                }
-            )
-        }
-        .sheet(isPresented: $showTidalLogin) {
-            TidalLoginWebView(
-                onComplete: { showTidalLogin = false },
-                onCancel: { showTidalLogin = false }
-            )
-        }
-    }
-
-    private func syncMusicAuthState() {
-        let music = MusicManager.shared
-        music.spotifyPrivateAPI.bootstrapIfNeeded(policy: .onDemand)
-        isPrivateAuth = music.isPrivateAPIAuthenticated
-        isOfficialAuth = music.isOfficialAPIAuthenticated
-        isTidalAuth = music.isTidalAPIAuthenticated
-        tidalDisplayName = music.tidalAPI.userProfile?.username
-        officialDisplayName = music.spotifyOfficialAPI.userProfile?.displayName
-        loginChallenge = music.spotifyPrivateAPI.loginChallenge
-    }
-
-    private func handlePrivateApiLogin() {
-        isPrivateApiLoading = true
-        privateApiError = nil
-        MusicManager.shared.spotifyPrivateAPI.login()
-    }
-
-    private func binding(for app: SystemApp, isBrowser: Bool) -> Binding<Bool> {
-        .init(
-            get: { settings.settings.musicAppStates[app.id, default: !isBrowser] },
-            set: { settings.settings.musicAppStates[app.id] = $0 }
-        )
     }
 
     private func mediaVisibilityBinding(for app: SystemApp, isBrowser: Bool) -> Binding<Bool> {
@@ -9157,11 +8903,8 @@ fileprivate struct PlayerButtonSettingsRow: View {
 
     private var isEnabledBinding: Binding<Bool> {
         switch buttonType {
-        case .like: return $settings.settings.musicLikeButtonEnabled
         case .shuffle: return $settings.settings.musicShuffleButtonEnabled
         case .repeat: return $settings.settings.musicRepeatButtonEnabled
-        case .playlists: return $settings.settings.musicPlaylistsButtonEnabled
-        case .devices: return $settings.settings.musicDevicesButtonEnabled
         }
     }
 

@@ -21,7 +21,7 @@ import Network
 
 // MARK: - Permission Enums
 enum PermissionType: Identifiable, CaseIterable {
-    case accessibility, notifications, location, calendar, reminders, bluetooth, focusStatus, fullDiskAccess, screenRecording, localNetwork, automation
+    case accessibility, notifications, location, calendar, reminders, bluetooth, focusStatus, fullDiskAccess, screenRecording, localNetwork
     var id: Self { self }
 }
 
@@ -92,22 +92,9 @@ class PermissionsManager: NSObject, ObservableObject, @MainActor CLLocationManag
     @Published var fullDiskAccessStatus: PermissionStatus = .notRequested
     @Published var screenRecordingStatus: PermissionStatus = .notRequested
     @Published var localNetworkStatus: PermissionStatus = .notRequested
-    @Published var automationStatus: PermissionStatus = .notRequested
 
     private var locationManager: CLLocationManager?
     private lazy var bluetoothManager = CBCentralManager(delegate: self, queue: nil, options: [CBCentralManagerOptionShowPowerAlertKey: 0])
-
-    private let automationPermissionRequestedKey = "automationPermissionRequested"
-
-    private struct AutomationTarget {
-        let name: String
-        let bundleIdentifier: String
-    }
-
-    private let automationTargets = [
-        AutomationTarget(name: "Music", bundleIdentifier: "com.apple.Music"),
-        AutomationTarget(name: "Spotify", bundleIdentifier: "com.spotify.client"),
-    ]
 
     private var localNetworkListener: NWListener?
     private var dummyNetService: NetService?
@@ -119,8 +106,7 @@ class PermissionsManager: NSObject, ObservableObject, @MainActor CLLocationManag
         .init(type: .accessibility, title: String(localized: "Accessibility"), description: String(localized: "Needed for media key presses, window snapping, and HUDs."), iconName: "figure.wave.circle.fill", iconColor: .purple, category: .required),
         .init(type: .fullDiskAccess, title: String(localized: "Full Disk Access"), description: String(localized: "Enables File Shelf and deeper system integrations."), iconName: "folder.badge.gearshape", iconColor: .gray, category: .recommended),
         .init(type: .screenRecording, title: String(localized: "Screen Recording"), description: String(localized: "Required for per-app audio capture, live window previews, and the hinge-driven desktop animation."), iconName: "record.circle", iconColor: .orange, category: .recommended),
-        .init(type: .localNetwork, title: String(localized: "Local Network"), description: String(localized: "Needed to discover and control supported media players on your network."), iconName: "network", iconColor: .cyan, category: .recommended),
-        .init(type: .automation, title: String(localized: "Automation"), description: String(localized: "Needed to control playback and get track info from Spotify and Music."), iconName: "play.display", iconColor: .green, category: .recommended),
+        .init(type: .localNetwork, title: String(localized: "Local Network"), description: String(localized: "Needed to discover nearby devices for Nearby Share transfers."), iconName: "network", iconColor: .cyan, category: .recommended),
         .init(type: .notifications, title: String(localized: "Notifications"), description: String(localized: "Needed to show custom alerts for messages and system events."), iconName: "bell.badge.fill", iconColor: .red, category: .recommended),
         .init(type: .location, title: String(localized: "Location"), description: String(localized: "Needed to provide live weather updates for your current location."), iconName: "location.fill", iconColor: .blue, category: .recommended),
         .init(type: .calendar, title: String(localized: "Calendar"), description: String(localized: "Needed to show your upcoming events."), iconName: "calendar", iconColor: .red, category: .recommended),
@@ -161,7 +147,6 @@ class PermissionsManager: NSObject, ObservableObject, @MainActor CLLocationManag
                 self?.checkAccessibilityStatus()
                 self?.checkFullDiskAccessStatus()
                 self?.checkScreenRecordingStatus()
-                self?.checkAutomationStatus()
                 self?.refreshNotificationsStatus()
                 self?.updateBluetoothStatus(for: CBManager.authorization)
             }
@@ -210,7 +195,6 @@ class PermissionsManager: NSObject, ObservableObject, @MainActor CLLocationManag
         checkFullDiskAccessStatus()
         checkScreenRecordingStatus()
         checkLocalNetworkStatus()
-        checkAutomationStatus()
 
         refreshNotificationsStatus()
 
@@ -255,7 +239,6 @@ class PermissionsManager: NSObject, ObservableObject, @MainActor CLLocationManag
         case .fullDiskAccess: return fullDiskAccessStatus
         case .screenRecording: return screenRecordingStatus
         case .localNetwork: return localNetworkStatus
-        case .automation: return automationStatus
         }
     }
 
@@ -289,9 +272,6 @@ class PermissionsManager: NSObject, ObservableObject, @MainActor CLLocationManag
         case .screenRecording:
             CGRequestScreenCaptureAccess()
             UserDefaults.standard.set(true, forKey: "screenRecordingRequested")
-
-        case .automation:
-            triggerAutomationPermissionRequest()
 
         case .localNetwork:
             triggerLocalNetworkPrivacyAlert()
@@ -331,124 +311,6 @@ class PermissionsManager: NSObject, ObservableObject, @MainActor CLLocationManag
                 DispatchQueue.main.async { self.checkAllPermissions() }
             }
         }
-    }
-
-    // MARK: - Automation Logic
-
-    private func checkAutomationStatus() {
-        guard UserDefaults.standard.bool(forKey: automationPermissionRequestedKey) else {
-            automationStatus = PermissionStatus.notRequested
-            return
-        }
-
-        let installedTargets = automationTargets.filter {
-            NSWorkspace.shared.urlForApplication(withBundleIdentifier: $0.bundleIdentifier) != nil
-        }
-
-        Task {
-            var statuses: [PermissionStatus] = []
-            for target in installedTargets {
-                statuses.append(await getAutomationPermissionStatus(for: target.name))
-            }
-
-            if statuses.contains(PermissionStatus.denied) {
-                automationStatus = PermissionStatus.denied
-            } else if !statuses.isEmpty && statuses.allSatisfy({ $0 == PermissionStatus.granted }) {
-                automationStatus = PermissionStatus.granted
-            } else {
-                automationStatus = PermissionStatus.notRequested
-            }
-        }
-    }
-
-    private func triggerAutomationPermissionRequest() {
-        Task(priority: .userInitiated) {
-            var foundTarget = false
-
-            for target in automationTargets {
-                guard await launchAutomationTarget(target) else { continue }
-                foundTarget = true
-
-                print("[PermissionsManager] Requesting Automation permission for \(target.name)...")
-                let status = await Self.determineAutomationPermission(
-                    for: target.bundleIdentifier,
-                    askUserIfNeeded: true
-                )
-                print("[PermissionsManager] Automation request for \(target.name) returned \(status).")
-            }
-
-            guard foundTarget else { return }
-            UserDefaults.standard.set(true, forKey: automationPermissionRequestedKey)
-
-            self.checkAutomationStatus()
-        }
-    }
-
-    private func launchAutomationTarget(_ target: AutomationTarget) async -> Bool {
-        if !NSRunningApplication.runningApplications(withBundleIdentifier: target.bundleIdentifier).isEmpty {
-            return true
-        }
-
-        guard let applicationURL = NSWorkspace.shared.urlForApplication(withBundleIdentifier: target.bundleIdentifier) else {
-            print("[PermissionsManager] Application '\(target.name)' not found.")
-            return false
-        }
-
-        let configuration = NSWorkspace.OpenConfiguration()
-        configuration.activates = false
-        configuration.addsToRecentItems = false
-
-        return await withCheckedContinuation { continuation in
-            NSWorkspace.shared.openApplication(at: applicationURL, configuration: configuration) { application, error in
-                if let error {
-                    print("[PermissionsManager] Could not launch \(target.name) for Automation permission: \(error.localizedDescription)")
-                }
-                continuation.resume(returning: application != nil)
-            }
-        }
-    }
-
-    private nonisolated static func determineAutomationPermission(
-        for bundleIdentifier: String,
-        askUserIfNeeded: Bool
-    ) async -> OSStatus {
-        await Task.detached(priority: .userInitiated) {
-            let target = NSAppleEventDescriptor(bundleIdentifier: bundleIdentifier)
-            guard let descriptor = target.aeDesc else { return OSStatus(paramErr) }
-
-            return AEDeterminePermissionToAutomateTarget(
-                descriptor,
-                AEEventClass(typeWildCard),
-                AEEventID(typeWildCard),
-                askUserIfNeeded
-            )
-        }.value
-    }
-
-    private func getAutomationPermissionStatus(for appName: String) async -> PermissionStatus {
-        let command = #"tell application "\#(appName)" to get its name"#
-
-        let errorInfo = await executeAppleScript(command: command, for: appName)
-
-        if errorInfo == nil {
-            return PermissionStatus.granted
-        } else if let errorNumber = errorInfo?[NSAppleScript.errorNumber] as? NSNumber,
-                  errorNumber.intValue == -1743 {
-            return PermissionStatus.denied
-        } else {
-            return PermissionStatus.notRequested
-        }
-    }
-
-    private func executeAppleScript(command: String, for appName: String) async -> NSDictionary? {
-        guard NSWorkspace.shared.urlForApplication(withBundleIdentifier: appName.lowercased() == "spotify" ? "com.spotify.client" : "com.apple.Music") != nil else {
-            print("[PermissionsManager] Application '\(appName)' not found.")
-            return ["error": "\(appName) not found"]
-        }
-
-        var errorInfo: NSDictionary?
-        AppleScriptRunner.execute(command, error: &errorInfo)
-        return errorInfo
     }
 
     // MARK: - Full Disk Access

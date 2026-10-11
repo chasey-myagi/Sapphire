@@ -75,32 +75,19 @@
 			</array>
 		</dict>
 	</array>
-	<key>CFBundleURLTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>com.cshariq.sapphire</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>sapphire</string>
-			</array>
-		</dict>
-	</array>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
 	<key>NSAudioCaptureUsageDescription</key>
-	<string>Sapphire listens to your music app's audio on this Mac to time lyrics word by word. The audio never leaves your Mac.</string>
+	<string>Sapphire captures app audio on this Mac for per-app volume and audio effects. The audio never leaves your Mac.</string>
 	<key>NSBluetoothAlwaysUsageDescription</key>
 	<string>Sapphire uses Bluetooth for device connection notifications, battery status, and proximity-based unlock.</string>
 	<key>NSHighResolutionCapable</key>
 	<true/>
 	<key>NSLocalNetworkUsageDescription</key>
-	<string>Sapphire uses the local network for Nearby Share transfers and music device connections.</string>
+	<string>Sapphire uses the local network for Nearby Share transfers.</string>
 	<key>NSScreenCaptureUsageDescription</key>
 	<string>Sapphire uses screen recording for per-app audio capture and live window previews.</string>
 	<key>UTExportedTypeDeclarations</key>

@@ -30,12 +30,6 @@ enum NotchWidgetMode: Hashable {
     case clipboardPlayer
     case mirrorPlayer
 
-    case musicQueueAndPlaylists
-    case musicDevices
-    case musicLyrics
-    case musicPlaylistDetail(SpotifyPlaylist)
-    case musicArtistDetail(uri: String, name: String)
-    case musicAlbumDetail(uri: String, name: String)
 
     case nearDrop
     case fileShelf
@@ -48,8 +42,6 @@ enum NotchWidgetMode: Hashable {
     case multiAudioAppEQ(bundleID: String, appName: String)
     case multiAudioApp8D(bundleID: String, appName: String)
     case multiAudioAppSurround(bundleID: String, appName: String)
-    case musicApiKeysMissing
-    case musicLoginPrompt
     case timerDetailView
     case focusSessionDetailView
     case batteryDetailView
@@ -78,23 +70,6 @@ enum NotchWidgetMode: Hashable {
             hasher.combine(26)
         case .mirrorPlayer:
             hasher.combine(27)
-        case .musicQueueAndPlaylists:
-            hasher.combine(6)
-        case .musicDevices:
-            hasher.combine(7)
-        case .musicLyrics:
-            hasher.combine(8)
-        case .musicPlaylistDetail(let playlist):
-            hasher.combine(9)
-            hasher.combine(playlist)
-        case .musicArtistDetail(let uri, let name):
-            hasher.combine(29)
-            hasher.combine(uri)
-            hasher.combine(name)
-        case .musicAlbumDetail(let uri, let name):
-            hasher.combine(30)
-            hasher.combine(uri)
-            hasher.combine(name)
         case .nearDrop:
             hasher.combine(10)
         case .fileShelf:
@@ -111,10 +86,6 @@ enum NotchWidgetMode: Hashable {
         case .multiAudioEQ(let device):
             hasher.combine(16)
             hasher.combine(device)
-        case .musicApiKeysMissing:
-            hasher.combine(17)
-        case .musicLoginPrompt:
-            hasher.combine(19)
         case .timerDetailView:
             hasher.combine(20)
         case .focusSessionDetailView:
@@ -202,8 +173,6 @@ enum LiveActivityLayoutKind: Equatable {
 enum MusicBottomContentType: Equatable {
     case none
     case peek(title: String, artist: String?)
-    case lyrics(line: LyricLine)
-    case upNext(title: String, artist: String?, artworkURL: URL?)
 }
 
 enum SportsBottomContentType: Equatable {
@@ -325,146 +294,6 @@ struct MicrophonePayload: Identifiable, Equatable, Hashable {
     let id = UUID()
     var isMuted: Bool
     var audioLevel: Float
-}
-
-struct LyricWord: Identifiable, Hashable {
-    let id: UUID
-    let text: String
-    let timestamp: TimeInterval
-    let endTimestamp: TimeInterval?
-
-    init(
-        id: UUID = UUID(),
-        text: String,
-        timestamp: TimeInterval,
-        endTimestamp: TimeInterval? = nil
-    ) {
-        self.id = id
-        self.text = text
-        self.timestamp = timestamp
-        self.endTimestamp = endTimestamp
-    }
-}
-
-struct LyricLine: Identifiable, Hashable {
-    let id: UUID
-    let text: String
-    let timestamp: TimeInterval
-    let endTimestamp: TimeInterval?
-    let words: [LyricWord]
-    var translatedText: String?
-    let background: [LyricWord]
-    let agent: String?
-    let songPart: String?
-
-    var hasWordTiming: Bool { !words.isEmpty }
-
-    var hasReconstructibleWordTiming: Bool {
-        hasWordTiming && words.map(\.text).joined() == text
-    }
-
-    func wordFillEndTimestamp(at index: Int) -> TimeInterval? {
-        guard words.indices.contains(index) else { return nil }
-        if let end = words[index].endTimestamp { return end }
-        if words.indices.contains(index + 1) { return words[index + 1].timestamp }
-        return endTimestamp
-    }
-
-    init(
-        id: UUID = UUID(),
-        text: String,
-        timestamp: TimeInterval,
-        endTimestamp: TimeInterval? = nil,
-        words: [LyricWord] = [],
-        translatedText: String? = nil,
-        background: [LyricWord] = [],
-        agent: String? = nil,
-        songPart: String? = nil
-    ) {
-        self.id = id
-        self.text = text
-        self.timestamp = timestamp
-        self.endTimestamp = endTimestamp
-        self.words = words
-        self.translatedText = translatedText
-        self.background = background
-        self.agent = agent
-        self.songPart = songPart
-    }
-}
-
-enum LyricsTimeline {
-    static func activeIndices(
-        in lyrics: [LyricLine],
-        at time: TimeInterval,
-        trackDuration: TimeInterval? = nil
-    ) -> [Int] {
-        var activeIndices: [Int] = []
-        activeIndices.reserveCapacity(2)
-        forEachActiveIndex(in: lyrics, at: time, trackDuration: trackDuration) {
-            activeIndices.append($0)
-        }
-        activeIndices.reverse()
-        return activeIndices
-    }
-
-    private static func forEachActiveIndex(
-        in lyrics: [LyricLine],
-        at time: TimeInterval,
-        trackDuration: TimeInterval?,
-        body: (Int) -> Void
-    ) {
-        guard time.isFinite, time >= 0 else { return }
-        if let trackDuration, trackDuration.isFinite, trackDuration >= 0, time >= trackDuration { return }
-
-        var latestFollowingStartAtOrBeforeTime: TimeInterval?
-
-        for index in lyrics.indices.reversed() {
-            let line = lyrics[index]
-            let start = line.timestamp
-            guard start.isFinite, start <= time else { continue }
-
-            let isActive: Bool
-            if let end = line.endTimestamp, end.isFinite, end >= start {
-                isActive = time < end
-            } else if let followingStart = latestFollowingStartAtOrBeforeTime,
-                      followingStart > start {
-                isActive = false
-            } else if let trackDuration, trackDuration.isFinite, trackDuration >= start {
-                isActive = time < trackDuration
-            } else {
-                isActive = true
-            }
-
-            if isActive { body(index) }
-
-            latestFollowingStartAtOrBeforeTime = max(
-                latestFollowingStartAtOrBeforeTime ?? start,
-                start
-            )
-        }
-    }
-
-    static func primaryIndex(
-        in lyrics: [LyricLine],
-        at time: TimeInterval,
-        trackDuration: TimeInterval? = nil
-    ) -> Int? {
-        var best: Int?
-        forEachActiveIndex(in: lyrics, at: time, trackDuration: trackDuration) { index in
-            guard let current = best else {
-                best = index
-                return
-            }
-            let candidate = lyrics[index].timestamp
-            let incumbent = lyrics[current].timestamp
-            if candidate > incumbent || (candidate == incumbent && index > current) {
-                best = index
-            }
-        }
-        return best
-    }
-
 }
 
 struct BatteryState: Equatable, Hashable {
